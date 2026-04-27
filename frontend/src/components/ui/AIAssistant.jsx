@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLang } from '../../context/LanguageContext';
-import { FiSend, FiX, FiMinimize2, FiMessageCircle, FiGlobe } from 'react-icons/fi';
+import { FiSend, FiX, FiMinimize2, FiMessageCircle } from 'react-icons/fi';
 
 // ── NLP keyword routing ───────────────────────────────────────
 const ROUTES = [
@@ -24,7 +24,7 @@ const matchRoute = (msg) => {
 };
 
 const AIAssistant = () => {
-  const { t, lang, toggleLang } = useLang();
+  const { t } = useLang();
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
@@ -40,13 +40,6 @@ const AIAssistant = () => {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, typing]);
-
-  // ✅ FIX: 
-  //  - Chat open & expanded  → place lang button above the chat widget (520px)
-  //  - Chat open & minimized → place lang button above the minimized header (~90px)
-  //  - Chat closed           → place lang button above the FAB button (90px)
-  //    (previously was 24, which caused it to be hidden UNDER the FAB)
-  const langButtonBottom = open && !minimized ? 520 : 90;
 
   const send = async (text) => {
     const msg = text || input.trim();
@@ -87,40 +80,8 @@ const AIAssistant = () => {
     return `Try asking:\n• "Find blood donor"\n• "Emergency contacts"\n• "Jobs"`;
   };
 
-  const suggestions = t('ai.suggestions');
-
   return (
     <>
-      {/* 🌐 LANGUAGE BUTTON */}
-      <button
-        onClick={toggleLang}
-        style={{
-          position: 'fixed',
-          bottom: langButtonBottom,
-          right: 24,
-          zIndex: 99999,
-          height: 40,
-          minWidth: 84,
-          padding: '0 14px',
-          borderRadius: 999,
-          border: '1px solid #ccc',
-          background: '#fff',
-          color: '#000',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 8,
-          fontSize: '0.8rem',
-          fontWeight: 600,
-          boxShadow: '0 6px 20px rgba(0,0,0,0.2)',
-          transition: 'bottom 0.3s ease',  // smooth slide when chat opens/closes
-        }}
-      >
-        <FiGlobe size={14} />
-        {lang === 'en' ? 'বাংলা' : 'EN'}
-      </button>
-
       {/* Floating chat button */}
       {!open && (
         <button
