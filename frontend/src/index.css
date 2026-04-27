@@ -326,8 +326,13 @@ tbody tr:last-child td { border-bottom: none; }
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
   .hide-mobile { display: none !important; }
 }
+
+/* ── Additional mobile refinements ─────────────────────────── */
 @media (max-width: 480px) {
+  .container { padding: 0 1rem; }          /* tighter padding on very small screens */
   .section-title { font-size: 1.8rem; letter-spacing: -0.5px; }
+  .card-pad { padding: 1rem; }
+  .hero-search-input { font-size: 0.95rem; } /* custom class if needed */
 }
 
 /* ── Pagination ─────────────────────────────────────────────── */

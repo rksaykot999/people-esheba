@@ -1,21 +1,21 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLang } from '../../context/LanguageContext';
-import { FiSend, FiX, FiMinimize2, FiMessageCircle } from 'react-icons/fi';
+import { FiSend, FiX, FiMinimize2, FiMessageCircle, FiGlobe } from 'react-icons/fi';
 
 // ── NLP keyword routing ───────────────────────────────────────
 const ROUTES = [
-  { keys:['blood','donor','রক্ত','donate blood'],  route:'/blood',        reply:'Finding blood donors near you... 🩸' },
+  { keys:['blood','donor','রক্ত','donate blood'], route:'/blood', reply:'Finding blood donors near you... 🩸' },
   { keys:['emergency','hospital','হাসপাতাল','ambulance','999'], route:'/emergency', reply:'Opening emergency services... 🚨' },
   { keys:['job','jobs','career','চাকরি','hire','employment'], route:'/jobs', reply:'Browsing available jobs... 💼' },
   { keys:['donation','help','সাহায্য','fund','aid','relief'], route:'/donation', reply:'Opening donation requests... ❤️' },
-  { keys:['volunteer','স্বেচ্ছাসেবক','community'],  route:'/volunteers',  reply:'Finding volunteers... 🙌' },
-  { keys:['map','location','nearby','কাছে'],         route:'/map',          reply:'Opening map view... 📍' },
-  { keys:['profile','account','প্রোফাইল'],           route:'/profile',      reply:'Going to your profile... 👤' },
-  { keys:['register','signup','join','নিবন্ধন'],     route:'/register',     reply:'Taking you to registration... ✍️' },
-  { keys:['login','signin','লগইন'],                 route:'/login',        reply:'Opening login page... 🔐' },
-  { keys:['fire','আগুন','fire service'],             route:'/emergency?type=fire', reply:'Opening fire service contacts... 🚒' },
-  { keys:['police','পুলিশ'],                         route:'/emergency?type=police', reply:'Opening police contacts... 👮' },
+  { keys:['volunteer','স্বেচ্ছাসেবক','community'], route:'/volunteers', reply:'Finding volunteers... 🙌' },
+  { keys:['map','location','nearby','কাছে'], route:'/map', reply:'Opening map view... 📍' },
+  { keys:['profile','account','প্রোফাইল'], route:'/profile', reply:'Going to your profile... 👤' },
+  { keys:['register','signup','join','নিবন্ধন'], route:'/register', reply:'Taking you to registration... ✍️' },
+  { keys:['login','signin','লগইন'], route:'/login', reply:'Opening login page... 🔐' },
+  { keys:['fire','আগুন','fire service'], route:'/emergency?type=fire', reply:'Opening fire service contacts... 🚒' },
+  { keys:['police','পুলিশ'], route:'/emergency?type=police', reply:'Opening police contacts... 👮' },
 ];
 
 const matchRoute = (msg) => {
@@ -24,26 +24,35 @@ const matchRoute = (msg) => {
 };
 
 const AIAssistant = () => {
-  const { t } = useLang();
+  const { t, lang, toggleLang } = useLang();
   const navigate = useNavigate();
-  const [open,     setOpen]     = useState(false);
-  const [minimized, setMin]     = useState(false);
-  const [input,    setInput]    = useState('');
+
+  const [open, setOpen] = useState(false);
+  const [minimized, setMin] = useState(false);
+  const [input, setInput] = useState('');
   const [messages, setMessages] = useState([
     { from: 'bot', text: t('ai.greeting'), ts: new Date() },
   ]);
   const [typing, setTyping] = useState(false);
+
   const bottomRef = useRef(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, typing]);
 
+  // ✅ FIX: 
+  //  - Chat open & expanded  → place lang button above the chat widget (520px)
+  //  - Chat open & minimized → place lang button above the minimized header (~90px)
+  //  - Chat closed           → place lang button above the FAB button (90px)
+  //    (previously was 24, which caused it to be hidden UNDER the FAB)
+  const langButtonBottom = open && !minimized ? 520 : 90;
+
   const send = async (text) => {
     const msg = text || input.trim();
     if (!msg) return;
-    setInput('');
 
+    setInput('');
     setMessages(m => [...m, { from: 'user', text: msg, ts: new Date() }]);
     setTyping(true);
 
@@ -65,77 +74,116 @@ const AIAssistant = () => {
 
   const generateReply = (msg) => {
     const m = msg.toLowerCase();
+
     if (m.includes('hello') || m.includes('hi') || m.includes('হ্যালো'))
       return `Hello! 👋 How can I help you today?\n\nYou can ask me about:\n• Blood donors\n• Emergency services\n• Jobs\n• Donation requests\n• Volunteers`;
+
     if (m.includes('thank') || m.includes('ধন্যবাদ'))
-      return `You're welcome! 😊 Happy to help. Is there anything else you need?`;
-    if (m.includes('help') && m.length < 10)
-      return `Sure! Here's what I can help with:\n\n🩸 Find blood donors\n🚨 Emergency contacts\n💼 Browse jobs\n❤️ Request/give help\n🙌 Find volunteers\n📍 Map view\n\nJust type what you're looking for!`;
-    if (m.includes('999') || m.includes('emergency number'))
-      return `📞 Emergency Numbers in Bangladesh:\n• Police: 999\n• Fire: 199\n• Ambulance: 199\n• Child Help: 1098\n• Women Help: 10921\n\nStay safe! 🙏`;
-    return `I'm not sure about that, but I can help you navigate to the right section.\n\nTry asking:\n• "Find blood donor"\n• "Emergency contacts"\n• "Browse jobs"\n• "Request help"`;
+      return `You're welcome! 😊`;
+
+    if (m.includes('999'))
+      return `📞 Emergency Numbers:\n• Police: 999\n• Fire: 199\n• Ambulance: 199`;
+
+    return `Try asking:\n• "Find blood donor"\n• "Emergency contacts"\n• "Jobs"`;
   };
 
   const suggestions = t('ai.suggestions');
 
   return (
     <>
-      {/* ── Floating Toggle Button ──────────────────────────── */}
+      {/* 🌐 LANGUAGE BUTTON */}
+      <button
+        onClick={toggleLang}
+        style={{
+          position: 'fixed',
+          bottom: langButtonBottom,
+          right: 24,
+          zIndex: 99999,
+          height: 40,
+          minWidth: 84,
+          padding: '0 14px',
+          borderRadius: 999,
+          border: '1px solid #ccc',
+          background: '#fff',
+          color: '#000',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 8,
+          fontSize: '0.8rem',
+          fontWeight: 600,
+          boxShadow: '0 6px 20px rgba(0,0,0,0.2)',
+          transition: 'bottom 0.3s ease',  // smooth slide when chat opens/closes
+        }}
+      >
+        <FiGlobe size={14} />
+        {lang === 'en' ? 'বাংলা' : 'EN'}
+      </button>
+
+      {/* Floating chat button */}
       {!open && (
         <button
           onClick={() => setOpen(true)}
           style={{
-            position: 'fixed', bottom: 24, left: 24, zIndex: 8000,
-            width: 56, height: 56, borderRadius: '50%', border: 'none',
+            position: 'fixed',
+            bottom: 24,
+            right: 24,
+            zIndex: 8000,
+            width: 56,
+            height: 56,
+            borderRadius: '50%',
+            border: 'none',
             background: 'linear-gradient(135deg, #06B6D4, #0284c7)',
-            color: '#fff', cursor: 'pointer',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 4px 24px rgba(6,182,212,0.5)',
-            animation: 'pulse-bot 2s ease-in-out infinite',
+            color: '#fff',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
-          title="AI Assistant"
         >
           <FiMessageCircle size={24} />
         </button>
       )}
 
-      {/* ── Chat Window ─────────────────────────────────────── */}
+      {/* Chat window */}
       {open && (
         <div style={{
-          position: 'fixed', bottom: 24, left: 24, zIndex: 8001,
-          width: 340, borderRadius: 20,
-          border: '1px solid var(--border-2)',
-          background: 'var(--surface)',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
-          overflow: 'hidden',
-          animation: 'fadeUp 0.25s ease',
-          display: 'flex', flexDirection: 'column',
+          position: 'fixed',
+          bottom: 24,
+          right: 24,
+          zIndex: 8001,
+          width: 340,
+          borderRadius: 20,
+          background: '#111',
           height: minimized ? 'auto' : 480,
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
         }}>
+
           {/* Header */}
           <div style={{
-            padding: '0.85rem 1rem',
-            background: 'linear-gradient(135deg, #0284c7, #06B6D4)',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: '10px 14px',
+            background: '#0284c7',
+            color: '#fff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{
-                width: 36, height: 36, borderRadius: '50%',
-                background: 'rgba(255,255,255,0.2)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '1.2rem',
-              }}>🤖</div>
-              <div>
-                <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#fff' }}>{t('ai.title')}</div>
-                <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.75)' }}>{t('ai.sub')}</div>
-              </div>
-            </div>
-            <div style={{ display: 'flex', gap: 6 }}>
-              <button onClick={() => setMin(m => !m)} style={{ width: 28, height: 28, borderRadius: 8, border: 'none', background: 'rgba(255,255,255,0.15)', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <FiMinimize2 size={13} />
+            <span style={{ fontWeight: 600 }}>AI Assistant</span>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button
+                onClick={() => setMin(v => !v)}
+                style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}
+              >
+                <FiMinimize2 size={16} />
               </button>
-              <button onClick={() => setOpen(false)} style={{ width: 28, height: 28, borderRadius: 8, border: 'none', background: 'rgba(255,255,255,0.15)', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <FiX size={13} />
+              <button
+                onClick={() => { setOpen(false); setMin(false); }}
+                style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}
+              >
+                <FiX size={16} />
               </button>
             </div>
           </div>
@@ -143,93 +191,77 @@ const AIAssistant = () => {
           {!minimized && (
             <>
               {/* Messages */}
-              <div style={{ flex: 1, overflowY: 'auto', padding: '1rem', display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div style={{ flex: 1, overflowY: 'auto', padding: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {messages.map((m, i) => (
-                  <div key={i} style={{ display: 'flex', justifyContent: m.from === 'user' ? 'flex-end' : 'flex-start' }}>
-                    <div style={{
-                      maxWidth: '82%',
-                      padding: '0.6rem 0.9rem',
-                      borderRadius: m.from === 'user'
-                        ? '16px 16px 4px 16px'
-                        : '16px 16px 16px 4px',
-                      background: m.from === 'user'
-                        ? 'linear-gradient(135deg, #E63946, #c1121f)'
-                        : 'var(--surface-2)',
-                      border: m.from === 'user' ? 'none' : '1px solid var(--border)',
-                      color: '#fff', fontSize: '0.83rem', lineHeight: 1.55,
-                      whiteSpace: 'pre-line',
-                    }}>
-                      {m.text}
-                    </div>
+                  <div
+                    key={i}
+                    style={{
+                      alignSelf: m.from === 'user' ? 'flex-end' : 'flex-start',
+                      background: m.from === 'user' ? '#0284c7' : '#222',
+                      color: '#fff',
+                      padding: '8px 12px',
+                      borderRadius: 12,
+                      maxWidth: '80%',
+                      whiteSpace: 'pre-wrap',
+                      fontSize: '0.85rem',
+                    }}
+                  >
+                    {m.text}
                   </div>
                 ))}
                 {typing && (
-                  <div style={{ display: 'flex', gap: 5, padding: '0.5rem 0.9rem', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: '16px 16px 16px 4px', width: 'fit-content' }}>
-                    {[0,1,2].map(n => (
-                      <div key={n} style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--cyan)', animation: `typing-dot 1.2s ${n * 0.2}s infinite ease-in-out` }} />
-                    ))}
+                  <div style={{
+                    alignSelf: 'flex-start',
+                    background: '#222',
+                    color: '#aaa',
+                    padding: '8px 12px',
+                    borderRadius: 12,
+                    fontSize: '0.8rem',
+                  }}>
+                    Typing...
                   </div>
                 )}
                 <div ref={bottomRef} />
               </div>
 
-              {/* Suggestions */}
-              {messages.length <= 1 && (
-                <div style={{ padding: '0 1rem 0.75rem', display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                  {Array.isArray(suggestions) && suggestions.map((s, i) => (
-                    <button key={i} onClick={() => send(s)} style={{
-                      padding: '4px 10px', borderRadius: 99, border: '1px solid var(--border-2)',
-                      background: 'var(--surface-2)', color: 'var(--text-muted)',
-                      fontSize: '0.75rem', cursor: 'pointer', transition: 'var(--t)',
-                    }}
-                      onMouseEnter={e => { e.target.style.borderColor = 'var(--cyan)'; e.target.style.color = 'var(--cyan)'; }}
-                      onMouseLeave={e => { e.target.style.borderColor = 'var(--border-2)'; e.target.style.color = 'var(--text-muted)'; }}
-                    >
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              )}
-
               {/* Input */}
-              <div style={{
-                padding: '0.75rem 1rem', borderTop: '1px solid var(--border)',
-                display: 'flex', gap: 8,
-              }}>
+              <div style={{ display: 'flex', borderTop: '1px solid #333', padding: 8, gap: 6 }}>
                 <input
-                  value={input} onChange={e => setInput(e.target.value)}
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && send()}
-                  placeholder={t('ai.placeholder')}
+                  placeholder="Type a message..."
                   style={{
-                    flex: 1, padding: '0.6rem 0.9rem', borderRadius: 10,
-                    border: '1px solid var(--border-2)', background: 'var(--surface-2)',
-                    color: '#fff', fontSize: '0.83rem', outline: 'none',
+                    flex: 1,
+                    background: '#222',
+                    border: '1px solid #444',
+                    borderRadius: 10,
+                    padding: '8px 10px',
+                    color: '#fff',
+                    fontSize: '0.85rem',
+                    outline: 'none',
                   }}
                 />
-                <button onClick={() => send()} disabled={!input.trim()} style={{
-                  width: 38, height: 38, borderRadius: 10, border: 'none',
-                  background: 'var(--grad-cyan)', color: '#fff', cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  opacity: input.trim() ? 1 : 0.4,
-                }}>
-                  <FiSend size={15} />
+                <button
+                  onClick={() => send()}
+                  style={{
+                    background: '#0284c7',
+                    border: 'none',
+                    borderRadius: 10,
+                    padding: '0 12px',
+                    color: '#fff',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <FiSend size={16} />
                 </button>
               </div>
             </>
           )}
         </div>
       )}
-
-      <style>{`
-        @keyframes pulse-bot {
-          0%, 100% { box-shadow: 0 4px 24px rgba(6,182,212,0.5); }
-          50% { box-shadow: 0 4px 40px rgba(6,182,212,0.8), 0 0 0 8px rgba(6,182,212,0.1); }
-        }
-        @keyframes typing-dot {
-          0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-          30% { transform: translateY(-5px); opacity: 1; }
-        }
-      `}</style>
     </>
   );
 };
