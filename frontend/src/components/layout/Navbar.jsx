@@ -18,7 +18,6 @@ import {
   FiMap,
   FiSearch,
   FiChevronDown,
-  FiGlobe,
   FiBookmark,
   FiPlusSquare,
   FiTruck,
@@ -489,27 +488,6 @@ export default function Navbar() {
               {isDark ? <FiSun size={14} /> : <FiMoon size={14} />}
             </button>
 
-            {/* ✅ FIX 1: Language toggle — removed the display:none!important rule that was hiding this */}
-            <button
-              id="lang-toggle"
-              onClick={toggleLang}
-              style={{
-                width: 64, height: 36,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                gap: 4, padding: "0", borderRadius: 8,
-                border: "1px solid var(--border)",
-                background: "var(--surface-2)",
-                color: "var(--text-muted)",
-                fontSize: "0.74rem", fontWeight: 700,
-                cursor: "pointer", transition: "var(--t)",
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(230,57,70,0.4)"; e.currentTarget.style.color = "var(--text)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.color = "var(--text-muted)"; }}
-            >
-              <FiGlobe size={12} />
-              {lang === "en" ? "বাংলা" : "EN"}
-            </button>
-
             {/* User menu desktop */}
             <div id="user-menu-wrap" className="hide-mobile" style={{ position: "relative" }}>
               {isAuth ? (
@@ -851,22 +829,7 @@ export default function Navbar() {
                 borderTopRightRadius: 24,
               }}
             >
-              {/* ✅ FIX 2: Language + Theme toggles — removed the {false &&} wrapper that was hiding these */}
               <div style={{ display: "flex", gap: 12, marginBottom: "1rem" }}>
-                <button
-                  onClick={toggleLang}
-                  style={{
-                    flex: 1, height: 48, borderRadius: 14,
-                    border: "1px solid var(--border)",
-                    background: "var(--surface)",
-                    color: "var(--text)", fontSize: "0.9rem", fontWeight: 700,
-                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                    cursor: "pointer",
-                  }}
-                >
-                  <FiGlobe size={16} />
-                  {lang === "en" ? "বাংলা" : "English"}
-                </button>
                 <button
                   onClick={toggleTheme}
                   style={{
