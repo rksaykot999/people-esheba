@@ -130,11 +130,11 @@ export default function Navbar() {
       color: "#EC4899",
       label: t("nav.health"),
       items: [
-        { icon: <FiUser size={16} />, label: t("health.doctors") || "Doctors", to: "/health/doctors" },
         { icon: <FiDroplet size={16} />, label: t("nav.blood") || "Blood Donation", to: "/blood" },
+        { icon: <FiUser size={16} />, label: t("health.doctors") || "Doctors", to: "/health/doctors" },
         { icon: <FiActivity size={16} />, label: t("health.mental") || "Mental Health", to: "/health/mental" },
         { icon: <FiPlusSquare size={16} />, label: t("health.pharmacy") || "Pharmacy", to: "/health/pharmacy" },
-        { icon: <FiActivity size={16} />, label: t("donation.medical") || "Medical Aid", to: "/donation?category=medical" },
+        { icon: <FiActivity size={16} />, label: t("donation.medical") || "Medical Aid", to: "/medical-eid?category=medical" }, // Donation → MedicalEid
       ],
     },
     {
@@ -158,7 +158,7 @@ export default function Navbar() {
         { icon: <FiBook size={16} />, label: t("education.courses") || "Courses", to: "/education/courses" },
         { icon: <FiAward size={16} />, label: t("education.scholarships") || "Scholarships", to: "/education/scholarships" },
         { icon: <FiUsers size={16} />, label: t("education.tutors") || "Tutors", to: "/education/tutors" },
-        { icon: <FiBook size={16} />, label: t("donation.education") || "Education Fund", to: "/donation?category=education" },
+        { icon: <FiBook size={16} />, label: t("donation.education") || "Education Fund", to: "/medical-eid?category=education" }, // Donation → MedicalEid
       ],
     },
     {
@@ -169,8 +169,8 @@ export default function Navbar() {
       items: [
         { icon: <FiUsers size={16} />, label: t("volunteers.title") || "Volunteers", to: "/volunteers" },
         { icon: <FiUserPlus size={16} />, label: t("volunteers.register") || "Join", to: "/volunteers?action=register" },
-        { icon: <FiHeart size={16} />, label: t("donation.title") || "All Requests", to: "/donation" },
-        { icon: <FiPlusCircle size={16} />, label: t("donation.new") || "Request Help", to: "/donation/new" },
+        { icon: <FiHeart size={16} />, label: t("donation.title") || "All Requests", to: "/medical-eid" }, // Donation → MedicalEid
+        { icon: <FiPlusCircle size={16} />, label: t("donation.new") || "Request Help", to: "/medical-eid/new" }, // Donation → MedicalEid
         { icon: <FiActivity size={16} />, label: t("common.events") || "Events", to: "/community/events" },
       ],
     },
@@ -202,10 +202,10 @@ export default function Navbar() {
     { icon: <FiActivity size={16} />, label: t("nav.home") || "Home", to: "/" },
     { icon: <FiAlertTriangle size={16} />, label: t("nav.emergency") || "Emergency", to: "/emergency" },
     { icon: <FiDroplet size={16} />, label: t("nav.blood") || "Blood Donation", to: "/blood" },
-    { icon: <FiHeart size={16} />, label: t("donation.title") || "Help Requests", to: "/donation" },
+    { icon: <FiHeart size={16} />, label: t("donation.title") || "Help Requests", to: "/medical-eid" }, // Donation → MedicalEid
     { icon: <FiBriefcase size={16} />, label: t("jobs.title") || "Jobs", to: "/jobs" },
     { icon: <FiEdit size={16} />, label: t("jobs.post") || "Post a Job", to: "/jobs/new" },
-    { icon: <FiPlusCircle size={16} />, label: t("donation.new") || "Request Help", to: "/donation/new" },
+    { icon: <FiPlusCircle size={16} />, label: t("donation.new") || "Request Help", to: "/medical-eid/new" }, // Donation → MedicalEid
     { icon: <FiUsers size={16} />, label: t("volunteers.title") || "Volunteers", to: "/volunteers" },
     { icon: <FiMap size={16} />, label: t("nav.map") || "Map", to: "/map" },
     ...(!isAuth
@@ -489,7 +489,7 @@ export default function Navbar() {
               {isDark ? <FiSun size={14} /> : <FiMoon size={14} />}
             </button>
 
-            {/* ✅ FIX 1: Language toggle — removed the display:none!important rule that was hiding this */}
+            {/* Language toggle */}
             <button
               id="lang-toggle"
               onClick={toggleLang}
@@ -851,7 +851,7 @@ export default function Navbar() {
                 borderTopRightRadius: 24,
               }}
             >
-              {/* ✅ FIX 2: Language + Theme toggles — removed the {false &&} wrapper that was hiding these */}
+              {/* Language + Theme toggles */}
               <div style={{ display: "flex", gap: 12, marginBottom: "1rem" }}>
                 <button
                   onClick={toggleLang}
