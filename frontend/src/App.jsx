@@ -1,62 +1,87 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
-import { AuthProvider, useAuth } from './context/AuthContext';
-import { LanguageProvider } from './context/LanguageContext';
-import { ThemeProvider } from './context/ThemeContext';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import { LanguageProvider } from "./context/LanguageContext";
+import { ThemeProvider } from "./context/ThemeContext";
 
 // Layouts
-import MainLayout  from './components/layout/MainLayout';
-import AdminLayout from './components/layout/AdminLayout';
+import MainLayout from "./components/layout/MainLayout";
+import AdminLayout from "./components/layout/AdminLayout";
 
 // Public pages
-import Home         from './pages/Home';
-import Login        from './pages/auth/Login';
-import Register     from './pages/auth/Register';
-import Emergency    from './pages/Emergency';
-import Blood        from './pages/Blood';
-import Donation     from './pages/Donation';
-import DonationNew  from './pages/DonationNew';
-import DonationDetail from './pages/DonationDetail';
-import Jobs         from './pages/Jobs';
-import JobDetail    from './pages/JobDetail';
-import JobNew       from './pages/JobNew';
-import Volunteers   from './pages/Volunteers';
-import MapPage      from './pages/MapPage';
-import Profile      from './pages/Profile';
-import NotFound     from './pages/NotFound';
+import Home from "./pages/Home";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import Emergency from "./pages/Emergency";
+import Blood from "./pages/Blood";
+import Donation from "./pages/Donation";
+import DonationNew from "./pages/DonationNew";
+import DonationDetail from "./pages/DonationDetail";
+import Jobs from "./pages/Jobs";
+import JobDetail from "./pages/JobDetail";
+import JobNew from "./pages/JobNew";
+import Volunteers from "./pages/Volunteers";
+import MapPage from "./pages/MapPage";
+import Profile from "./pages/Profile";
+import NotFound from "./pages/NotFound";
 
 // New pages
-import Health       from './pages/Health';
-import Education    from './pages/Education';
-import Services     from './pages/Services';
-import Notices      from './pages/Notices';
+import Health from "./pages/Health";
+import Education from "./pages/Education";
+import Services from "./pages/Services";
+import Notices from "./pages/Notices";
 
 // Admin pages
-import AdminDashboard    from './pages/admin/AdminDashboard';
-import AdminUsers        from './pages/admin/AdminUsers';
-import AdminDonations    from './pages/admin/AdminDonations';
-import AdminJobs         from './pages/admin/AdminJobs';
-import AdminBlood        from './pages/admin/AdminBlood';
-import AdminVolunteers   from './pages/admin/AdminVolunteers';
-import AdminEmergency    from './pages/admin/AdminEmergency';
-import AdminReports      from './pages/admin/AdminReports';
-import AdminAnalytics    from './pages/admin/AdminAnalytics';
-import AdminNotifications from './pages/admin/AdminNotifications';
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminDonations from "./pages/admin/AdminDonations";
+import AdminJobs from "./pages/admin/AdminJobs";
+import AdminBlood from "./pages/admin/AdminBlood";
+import AdminVolunteers from "./pages/admin/AdminVolunteers";
+import AdminEmergency from "./pages/admin/AdminEmergency";
+import AdminReports from "./pages/admin/AdminReports";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import AdminNotifications from "./pages/admin/AdminNotifications";
+import Doctors from "./pages/Doctors";
 
 // AI Chatbot (floating)
-import AIChatbot from './components/ui/AIChatbot';
+import AIChatbot from "./components/ui/AIChatbot";
 
 /* ── Route guards ──────────────────────────────────────────── */
 const PrivateRoute = ({ children }) => {
   const { isAuth, loading } = useAuth();
-  if (loading) return <div style={{ display:'flex',alignItems:'center',justifyContent:'center',height:'100vh' }}><div className="spinner"/></div>;
+  if (loading)
+    return (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+        }}
+      >
+        <div className="spinner" />
+      </div>
+    );
   return isAuth ? children : <Navigate to="/login" replace />;
 };
 
 const AdminRoute = ({ children }) => {
   const { isAuth, isAdmin, loading } = useAuth();
-  if (loading) return <div style={{ display:'flex',alignItems:'center',justifyContent:'center',height:'100vh' }}><div className="spinner"/></div>;
-  if (!isAuth)  return <Navigate to="/login" replace />;
+  if (loading)
+    return (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+        }}
+      >
+        <div className="spinner" />
+      </div>
+    );
+  if (!isAuth) return <Navigate to="/login" replace />;
   if (!isAdmin) return <Navigate to="/" replace />;
   return children;
 };
@@ -75,43 +100,86 @@ function AppRoutes() {
           <Route index element={<Home />} />
 
           {/* Existing */}
-          <Route path="emergency"      element={<Emergency />} />
-          <Route path="blood"          element={<Blood />} />
-          <Route path="donation"       element={<Donation />} />
-          <Route path="donation/new"   element={<PrivateRoute><DonationNew /></PrivateRoute>} />
-          <Route path="donation/:id"   element={<DonationDetail />} />
-          <Route path="jobs"           element={<Jobs />} />
-          <Route path="jobs/new"       element={<PrivateRoute><JobNew /></PrivateRoute>} />
-          <Route path="jobs/:id"       element={<JobDetail />} />
-          <Route path="volunteers"     element={<Volunteers />} />
-          <Route path="map"            element={<MapPage />} />
-          <Route path="profile"        element={<PrivateRoute><Profile /></PrivateRoute>} />
+          <Route path="emergency" element={<Emergency />} />
+          <Route path="blood" element={<Blood />} />
+          <Route path="doctors" element={<Doctors />} />
+          <Route path="donation" element={<Donation />} />
+          <Route
+            path="donation/new"
+            element={
+              <PrivateRoute>
+                <DonationNew />
+              </PrivateRoute>
+            }
+          />
+          <Route path="donation/:id" element={<DonationDetail />} />
+          <Route path="jobs" element={<Jobs />} />
+          <Route
+            path="jobs/new"
+            element={
+              <PrivateRoute>
+                <JobNew />
+              </PrivateRoute>
+            }
+          />
+          <Route path="jobs/:id" element={<JobDetail />} />
+          <Route path="volunteers" element={<Volunteers />} />
+          <Route path="map" element={<MapPage />} />
+          <Route
+            path="profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
 
           {/* New pages */}
-          <Route path="health"         element={<Health />} />
-          <Route path="education"      element={<Education />} />
-          <Route path="services"       element={<Services />} />
-          <Route path="notices"        element={<Notices />} />
+          <Route path="health" element={<Health />} />
+          <Route path="education" element={<Education />} />
+          <Route path="services" element={<Services />} />
+          <Route path="notices" element={<Notices />} />
 
-          <Route path="*"              element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
 
         {/* ── Auth routes ────────────────────────────────── */}
-        <Route path="/login"    element={<GuestRoute><Login /></GuestRoute>} />
-        <Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />
+        <Route
+          path="/login"
+          element={
+            <GuestRoute>
+              <Login />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <GuestRoute>
+              <Register />
+            </GuestRoute>
+          }
+        />
 
         {/* ── Admin routes ───────────────────────────────── */}
-        <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
-          <Route index                 element={<AdminDashboard />} />
-          <Route path="users"          element={<AdminUsers />} />
-          <Route path="donations"      element={<AdminDonations />} />
-          <Route path="jobs"           element={<AdminJobs />} />
-          <Route path="blood"          element={<AdminBlood />} />
-          <Route path="volunteers"     element={<AdminVolunteers />} />
-          <Route path="emergency"      element={<AdminEmergency />} />
-          <Route path="reports"        element={<AdminReports />} />
-          <Route path="analytics"      element={<AdminAnalytics />} />
-          <Route path="notifications"  element={<AdminNotifications />} />
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="donations" element={<AdminDonations />} />
+          <Route path="jobs" element={<AdminJobs />} />
+          <Route path="blood" element={<AdminBlood />} />
+          <Route path="volunteers" element={<AdminVolunteers />} />
+          <Route path="emergency" element={<AdminEmergency />} />
+          <Route path="reports" element={<AdminReports />} />
+          <Route path="analytics" element={<AdminAnalytics />} />
+          <Route path="notifications" element={<AdminNotifications />} />
         </Route>
       </Routes>
 
@@ -132,14 +200,16 @@ export default function App() {
               toastOptions={{
                 duration: 4000,
                 style: {
-                  background: '#162032',
-                  color: '#F0F4FF',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: '10px',
-                  fontSize: '0.875rem',
+                  background: "#162032",
+                  color: "#F0F4FF",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: "10px",
+                  fontSize: "0.875rem",
                 },
-                success: { iconTheme: { primary: '#10B981', secondary: '#fff' } },
-                error:   { iconTheme: { primary: '#E63946', secondary: '#fff' } },
+                success: {
+                  iconTheme: { primary: "#10B981", secondary: "#fff" },
+                },
+                error: { iconTheme: { primary: "#E63946", secondary: "#fff" } },
               }}
             />
           </AuthProvider>

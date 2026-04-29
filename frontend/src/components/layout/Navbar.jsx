@@ -117,11 +117,31 @@ export default function Navbar() {
       color: "#E63946",
       label: t("nav.emergency"),
       items: [
-        { icon: <FiPlusSquare size={16} />, label: t("emergency.hospital") || "Hospitals", to: "/emergency?type=hospital" },
-        { icon: <FiShield size={16} />, label: t("emergency.police") || "Police", to: "/emergency?type=police" },
-        { icon: <FiActivity size={16} />, label: t("emergency.fire") || "Fire Service", to: "/emergency?type=fire" },
-        { icon: <FiTruck size={16} />, label: t("emergency.ambulance") || "Ambulance", to: "/emergency?type=ambulance" },
-        { icon: <FiList size={16} />, label: t("common.viewAll"), to: "/emergency" },
+        {
+          icon: <FiPlusSquare size={16} />,
+          label: t("emergency.hospital") || "Hospitals",
+          to: "/emergency?type=hospital",
+        },
+        {
+          icon: <FiShield size={16} />,
+          label: t("emergency.police") || "Police",
+          to: "/emergency?type=police",
+        },
+        {
+          icon: <FiActivity size={16} />,
+          label: t("emergency.fire") || "Fire Service",
+          to: "/emergency?type=fire",
+        },
+        {
+          icon: <FiTruck size={16} />,
+          label: t("emergency.ambulance") || "Ambulance",
+          to: "/emergency?type=ambulance",
+        },
+        {
+          icon: <FiList size={16} />,
+          label: t("common.viewAll"),
+          to: "/emergency",
+        },
       ],
     },
     {
@@ -130,11 +150,31 @@ export default function Navbar() {
       color: "#EC4899",
       label: t("nav.health"),
       items: [
-        { icon: <FiDroplet size={16} />, label: t("nav.blood") || "Blood Donation", to: "/blood" },
-        { icon: <FiUser size={16} />, label: t("health.doctors") || "Doctors", to: "/health/doctors" },
-        { icon: <FiActivity size={16} />, label: t("health.mental") || "Mental Health", to: "/health/mental" },
-        { icon: <FiPlusSquare size={16} />, label: t("health.pharmacy") || "Pharmacy", to: "/health/pharmacy" },
-        { icon: <FiActivity size={16} />, label: t("donation.medical") || "Medical Aid", to: "/medical-eid?category=medical" }, // Donation → MedicalEid
+        {
+          icon: <FiDroplet size={16} />,
+          label: t("nav.blood") || "Blood Donation",
+          to: "/blood",
+        },
+        {
+          icon: <FiUser size={16} />,
+          label: t("health.doctors") || "Doctors",
+          to: "/doctors",
+        },
+        {
+          icon: <FiActivity size={16} />,
+          label: t("health.mental") || "Mental Health",
+          to: "/health/mental",
+        },
+        {
+          icon: <FiPlusSquare size={16} />,
+          label: t("health.pharmacy") || "Pharmacy",
+          to: "/health/pharmacy",
+        },
+        {
+          icon: <FiActivity size={16} />,
+          label: t("donation.medical") || "Medical Aid",
+          to: "/medical-eid?category=medical",
+        }, // Donation → MedicalEid
       ],
     },
     {
@@ -143,10 +183,26 @@ export default function Navbar() {
       color: "#06B6D4",
       label: t("nav.jobs"),
       items: [
-        { icon: <FiBriefcase size={16} />, label: t("jobs.title") || "Browse Jobs", to: "/jobs" },
-        { icon: <FiEdit size={16} />, label: t("jobs.post") || "Post a Job", to: "/jobs/new" },
-        { icon: <FiMonitor size={16} />, label: t("jobs.freelance") || "Freelance", to: "/jobs?type=freelance" },
-        { icon: <FiAward size={16} />, label: t("jobs.govt") || "Government", to: "/jobs?type=govt" },
+        {
+          icon: <FiBriefcase size={16} />,
+          label: t("jobs.title") || "Browse Jobs",
+          to: "/jobs",
+        },
+        {
+          icon: <FiEdit size={16} />,
+          label: t("jobs.post") || "Post a Job",
+          to: "/jobs/new",
+        },
+        {
+          icon: <FiMonitor size={16} />,
+          label: t("jobs.freelance") || "Freelance",
+          to: "/jobs?type=freelance",
+        },
+        {
+          icon: <FiAward size={16} />,
+          label: t("jobs.govt") || "Government",
+          to: "/jobs?type=govt",
+        },
       ],
     },
     {
@@ -155,10 +211,21 @@ export default function Navbar() {
       color: "#F59E0B",
       label: t("nav.education"),
       items: [
-        { icon: <FiBook size={16} />, label: t("education.courses") || "Courses", to: "/education/courses" },
-        { icon: <FiAward size={16} />, label: t("education.scholarships") || "Scholarships", to: "/education/scholarships" },
-        { icon: <FiUsers size={16} />, label: t("education.tutors") || "Tutors", to: "/education/tutors" },
-        { icon: <FiBook size={16} />, label: t("donation.education") || "Education Fund", to: "/medical-eid?category=education" }, // Donation → MedicalEid
+        {
+          icon: <FiAward size={16} />,
+          label: t("education.scholarships") || "Scholarships",
+          to: "/education?type=scholarships",
+        },
+        {
+          icon: <FiUsers size={16} />,
+          label: t("education.tutors") || "Tutors",
+          to: "/education/tutors",
+        },
+        {
+          icon: <FiBook size={16} />,
+          label: t("donation.education") || "Education Fund",
+          to: "/medical-eid?category=education",
+        }, // Donation → MedicalEid
       ],
     },
     {
@@ -167,11 +234,26 @@ export default function Navbar() {
       color: "#10B981",
       label: t("nav.community"),
       items: [
-        { icon: <FiUsers size={16} />, label: t("volunteers.title") || "Volunteers", to: "/volunteers" },
-        { icon: <FiUserPlus size={16} />, label: t("volunteers.register") || "Join", to: "/volunteers?action=register" },
-        { icon: <FiHeart size={16} />, label: t("donation.title") || "All Requests", to: "/medical-eid" }, // Donation → MedicalEid
-        { icon: <FiPlusCircle size={16} />, label: t("donation.new") || "Request Help", to: "/medical-eid/new" }, // Donation → MedicalEid
-        { icon: <FiActivity size={16} />, label: t("common.events") || "Events", to: "/community/events" },
+        {
+          icon: <FiUsers size={16} />,
+          label: t("volunteers.title") || "Volunteers",
+          to: "/volunteers",
+        },
+        {
+          icon: <FiUserPlus size={16} />,
+          label: t("volunteers.register") || "Join",
+          to: "/volunteers?action=register",
+        },
+        {
+          icon: <FiHeart size={16} />,
+          label: t("donation.title") || "All Requests",
+          to: "/donation",
+        }, // Donation → MedicalEid
+        {
+          icon: <FiPlusCircle size={16} />,
+          label: t("donation.new") || "Request Help",
+          to: "/donation/new",
+        }, // Donation → MedicalEid
       ],
     },
     {
@@ -180,9 +262,21 @@ export default function Navbar() {
       color: "#8B5CF6",
       label: t("nav.services"),
       items: [
-        { icon: <FiMonitor size={16} />, label: t("services.home") || "Home Services", to: "/services?cat=home" },
-        { icon: <FiTruck size={16} />, label: t("services.transport") || "Transport", to: "/services?cat=transport" },
-        { icon: <FiEdit size={16} />, label: t("services.repairs") || "Repairs", to: "/services?cat=repairs" },
+        {
+          icon: <FiMonitor size={16} />,
+          label: t("services.home") || "Home Services",
+          to: "/services?cat=home",
+        },
+        {
+          icon: <FiTruck size={16} />,
+          label: t("services.transport") || "Transport",
+          to: "/services?cat=transport",
+        },
+        {
+          icon: <FiEdit size={16} />,
+          label: t("services.repairs") || "Repairs",
+          to: "/services?cat=repairs",
+        },
       ],
     },
     {
@@ -191,28 +285,87 @@ export default function Navbar() {
       color: "#64748B",
       label: t("nav.government"),
       items: [
-        { icon: <FiShield size={16} />, label: t("government.nid") || "NID Info", to: "/govt/nid" },
-        { icon: <FiAward size={16} />, label: t("government.schemes") || "Gov Schemes", to: "/govt/schemes" },
-        { icon: <FiList size={16} />, label: t("government.utility") || "Utility Bill", to: "/govt/utility" },
+        {
+          icon: <FiShield size={16} />,
+          label: t("government.nid") || "NID Info",
+          to: "/govt/nid",
+        },
+        {
+          icon: <FiAward size={16} />,
+          label: t("government.schemes") || "Gov Schemes",
+          to: "/govt/schemes",
+        },
+        {
+          icon: <FiList size={16} />,
+          label: t("government.utility") || "Utility Bill",
+          to: "/govt/utility",
+        },
       ],
     },
   ];
 
   const VIEW_PAGES = [
     { icon: <FiActivity size={16} />, label: t("nav.home") || "Home", to: "/" },
-    { icon: <FiAlertTriangle size={16} />, label: t("nav.emergency") || "Emergency", to: "/emergency" },
-    { icon: <FiDroplet size={16} />, label: t("nav.blood") || "Blood Donation", to: "/blood" },
-    { icon: <FiHeart size={16} />, label: t("donation.title") || "Help Requests", to: "/medical-eid" }, // Donation → MedicalEid
-    { icon: <FiBriefcase size={16} />, label: t("jobs.title") || "Jobs", to: "/jobs" },
-    { icon: <FiEdit size={16} />, label: t("jobs.post") || "Post a Job", to: "/jobs/new" },
-    { icon: <FiPlusCircle size={16} />, label: t("donation.new") || "Request Help", to: "/medical-eid/new" }, // Donation → MedicalEid
-    { icon: <FiUsers size={16} />, label: t("volunteers.title") || "Volunteers", to: "/volunteers" },
+    {
+      icon: <FiAlertTriangle size={16} />,
+      label: t("nav.emergency") || "Emergency",
+      to: "/emergency",
+    },
+    {
+      icon: <FiDroplet size={16} />,
+      label: t("nav.blood") || "Blood Donation",
+      to: "/blood",
+    },
+    {
+      icon: <FiBook size={16} />,
+      label: t("nav.education") || "Education",
+      to: "/education",
+    },
+    {
+      icon: <FiBriefcase size={16} />,
+      label: t("jobs.title") || "Jobs",
+      to: "/jobs",
+    },
+    {
+      icon: <FiEdit size={16} />,
+      label: t("jobs.post") || "Post a Job",
+      to: "/jobs/new",
+    },
+    {
+      icon: <FiHeart size={16} />,
+      label: t("donation.title") || "Help Requests",
+      to: "/donation/new",
+    }, // Donation → MedicalEid
+    
+    {
+      icon: <FiUsers size={16} />,
+      label: t("volunteers.title") || "Volunteers",
+      to: "/volunteers",
+    },
     { icon: <FiMap size={16} />, label: t("nav.map") || "Map", to: "/map" },
     ...(!isAuth
-      ? [{ icon: <FiUser size={16} />, label: t("nav.login") || "Login", to: "/login" }]
-      : [{ icon: <FiUser size={16} />, label: t("nav.profile") || "Profile", to: "/profile" }]),
+      ? [
+          {
+            icon: <FiUser size={16} />,
+            label: t("nav.login") || "Login",
+            to: "/login",
+          },
+        ]
+      : [
+          {
+            icon: <FiUser size={16} />,
+            label: t("nav.profile") || "Profile",
+            to: "/profile",
+          },
+        ]),
     ...(isAdmin
-      ? [{ icon: <FiShield size={16} />, label: t("nav.admin") || "Admin Panel", to: "/admin" }]
+      ? [
+          {
+            icon: <FiShield size={16} />,
+            label: t("nav.admin") || "Admin Panel",
+            to: "/admin",
+          },
+        ]
       : []),
   ];
 
@@ -319,7 +472,10 @@ export default function Navbar() {
                     border: "none",
                     cursor: "pointer",
                     background: "transparent",
-                    color: activeMenu === cat.key ? "var(--red)" : "var(--text-muted)",
+                    color:
+                      activeMenu === cat.key
+                        ? "var(--red)"
+                        : "var(--text-muted)",
                     fontSize: "0.74rem",
                     fontWeight: 700,
                     transition: "all 0.2s",
@@ -327,7 +483,14 @@ export default function Navbar() {
                     position: "relative",
                   }}
                 >
-                  <span style={{ display: "flex", alignItems: "center", fontSize: "1rem", opacity: activeMenu === cat.key ? 1 : 0.7 }}>
+                  <span
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      fontSize: "1rem",
+                      opacity: activeMenu === cat.key ? 1 : 0.7,
+                    }}
+                  >
                     {cat.icon}
                   </span>
                   {cat.label}
@@ -336,7 +499,8 @@ export default function Navbar() {
                     style={{
                       transition: "transform 0.2s",
                       opacity: 0.5,
-                      transform: activeMenu === cat.key ? "rotate(180deg)" : "none",
+                      transform:
+                        activeMenu === cat.key ? "rotate(180deg)" : "none",
                       marginLeft: 4,
                     }}
                   />
@@ -364,7 +528,9 @@ export default function Navbar() {
                       top: "calc(100% + 6px)",
                       left: "50%",
                       transform: "translateX(-50%)",
-                      background: isDark ? "rgba(15,23,36,0.95)" : "rgba(255,255,255,0.95)",
+                      background: isDark
+                        ? "rgba(15,23,36,0.95)"
+                        : "rgba(255,255,255,0.95)",
                       backdropFilter: "blur(40px)",
                       WebkitBackdropFilter: "blur(40px)",
                       border: "1px solid var(--border-2)",
@@ -386,8 +552,24 @@ export default function Navbar() {
                         gap: 7,
                       }}
                     >
-                      <span style={{ display: "flex", alignItems: "center", color: cat.color }}>{cat.icon}</span>
-                      <span style={{ fontSize: "0.73rem", fontWeight: 800, color: "var(--text)" }}>{cat.label}</span>
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          color: cat.color,
+                        }}
+                      >
+                        {cat.icon}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: "0.73rem",
+                          fontWeight: 800,
+                          color: "var(--text)",
+                        }}
+                      >
+                        {cat.label}
+                      </span>
                     </div>
                     {cat.items.map((item, i) => (
                       <Link
@@ -414,7 +596,15 @@ export default function Navbar() {
                           e.currentTarget.style.color = "var(--text-muted)";
                         }}
                       >
-                        <span style={{ width: 22, display: "flex", justifyContent: "center", alignItems: "center", fontSize: "0.95rem" }}>
+                        <span
+                          style={{
+                            width: 22,
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            fontSize: "0.95rem",
+                          }}
+                        >
                           {item.icon}
                         </span>
                         {item.label}
@@ -442,15 +632,26 @@ export default function Navbar() {
               className="hide-mobile"
               onClick={() => setSearchOpen((s) => !s)}
               style={{
-                width: 36, height: 36, borderRadius: 8,
+                width: 36,
+                height: 36,
+                borderRadius: 8,
                 border: "1px solid var(--border)",
                 background: "var(--surface-2)",
                 color: "var(--text-muted)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                cursor: "pointer", transition: "var(--t)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                transition: "var(--t)",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text)"; e.currentTarget.style.borderColor = "var(--border-2)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.borderColor = "var(--border)"; }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "var(--text)";
+                e.currentTarget.style.borderColor = "var(--border-2)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "var(--text-muted)";
+                e.currentTarget.style.borderColor = "var(--border)";
+              }}
             >
               <FiSearch size={14} />
             </button>
@@ -460,11 +661,21 @@ export default function Navbar() {
               onClick={() => setSosOpen(true)}
               className="sos-pulse hide-mobile"
               style={{
-                height: 40, display: "flex", alignItems: "center", justifyContent: "center",
-                gap: 6, padding: "0 18px", borderRadius: 14,
-                background: "var(--red)", border: "none", color: "#fff",
-                fontSize: "0.75rem", fontWeight: 900, cursor: "pointer",
-                letterSpacing: "1px", boxShadow: "0 8px 20px -6px rgba(230,57,70,0.5)",
+                height: 40,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 6,
+                padding: "0 18px",
+                borderRadius: 14,
+                background: "var(--red)",
+                border: "none",
+                color: "#fff",
+                fontSize: "0.75rem",
+                fontWeight: 900,
+                cursor: "pointer",
+                letterSpacing: "1px",
+                boxShadow: "0 8px 20px -6px rgba(230,57,70,0.5)",
               }}
             >
               <FiAlertTriangle size={14} />
@@ -476,15 +687,26 @@ export default function Navbar() {
               id="theme-toggle"
               onClick={toggleTheme}
               style={{
-                width: 36, height: 36, borderRadius: 8,
+                width: 36,
+                height: 36,
+                borderRadius: 8,
                 border: "1px solid var(--border)",
                 background: "var(--surface-2)",
                 color: "var(--text-muted)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                cursor: "pointer", transition: "var(--t)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                transition: "var(--t)",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text)"; e.currentTarget.style.borderColor = "var(--border-2)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.borderColor = "var(--border)"; }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "var(--text)";
+                e.currentTarget.style.borderColor = "var(--border-2)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "var(--text-muted)";
+                e.currentTarget.style.borderColor = "var(--border)";
+              }}
             >
               {isDark ? <FiSun size={14} /> : <FiMoon size={14} />}
             </button>
@@ -494,47 +716,85 @@ export default function Navbar() {
               id="lang-toggle"
               onClick={toggleLang}
               style={{
-                width: 64, height: 36,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                gap: 4, padding: "0", borderRadius: 8,
+                width: 64,
+                height: 36,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 4,
+                padding: "0",
+                borderRadius: 8,
                 border: "1px solid var(--border)",
                 background: "var(--surface-2)",
                 color: "var(--text-muted)",
-                fontSize: "0.74rem", fontWeight: 700,
-                cursor: "pointer", transition: "var(--t)",
+                fontSize: "0.74rem",
+                fontWeight: 700,
+                cursor: "pointer",
+                transition: "var(--t)",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(230,57,70,0.4)"; e.currentTarget.style.color = "var(--text)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.color = "var(--text-muted)"; }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = "rgba(230,57,70,0.4)";
+                e.currentTarget.style.color = "var(--text)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "var(--border)";
+                e.currentTarget.style.color = "var(--text-muted)";
+              }}
             >
               <FiGlobe size={12} />
               {lang === "en" ? "বাংলা" : "EN"}
             </button>
 
             {/* User menu desktop */}
-            <div id="user-menu-wrap" className="hide-mobile" style={{ position: "relative" }}>
+            <div
+              id="user-menu-wrap"
+              className="hide-mobile"
+              style={{ position: "relative" }}
+            >
               {isAuth ? (
                 <>
                   <button
                     onClick={() => setUserMenu((s) => !s)}
                     style={{
-                      height: 36, display: "flex", alignItems: "center",
-                      gap: 6, padding: "0 10px 0 5px", borderRadius: 8,
+                      height: 36,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      padding: "0 10px 0 5px",
+                      borderRadius: 8,
                       border: "1px solid var(--border)",
                       background: "var(--surface-2)",
-                      color: "var(--text)", cursor: "pointer", transition: "var(--t)",
+                      color: "var(--text)",
+                      cursor: "pointer",
+                      transition: "var(--t)",
                     }}
                   >
                     <div
                       style={{
-                        width: 26, height: 26, borderRadius: "50%",
+                        width: 26,
+                        height: 26,
+                        borderRadius: "50%",
                         background: "var(--grad-cyan)",
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        fontSize: "0.7rem", fontWeight: 800, color: "#fff",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "0.7rem",
+                        fontWeight: 800,
+                        color: "#fff",
                       }}
                     >
                       {user?.name?.[0]?.toUpperCase() || "U"}
                     </div>
-                    <span style={{ fontSize: "0.82rem", fontWeight: 600, maxWidth: 72, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    <span
+                      style={{
+                        fontSize: "0.82rem",
+                        fontWeight: 600,
+                        maxWidth: 72,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
                       {user?.name?.split(" ")[0]}
                     </span>
                     <FiChevronDown size={11} style={{ opacity: 0.5 }} />
@@ -542,55 +802,142 @@ export default function Navbar() {
                   {userMenu && (
                     <div
                       style={{
-                        position: "absolute", top: "calc(100% + 7px)", right: 0,
+                        position: "absolute",
+                        top: "calc(100% + 7px)",
+                        right: 0,
                         background: isDark ? "rgba(15,23,36,0.98)" : "#fff",
                         backdropFilter: "blur(20px)",
                         border: "1px solid var(--border-2)",
-                        borderRadius: 12, padding: 6, minWidth: 185,
-                        zIndex: 999, boxShadow: "var(--shadow-lg)",
+                        borderRadius: 12,
+                        padding: 6,
+                        minWidth: 185,
+                        zIndex: 999,
+                        boxShadow: "var(--shadow-lg)",
                         animation: "dropFade 0.15s ease",
                       }}
                     >
-                      <div style={{ padding: "9px 12px 8px", borderBottom: "1px solid var(--border)", marginBottom: 4 }}>
-                        <div style={{ fontWeight: 700, color: "var(--text)", fontSize: "0.88rem" }}>{user?.name}</div>
-                        <div style={{ fontSize: "0.71rem", color: "var(--text-dim)", marginTop: 2 }}>{user?.email}</div>
+                      <div
+                        style={{
+                          padding: "9px 12px 8px",
+                          borderBottom: "1px solid var(--border)",
+                          marginBottom: 4,
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontWeight: 700,
+                            color: "var(--text)",
+                            fontSize: "0.88rem",
+                          }}
+                        >
+                          {user?.name}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: "0.71rem",
+                            color: "var(--text-dim)",
+                            marginTop: 2,
+                          }}
+                        >
+                          {user?.email}
+                        </div>
                         {user?.role === "admin" && (
-                          <span className="badge badge-red" style={{ marginTop: 4, fontSize: "0.62rem" }}>ADMIN</span>
+                          <span
+                            className="badge badge-red"
+                            style={{ marginTop: 4, fontSize: "0.62rem" }}
+                          >
+                            ADMIN
+                          </span>
                         )}
                       </div>
                       {[
-                        { icon: <FiUser size={13} />, label: t("nav.profile") || "Profile", to: "/profile" },
-                        { icon: <FiBookmark size={13} />, label: "Saved Items", to: "/profile?tab=bookmarks" },
-                        ...(isAdmin ? [{ icon: <FiShield size={13} />, label: t("nav.admin") || "Admin", to: "/admin" }] : []),
+                        {
+                          icon: <FiUser size={13} />,
+                          label: t("nav.profile") || "Profile",
+                          to: "/profile",
+                        },
+                        {
+                          icon: <FiBookmark size={13} />,
+                          label: "Saved Items",
+                          to: "/profile?tab=bookmarks",
+                        },
+                        ...(isAdmin
+                          ? [
+                              {
+                                icon: <FiShield size={13} />,
+                                label: t("nav.admin") || "Admin",
+                                to: "/admin",
+                              },
+                            ]
+                          : []),
                       ].map((item) => (
                         <Link
                           key={item.to}
                           to={item.to}
                           onClick={() => setUserMenu(false)}
                           style={{
-                            display: "flex", alignItems: "center", gap: 9,
-                            padding: "8px 12px", borderRadius: 8, textDecoration: "none",
-                            color: "var(--text-muted)", fontSize: "0.83rem", fontWeight: 500, transition: "all 0.15s",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 9,
+                            padding: "8px 12px",
+                            borderRadius: 8,
+                            textDecoration: "none",
+                            color: "var(--text-muted)",
+                            fontSize: "0.83rem",
+                            fontWeight: 500,
+                            transition: "all 0.15s",
                           }}
-                          onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-3)"; e.currentTarget.style.color = "var(--text)"; }}
-                          onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-muted)"; }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background =
+                              "var(--surface-3)";
+                            e.currentTarget.style.color = "var(--text)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "transparent";
+                            e.currentTarget.style.color = "var(--text-muted)";
+                          }}
                         >
-                          <span style={{ color: "var(--text-dim)" }}>{item.icon}</span>
+                          <span style={{ color: "var(--text-dim)" }}>
+                            {item.icon}
+                          </span>
                           {item.label}
                         </Link>
                       ))}
-                      <div style={{ borderTop: "1px solid var(--border)", marginTop: 4, paddingTop: 4 }}>
+                      <div
+                        style={{
+                          borderTop: "1px solid var(--border)",
+                          marginTop: 4,
+                          paddingTop: 4,
+                        }}
+                      >
                         <button
-                          onClick={() => { logout(); navigate("/"); setUserMenu(false); }}
-                          style={{
-                            display: "flex", alignItems: "center", gap: 9,
-                            padding: "8px 12px", borderRadius: 8,
-                            background: "transparent", border: "none",
-                            color: "var(--red)", fontSize: "0.83rem", fontWeight: 600,
-                            cursor: "pointer", width: "100%", transition: "all 0.15s",
+                          onClick={() => {
+                            logout();
+                            navigate("/");
+                            setUserMenu(false);
                           }}
-                          onMouseEnter={(e) => (e.currentTarget.style.background = "var(--red-light)")}
-                          onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 9,
+                            padding: "8px 12px",
+                            borderRadius: 8,
+                            background: "transparent",
+                            border: "none",
+                            color: "var(--red)",
+                            fontSize: "0.83rem",
+                            fontWeight: 600,
+                            cursor: "pointer",
+                            width: "100%",
+                            transition: "all 0.15s",
+                          }}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.background =
+                              "var(--red-light)")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.background = "transparent")
+                          }
                         >
                           <FiLogOut size={13} />
                           {t("nav.logout") || "Logout"}
@@ -604,15 +951,28 @@ export default function Navbar() {
                   <Link
                     to="/login"
                     style={{
-                      height: 36, display: "flex", alignItems: "center", justifyContent: "center",
-                      padding: "0 16px", borderRadius: 8,
+                      height: 36,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "0 16px",
+                      borderRadius: 8,
                       border: "1px solid var(--border-2)",
                       background: "var(--surface-2)",
-                      color: "var(--text-muted)", fontSize: "0.82rem", fontWeight: 600,
-                      transition: "var(--t)", textDecoration: "none",
+                      color: "var(--text-muted)",
+                      fontSize: "0.82rem",
+                      fontWeight: 600,
+                      transition: "var(--t)",
+                      textDecoration: "none",
                     }}
-                    onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text)"; e.currentTarget.style.borderColor = "var(--border)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.borderColor = "var(--border-2)"; }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = "var(--text)";
+                      e.currentTarget.style.borderColor = "var(--border)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = "var(--text-muted)";
+                      e.currentTarget.style.borderColor = "var(--border-2)";
+                    }}
                   >
                     {t("nav.login") || "Login"}
                   </Link>
@@ -625,11 +985,15 @@ export default function Navbar() {
               id="mobile-burger"
               onClick={() => setMobile((s) => !s)}
               style={{
-                width: 36, height: 36, borderRadius: 8,
+                width: 36,
+                height: 36,
+                borderRadius: 8,
                 border: "1px solid var(--border)",
                 background: "var(--surface-2)",
                 color: "var(--text)",
-                display: "none", alignItems: "center", justifyContent: "center",
+                display: "none",
+                alignItems: "center",
+                justifyContent: "center",
                 cursor: "pointer",
               }}
             >
@@ -640,11 +1004,31 @@ export default function Navbar() {
 
         {/* Search bar */}
         {searchOpen && (
-          <div style={{ padding: "0 1.5rem 1rem", animation: "dropFade 0.15s ease" }}>
-            <form onSubmit={handleSearch} style={{ display: "flex", gap: 8, maxWidth: 560, margin: "0 auto" }}>
+          <div
+            style={{
+              padding: "0 1.5rem 1rem",
+              animation: "dropFade 0.15s ease",
+            }}
+          >
+            <form
+              onSubmit={handleSearch}
+              style={{
+                display: "flex",
+                gap: 8,
+                maxWidth: 560,
+                margin: "0 auto",
+              }}
+            >
               <div style={{ flex: 1, position: "relative" }}>
                 <FiSearch
-                  style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: "var(--text-dim)", pointerEvents: "none" }}
+                  style={{
+                    position: "absolute",
+                    left: 11,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    color: "var(--text-dim)",
+                    pointerEvents: "none",
+                  }}
                   size={15}
                 />
                 <input
@@ -656,8 +1040,14 @@ export default function Navbar() {
                   style={{ paddingLeft: 34 }}
                 />
               </div>
-              <button type="submit" className="btn btn-primary btn-sm">{t("common.search")}</button>
-              <button type="button" onClick={() => setSearchOpen(false)} className="btn btn-ghost btn-sm">
+              <button type="submit" className="btn btn-primary btn-sm">
+                {t("common.search")}
+              </button>
+              <button
+                type="button"
+                onClick={() => setSearchOpen(false)}
+                className="btn btn-ghost btn-sm"
+              >
                 <FiX size={14} />
               </button>
             </form>
@@ -671,44 +1061,78 @@ export default function Navbar() {
           <div
             onClick={() => setMobile(false)}
             style={{
-              position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh",
-              background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)",
-              zIndex: 9998, animation: "dropFade 0.3s ease",
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100vw",
+              height: "100vh",
+              background: "rgba(0,0,0,0.5)",
+              backdropFilter: "blur(4px)",
+              zIndex: 9998,
+              animation: "dropFade 0.3s ease",
             }}
           />
           <div
             style={{
-              position: "fixed", top: 0, right: 0, bottom: 0,
-              width: "100%", maxWidth: 400,
+              position: "fixed",
+              top: 0,
+              right: 0,
+              bottom: 0,
+              width: "100%",
+              maxWidth: 400,
               background: isDark ? "var(--bg)" : "#fff",
-              zIndex: 9999, overflowY: "auto",
-              animation: "slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards",
-              display: "flex", flexDirection: "column",
+              zIndex: 9999,
+              overflowY: "auto",
+              animation:
+                "slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards",
+              display: "flex",
+              flexDirection: "column",
               boxShadow: "-10px 0 40px rgba(0,0,0,0.5)",
             }}
           >
             {/* Drawer Header */}
             <div
               style={{
-                display: "flex", alignItems: "center", justifyContent: "space-between",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
                 padding: "1.2rem 1.5rem",
                 borderBottom: "1px solid var(--border)",
                 background: isDark ? "var(--bg)" : "#fff",
-                position: "sticky", top: 0, zIndex: 10,
+                position: "sticky",
+                top: 0,
+                zIndex: 10,
               }}
             >
-              <Link to="/" onClick={() => setMobile(false)} style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-                <img src={isDark ? "/logo-dark.png" : "/Logo.png"} alt="People E-Sheba" style={{ height: 36, width: "auto" }} />
+              <Link
+                to="/"
+                onClick={() => setMobile(false)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  textDecoration: "none",
+                }}
+              >
+                <img
+                  src={isDark ? "/logo-dark.png" : "/Logo.png"}
+                  alt="People E-Sheba"
+                  style={{ height: 36, width: "auto" }}
+                />
               </Link>
               <button
                 onClick={() => setMobile(false)}
                 style={{
-                  width: 36, height: 36, borderRadius: "50%",
+                  width: 36,
+                  height: 36,
+                  borderRadius: "50%",
                   border: "1px solid var(--border)",
                   background: "var(--surface-2)",
                   color: "var(--text)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  cursor: "pointer", transition: "var(--t)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  transition: "var(--t)",
                 }}
               >
                 <FiX size={18} />
@@ -716,25 +1140,59 @@ export default function Navbar() {
             </div>
 
             {/* Drawer Content */}
-            <div style={{ padding: "1.5rem", flex: 1, display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+            <div
+              style={{
+                padding: "1.5rem",
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                gap: "1.5rem",
+              }}
+            >
               {/* Search */}
               <form onSubmit={handleSearch} style={{ position: "relative" }}>
-                <FiSearch style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "var(--text-dim)" }} size={16} />
+                <FiSearch
+                  style={{
+                    position: "absolute",
+                    left: 16,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    color: "var(--text-dim)",
+                  }}
+                  size={16}
+                />
                 <input
                   value={searchQ}
                   onChange={(e) => setSearchQ(e.target.value)}
                   placeholder={t("nav.search")}
                   className="form-input"
-                  style={{ paddingLeft: 44, paddingRight: 44, height: 52, borderRadius: 26, background: "var(--surface-2)", border: "1px solid var(--border)", fontSize: "0.9rem" }}
+                  style={{
+                    paddingLeft: 44,
+                    paddingRight: 44,
+                    height: 52,
+                    borderRadius: 26,
+                    background: "var(--surface-2)",
+                    border: "1px solid var(--border)",
+                    fontSize: "0.9rem",
+                  }}
                 />
                 <button
                   type="submit"
                   style={{
-                    position: "absolute", right: 6, top: 6,
-                    width: 40, height: 40, borderRadius: 20,
-                    background: "var(--grad-red)", border: "none", color: "#fff",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    cursor: "pointer", boxShadow: "var(--shadow-red)",
+                    position: "absolute",
+                    right: 6,
+                    top: 6,
+                    width: 40,
+                    height: 40,
+                    borderRadius: 20,
+                    background: "var(--grad-red)",
+                    border: "none",
+                    color: "#fff",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    boxShadow: "var(--shadow-red)",
                   }}
                 >
                   <FiSearch size={16} />
@@ -742,25 +1200,69 @@ export default function Navbar() {
               </form>
 
               {/* Pages & Categories */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                <div style={{ background: "var(--surface-2)", borderRadius: 16, border: "1px solid var(--border)", padding: "1rem" }}>
-                  <div style={{ fontWeight: 800, fontSize: "0.8rem", letterSpacing: "0.3px", color: "var(--text-dim)", marginBottom: 10, textTransform: "uppercase" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.75rem",
+                }}
+              >
+                <div
+                  style={{
+                    background: "var(--surface-2)",
+                    borderRadius: 16,
+                    border: "1px solid var(--border)",
+                    padding: "1rem",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontWeight: 800,
+                      fontSize: "0.8rem",
+                      letterSpacing: "0.3px",
+                      color: "var(--text-dim)",
+                      marginBottom: 10,
+                      textTransform: "uppercase",
+                    }}
+                  >
                     Available Pages
                   </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: 8,
+                    }}
+                  >
                     {VIEW_PAGES.map((item) => (
                       <Link
                         key={item.to}
                         to={item.to}
                         onClick={() => setMobile(false)}
                         style={{
-                          display: "flex", alignItems: "center", gap: 8,
-                          padding: "11px 12px", borderRadius: 12, textDecoration: "none",
-                          color: "var(--text-muted)", fontSize: "0.84rem", fontWeight: 600,
-                          background: "var(--surface)", border: "1px solid var(--border)",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          padding: "11px 12px",
+                          borderRadius: 12,
+                          textDecoration: "none",
+                          color: "var(--text-muted)",
+                          fontSize: "0.84rem",
+                          fontWeight: 600,
+                          background: "var(--surface)",
+                          border: "1px solid var(--border)",
                         }}
                       >
-                        <span style={{ color: "var(--red)", opacity: 0.85, display: "flex", alignItems: "center" }}>{item.icon}</span>
+                        <span
+                          style={{
+                            color: "var(--red)",
+                            opacity: 0.85,
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          {item.icon}
+                        </span>
                         {item.label}
                       </Link>
                     ))}
@@ -773,38 +1275,69 @@ export default function Navbar() {
                     <div
                       key={cat.key}
                       style={{
-                        background: "var(--surface-2)", borderRadius: 16,
-                        border: "1px solid var(--border)", overflow: "hidden", transition: "var(--t)",
+                        background: "var(--surface-2)",
+                        borderRadius: 16,
+                        border: "1px solid var(--border)",
+                        overflow: "hidden",
+                        transition: "var(--t)",
                       }}
                     >
                       <button
                         onClick={() => setOpenCat(isOpen ? null : cat.key)}
                         style={{
-                          width: "100%", display: "flex", alignItems: "center",
-                          justifyContent: "space-between", padding: "1rem 1.25rem",
-                          background: "transparent", border: "none", cursor: "pointer",
+                          width: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          padding: "1rem 1.25rem",
+                          background: "transparent",
+                          border: "none",
+                          cursor: "pointer",
                         }}
                       >
-                        <div style={{ display: "flex", alignItems: "center", gap: 12, color: isOpen ? "var(--text)" : "var(--text-muted)" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 12,
+                            color: isOpen ? "var(--text)" : "var(--text-muted)",
+                          }}
+                        >
                           <div
                             style={{
-                              width: 36, height: 36, borderRadius: 10,
-                              background: isOpen ? `${cat.color}20` : "var(--surface)",
+                              width: 36,
+                              height: 36,
+                              borderRadius: 10,
+                              background: isOpen
+                                ? `${cat.color}20`
+                                : "var(--surface)",
                               color: isOpen ? cat.color : "var(--text-dim)",
-                              display: "flex", alignItems: "center", justifyContent: "center",
-                              transition: "var(--t)", border: "1px solid var(--border)",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              transition: "var(--t)",
+                              border: "1px solid var(--border)",
                             }}
                           >
                             {cat.icon}
                           </div>
-                          <span style={{ fontWeight: 700, fontSize: "0.95rem", letterSpacing: "0.3px" }}>{cat.label}</span>
+                          <span
+                            style={{
+                              fontWeight: 700,
+                              fontSize: "0.95rem",
+                              letterSpacing: "0.3px",
+                            }}
+                          >
+                            {cat.label}
+                          </span>
                         </div>
                         <FiChevronDown
                           size={18}
                           style={{
                             color: "var(--text-dim)",
                             transform: isOpen ? "rotate(180deg)" : "none",
-                            transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                            transition:
+                              "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                           }}
                         />
                       </button>
@@ -816,20 +1349,43 @@ export default function Navbar() {
                           padding: isOpen ? "0 1rem 1rem 1rem" : "0 1rem",
                         }}
                       >
-                        <div style={{ display: "flex", flexDirection: "column", gap: 6, paddingTop: 4 }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 6,
+                            paddingTop: 4,
+                          }}
+                        >
                           {cat.items.map((item, i) => (
                             <Link
                               key={i}
                               to={item.to}
                               onClick={() => setMobile(false)}
                               style={{
-                                display: "flex", alignItems: "center", gap: 10,
-                                padding: "12px 14px", borderRadius: 12, textDecoration: "none",
-                                color: "var(--text-muted)", fontSize: "0.88rem", fontWeight: 600,
-                                background: "var(--surface)", border: "1px solid var(--border)",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 10,
+                                padding: "12px 14px",
+                                borderRadius: 12,
+                                textDecoration: "none",
+                                color: "var(--text-muted)",
+                                fontSize: "0.88rem",
+                                fontWeight: 600,
+                                background: "var(--surface)",
+                                border: "1px solid var(--border)",
                               }}
                             >
-                              <span style={{ color: cat.color, opacity: 0.8, display: "flex", alignItems: "center" }}>{item.icon}</span>
+                              <span
+                                style={{
+                                  color: cat.color,
+                                  opacity: 0.8,
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                              >
+                                {item.icon}
+                              </span>
                               {item.label}
                             </Link>
                           ))}
@@ -851,49 +1407,24 @@ export default function Navbar() {
                 borderTopRightRadius: 24,
               }}
             >
-              {/* Language + Theme toggles */}
-              <div style={{ display: "flex", gap: 12, marginBottom: "1rem" }}>
-                <button
-                  onClick={toggleLang}
-                  style={{
-                    flex: 1, height: 48, borderRadius: 14,
-                    border: "1px solid var(--border)",
-                    background: "var(--surface)",
-                    color: "var(--text)", fontSize: "0.9rem", fontWeight: 700,
-                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                    cursor: "pointer",
-                  }}
-                >
-                  <FiGlobe size={16} />
-                  {lang === "en" ? "বাংলা" : "English"}
-                </button>
-                <button
-                  onClick={toggleTheme}
-                  style={{
-                    flex: 1, height: 48, borderRadius: 14,
-                    border: "1px solid var(--border)",
-                    background: "var(--surface)",
-                    color: "var(--text)", fontSize: "0.9rem", fontWeight: 700,
-                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                    cursor: "pointer",
-                  }}
-                >
-                  {isDark ? <FiSun size={16} /> : <FiMoon size={16} />}
-                  {isDark ? "Light" : "Dark"}
-                </button>
-              </div>
-
               {isAuth ? (
                 <div style={{ display: "grid", gap: "0.75rem" }}>
                   <Link
                     to="/profile"
                     onClick={() => setMobile(false)}
                     style={{
-                      height: 48, borderRadius: 14,
-                      background: "var(--surface)", border: "1px solid var(--border)",
-                      color: "var(--text)", textDecoration: "none",
-                      fontWeight: 700, fontSize: "0.9rem",
-                      display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                      height: 48,
+                      borderRadius: 14,
+                      background: "var(--surface)",
+                      border: "1px solid var(--border)",
+                      color: "var(--text)",
+                      textDecoration: "none",
+                      fontWeight: 700,
+                      fontSize: "0.9rem",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 8,
                     }}
                   >
                     <FiUser size={16} />
@@ -904,10 +1435,17 @@ export default function Navbar() {
                       to="/admin"
                       onClick={() => setMobile(false)}
                       style={{
-                        height: 48, borderRadius: 14,
-                        background: "rgba(230,57,70,0.1)", color: "var(--red)",
-                        textDecoration: "none", fontWeight: 700, fontSize: "0.9rem",
-                        display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                        height: 48,
+                        borderRadius: 14,
+                        background: "rgba(230,57,70,0.1)",
+                        color: "var(--red)",
+                        textDecoration: "none",
+                        fontWeight: 700,
+                        fontSize: "0.9rem",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 8,
                       }}
                     >
                       <FiShield size={16} />
@@ -915,12 +1453,24 @@ export default function Navbar() {
                     </Link>
                   )}
                   <button
-                    onClick={() => { logout(); navigate("/"); setMobile(false); }}
+                    onClick={() => {
+                      logout();
+                      navigate("/");
+                      setMobile(false);
+                    }}
                     style={{
-                      height: 48, borderRadius: 14,
-                      background: "var(--grad-red)", border: "none", color: "#fff",
-                      fontWeight: 700, fontSize: "0.9rem", cursor: "pointer",
-                      display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                      height: 48,
+                      borderRadius: 14,
+                      background: "var(--grad-red)",
+                      border: "none",
+                      color: "#fff",
+                      fontWeight: 700,
+                      fontSize: "0.9rem",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 8,
                       boxShadow: "var(--shadow-red)",
                     }}
                   >
@@ -934,11 +1484,17 @@ export default function Navbar() {
                     to="/login"
                     onClick={() => setMobile(false)}
                     style={{
-                      height: 48, borderRadius: 14,
+                      height: 48,
+                      borderRadius: 14,
                       border: "1px solid var(--border-2)",
-                      background: "var(--surface)", color: "var(--text)",
-                      textDecoration: "none", fontWeight: 700, fontSize: "0.9rem",
-                      display: "flex", alignItems: "center", justifyContent: "center",
+                      background: "var(--surface)",
+                      color: "var(--text)",
+                      textDecoration: "none",
+                      fontWeight: 700,
+                      fontSize: "0.9rem",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
                     {t("nav.login")}
