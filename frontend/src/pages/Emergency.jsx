@@ -30,7 +30,6 @@ const TYPE_META = {
 const HOTLINES = [
   { number:'999',  label:'National Emergency', sublabel:'Police · Fire · Ambulance', color:'#E63946', Icon: FiAlertTriangle },
   { number:'199',  label:'Fire Service',        sublabel:'Fire & Civil Defence',      color:'#F59E0B', Icon: MdLocalFireDepartment },
-  { number:'16430',label:'Anti-Terrorism',      sublabel:'RAB Hotline',               color:'#06B6D4', Icon: FiShield },
   { number:'1090', label:'Poison Control',      sublabel:'NIMH Helpline',             color:'#8B5CF6', Icon: FiAlertTriangle },
   { number:'16789',label:'Women Helpline',      sublabel:'National Women Helpline',   color:'#EC4899', Icon: FiHeart },
   { number:'1098', label:'Child Helpline',      sublabel:'Shishu Helpline',           color:'#10B981', Icon: FiSmile },
