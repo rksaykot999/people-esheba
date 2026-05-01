@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { FiHeart, FiSearch, FiPhone, FiMapPin, FiClock, FiDroplet, FiUser, FiList, FiActivity, FiFilter } from 'react-icons/fi';
 import { MdLocalHospital } from 'react-icons/md';
@@ -26,6 +26,11 @@ export default function Health() {
   const [searchParams] = useSearchParams();
   const [search, setSearch]         = useState('');
   const [activeType, setActiveType] = useState(searchParams.get('type') || 'all');
+
+  // Sync state with URL params
+  useEffect(() => {
+    setActiveType(searchParams.get('type') || 'all');
+  }, [searchParams]);
 
   const filtered = SAMPLE.filter(item => {
     const matchType   = activeType === 'all' || item.type === activeType;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { FiBell, FiSearch, FiClock, FiExternalLink, FiBook, FiBriefcase, FiAward, FiShield, FiFilter, FiCalendar } from 'react-icons/fi';
 
@@ -35,6 +35,11 @@ export default function Notices() {
   const [searchParams] = useSearchParams();
   const [search, setSearch]       = useState('');
   const [activeCat, setActiveCat] = useState(searchParams.get('cat') || 'all');
+
+  // Sync state with URL params
+  useEffect(() => {
+    setActiveCat(searchParams.get('cat') || 'all');
+  }, [searchParams]);
 
   const filtered = SAMPLE.filter(item => {
     const matchCat    = activeCat === 'all' || item.cat === activeCat;

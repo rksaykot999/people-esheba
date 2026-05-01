@@ -353,3 +353,9 @@ tbody tr:last-child td { border-bottom: none; }
   border-bottom: 1px solid var(--border);
   padding: 2.5rem 0;
 }
+
+@media(max-width:1240px){
+  #desktop-sos{
+    display:none !important;
+  }
+}

@@ -40,9 +40,10 @@ export default function Login() {
         {/* Logo */}
         <div style={{ textAlign:'center', marginBottom:'2rem' }}>
           <Link to="/" style={{ display:'inline-flex', alignItems:'center', gap:10, textDecoration:'none', marginBottom:'1.5rem' }}>
+            <div style={{ width:44, height:44, background:'var(--grad-red)', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontWeight:900, fontSize:'1.25rem', boxShadow:'var(--shadow-red)' }}>ই</div>
             <div>
-              <div style={{ fontWeight:800, fontSize:'1.1rem', color:'var(--red)' }}>People E-Sheba</div>
-              <div style={{ fontSize:'0.8rem', color:'var(--text-dim)' }}>জনসেবা প্ল্যাটফর্ম</div>
+              <div style={{ fontWeight:800, fontSize:'1.1rem', color:'#fff' }}>People <span style={{ color:'var(--red)' }}>E-Sheba</span></div>
+              <div style={{ fontSize:'0.7rem', color:'var(--text-dim)' }}>জনসেবা প্ল্যাটফর্ম</div>
             </div>
           </Link>
           <h1 style={{ fontSize:'1.7rem', fontWeight:800, color:'#fff', marginBottom:6 }}>{isBn?'লগইন করুন':'Sign In'}</h1>
