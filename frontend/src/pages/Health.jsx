@@ -19,110 +19,92 @@ const SAMPLE = [
   {
     id: 1, type: 'govt-hospital', name: 'Dhaka Medical College Hospital',
     area: 'Dhaka', phone: '02-55165001', rating: 4.5,
-    desc: 'The largest tertiary care hospital in Bangladesh providing specialized healthcare.',
-    badge: 'Emergency 24/7'
+    descKey: 'desc_dmch', badgeKey: 'badge_emergency_24_7'
   },
   {
     id: 2, type: 'govt-hospital', name: 'BSMMU (PG Hospital)',
     area: 'Dhaka', phone: '02-9661068', rating: 4.7,
-    desc: 'Premier postgraduate medical institution and hospital for advanced treatment.',
-    badge: 'Research Center'
+    descKey: 'desc_bsmmu', badgeKey: 'badge_research_center'
   },
   {
     id: 3, type: 'govt-hospital', name: 'Barishal General Hospital',
     area: 'Dhaka', phone: '02-9661068', rating: 3.9,
-    desc: 'Premier postgraduate medical institution and hospital for advanced treatment.',
-    badge: 'Research Center'
+    descKey: 'desc_bsmmu', badgeKey: 'badge_research_center'
   },
   {
     id: 4, type: 'govt-hospital', name: 'Government Employee Hospital',
     area: 'Dhaka', phone: '02-9661068', rating: 4.3,
-    desc: 'Premier postgraduate medical institution and hospital for advanced treatment.',
-    badge: 'Research Center'
+    descKey: 'desc_bsmmu', badgeKey: 'badge_research_center'
   },
   {
     id: 5, type: 'govt-hospital', name: '250 Bed General Hospital, Noakhali',
     area: 'Dhaka', phone: '02-9661068', rating: 3.8,
-    desc: 'Premier postgraduate medical institution and hospital for advanced treatment.',
-    badge: 'Research Center'
+    descKey: 'desc_bsmmu', badgeKey: 'badge_research_center'
   },
   {
     id: 6, type: 'govt-hospital', name: 'BIU, Green Model Town, Mugda, Dhaka',
     area: 'Dhaka', phone: '02-9661068', rating: 4.1,
-    desc: 'Premier postgraduate medical institution and hospital for advanced treatment.',
-    badge: 'Research Center'
+    descKey: 'desc_bsmmu', badgeKey: 'badge_research_center'
   },
   {
     id: 7, type: 'govt-hospital', name: 'Shaheed Suhrawardy Medical College and Hospital',
     area: 'Dhaka', phone: '02-9661068', rating: 4.2,
-    desc: 'Premier postgraduate medical institution and hospital for advanced treatment.',
-    badge: 'Research Center'
+    descKey: 'desc_bsmmu', badgeKey: 'badge_research_center'
   },
   {
     id: 8, type: 'govt-hospital', name: 'Shaheed Ahsan Ullah Master General Hospital',
     area: 'Dhaka', phone: '02-9661068', rating: 4.1,
-    desc: 'Premier postgraduate medical institution and hospital for advanced treatment.',
-    badge: 'Research Center'
+    descKey: 'desc_bsmmu', badgeKey: 'badge_research_center'
   },
   {
     id: 9, type: 'govt-hospital', name: 'MEGHNA UPAZILLA HEALTH COMPLEX',
     area: 'Dhaka', phone: '02-9661068', rating: 3.4,
-    desc: 'Premier postgraduate medical institution and hospital for advanced treatment.',
-    badge: 'Research Center'
+    descKey: 'desc_bsmmu', badgeKey: 'badge_research_center'
   },
   {
     id: 10, type: 'private-hospital', name: 'Square Hospital Ltd.',
     area: 'Dhaka', phone: '02-8159457', rating: 4.8,
-    desc: 'Leading private healthcare provider with international standard facilities.',
-    badge: 'Premium Care'
+    descKey: 'desc_square', badgeKey: 'badge_premium_care'
   },
   {
     id: 11, type: 'private-hospital', name: 'United Hospital',
     area: 'Dhaka', phone: '02-8836000', rating: 4.6,
-    desc: 'Specialized multidisciplinary hospital known for cardiac and oncology care.',
-    badge: 'Specialized'
+    descKey: 'desc_united', badgeKey: 'badge_specialized'
   },
   {
     id: 12, type: 'private-hospital', name: 'Barishal Metropolitan Hospital',
     area: 'Dhaka', phone: '02-8836000', rating: 4.0,
-    desc: 'Specialized multidisciplinary hospital known for cardiac and oncology care.',
-    badge: 'Specialized'
+    descKey: 'desc_united', badgeKey: 'badge_specialized'
   },
   {
     id: 13, type: 'private-hospital', name: 'KMC Hospital',
     area: 'Dhaka', phone: '02-8836000', rating: 4.3,
-    desc: 'Specialized multidisciplinary hospital known for cardiac and oncology care.',
-    badge: 'Specialized'
+    descKey: 'desc_united', badgeKey: 'badge_specialized'
   },
   {
     id: 14, type: 'private-hospital', name: 'Arif Memorial Hospital',
     area: 'Dhaka', phone: '02-8836000', rating: 3.9,
-    desc: 'Specialized multidisciplinary hospital known for cardiac and oncology care.',
-    badge: 'Specialized'
+    descKey: 'desc_united', badgeKey: 'badge_specialized'
   },
   {
     id: 15, type: 'private-hospital', name: 'South Apollo Medical College & Hospital',
     area: 'Dhaka', phone: '02-8836000', rating: 4.6,
-    desc: 'Specialized multidisciplinary hospital known for cardiac and oncology care.',
-    badge: 'Specialized'
+    descKey: 'desc_united', badgeKey: 'badge_specialized'
   },
   {
     id: 16, type: 'private-hospital', name: 'Continental Hospital PLC',
     area: 'Dhaka', phone: '02-8836000', rating: 3.8,
-    desc: 'Specialized multidisciplinary hospital known for cardiac and oncology care.',
-    badge: 'Specialized'
+    descKey: 'desc_united', badgeKey: 'badge_specialized'
   },
   {
     id: 17, type: 'private-hospital', name: 'Rahat Anwar Hospital',
     area: 'Dhaka', phone: '02-8836000', rating: 4.0,
-    desc: 'Specialized multidisciplinary hospital known for cardiac and oncology care.',
-    badge: 'Specialized'
+    descKey: 'desc_united', badgeKey: 'badge_specialized'
   },
   {
     id: 18, type: 'private-hospital', name: 'The Life Care',
     area: 'Dhaka', phone: '02-8836000', rating: 5.0,
-    desc: 'Specialized multidisciplinary hospital known for cardiac and oncology care.',
-    badge: 'Specialized'
+    descKey: 'desc_united', badgeKey: 'badge_specialized'
   },
 ];
 
@@ -160,8 +142,8 @@ export default function Health() {
         padding: '6rem 1rem 4rem',
         textAlign: 'center',
         borderBottom: '1px solid var(--border)',
-        background: isDark 
-          ? 'linear-gradient(to bottom, rgba(2,17,46,0.5), var(--bg))' 
+        background: isDark
+          ? 'linear-gradient(to bottom, rgba(2,17,46,0.5), var(--bg))'
           : 'linear-gradient(to bottom, rgba(230,57,70,0.05), var(--bg))'
       }}>
         <div style={{
@@ -237,7 +219,7 @@ export default function Health() {
                     background: 'var(--cyan-light)', color: 'var(--cyan)',
                     padding: '5px 12px', borderRadius: '8px', fontSize: '0.7rem', fontWeight: 700
                   }}>
-                    {item.badge}
+                    {t(`health.${item.badgeKey}`)}
                   </span>
                   <MdLocalHospital size={22} color={item.type === 'govt-hospital' ? 'var(--red)' : 'var(--cyan)'} />
                 </div>
@@ -251,7 +233,7 @@ export default function Health() {
                   <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>({t('health.rating')})</span>
                 </div>
 
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '20px' }}>{item.desc}</p>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '20px' }}>{t(`health.${item.descKey}`)}</p>
 
                 <div style={{ borderTop: '1px solid var(--border)', paddingTop: '15px', marginBottom: '20px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '8px' }}>
@@ -268,8 +250,8 @@ export default function Health() {
                   flex: 1, height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: 'var(--red)', color: '#fff', borderRadius: '12px', fontWeight: 700, textDecoration: 'none', gap: 8, transition: 'transform 0.2s'
                 }}
-                onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
-                onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+                  onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                  onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
                 >
                   <FiPhone size={16} /> {t('common.contact')}
                 </a>
@@ -287,4 +269,4 @@ export default function Health() {
       </div>
     </div>
   );
-}
+}
