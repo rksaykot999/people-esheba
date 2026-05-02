@@ -1,272 +1,541 @@
-import { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
-import {
-  FiHeart, FiSearch, FiPhone, FiMapPin, FiClock,
-  FiDroplet, FiUser, FiList, FiActivity, FiFilter, FiArrowRight,
-  FiStar
-} from 'react-icons/fi';
-import { MdLocalHospital } from 'react-icons/md';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useLang } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
+import {
+  FiSearch, FiMapPin, FiFilter, FiExternalLink,
+  FiShield, FiAward, FiClock, FiNavigation,
+  FiZap, FiCopy, FiCheckCircle, FiHeart, FiStar,
+  FiActivity, FiPhone, FiUser, FiDroplet
+} from 'react-icons/fi';
+import { MdLocalHospital, MdMedicalServices, MdLocalPharmacy } from 'react-icons/md';
 
-const TYPES = [
-  { key: 'all', label: 'nav.all', color: 'var(--text-dim)' },
-  { key: 'govt-hospital', label: 'health.govt_hospital', color: 'var(--red)' },
-  { key: 'private-hospital', label: 'health.private_hospital', color: 'var(--cyan)' },
-];
+/* ── Constants ──────────────────────────────────────────── */
+const TYPES = ['govt-hospital', 'private-hospital'];
 
+const TYPE_META = {
+  'govt-hospital': { color: '#E63946', bg: 'rgba(230,57,70,0.1)', icon: MdLocalHospital, label: 'Govt Hospital' },
+  'private-hospital': { color: '#06B6D4', bg: 'rgba(6,182,212,0.1)', icon: MdMedicalServices, label: 'Private Hospital' },
+};
+
+/* Sample data – replace with API call as needed */
 const SAMPLE = [
   {
     id: 1, type: 'govt-hospital', name: 'Dhaka Medical College Hospital',
-    area: 'Dhaka', phone: '02-55165001', rating: 4.5,
-    descKey: 'desc_dmch', badgeKey: 'badge_emergency_24_7'
+    area: 'Dhaka', district: 'Dhaka', phone: '02-55165001', rating: 4.5,
+    is_verified: true, badgeKey: 'badge_emergency_24_7'
   },
   {
     id: 2, type: 'govt-hospital', name: 'BSMMU (PG Hospital)',
-    area: 'Dhaka', phone: '02-9661068', rating: 4.7,
-    descKey: 'desc_bsmmu', badgeKey: 'badge_research_center'
+    area: 'Dhaka', district: 'Dhaka', phone: '02-9661068', rating: 4.7,
+    is_verified: true, badgeKey: 'badge_research_center'
   },
   {
-    id: 3, type: 'govt-hospital', name: 'Barishal General Hospital',
-    area: 'Dhaka', phone: '02-9661068', rating: 3.9,
-    descKey: 'desc_bsmmu', badgeKey: 'badge_research_center'
+    id: 3, type: 'govt-hospital', name: 'Shaheed Suhrawardy Medical College and Hospital',
+    area: 'Dhaka', district: 'Dhaka', phone: '02-9661068', rating: 4.2,
+    is_verified: true, badgeKey: 'badge_research_center'
   },
   {
-    id: 4, type: 'govt-hospital', name: 'Government Employee Hospital',
-    area: 'Dhaka', phone: '02-9661068', rating: 4.3,
-    descKey: 'desc_bsmmu', badgeKey: 'badge_research_center'
+    id: 4, type: 'private-hospital', name: 'Square Hospital Ltd.',
+    area: 'Dhaka', district: 'Dhaka', phone: '02-8159457', rating: 4.8,
+    is_verified: true, badgeKey: 'badge_premium_care'
   },
   {
-    id: 5, type: 'govt-hospital', name: '250 Bed General Hospital, Noakhali',
-    area: 'Dhaka', phone: '02-9661068', rating: 3.8,
-    descKey: 'desc_bsmmu', badgeKey: 'badge_research_center'
+    id: 5, type: 'private-hospital', name: 'United Hospital',
+    area: 'Dhaka', district: 'Dhaka', phone: '02-8836000', rating: 4.6,
+    is_verified: true, badgeKey: 'badge_specialized'
   },
   {
-    id: 6, type: 'govt-hospital', name: 'BIU, Green Model Town, Mugda, Dhaka',
-    area: 'Dhaka', phone: '02-9661068', rating: 4.1,
-    descKey: 'desc_bsmmu', badgeKey: 'badge_research_center'
+    id: 6, type: 'private-hospital', name: 'Continental Hospital PLC',
+    area: 'Dhaka', district: 'Dhaka', phone: '02-8836000', rating: 3.8,
+    is_verified: false, badgeKey: null
   },
   {
-    id: 7, type: 'govt-hospital', name: 'Shaheed Suhrawardy Medical College and Hospital',
-    area: 'Dhaka', phone: '02-9661068', rating: 4.2,
-    descKey: 'desc_bsmmu', badgeKey: 'badge_research_center'
+    id: 7, type: 'govt-hospital', name: 'Barishal General Hospital',
+    area: 'Barishal', district: 'Barishal', phone: '02-9661068', rating: 3.9,
+    is_verified: true, badgeKey: 'badge_emergency_24_7'
   },
   {
-    id: 8, type: 'govt-hospital', name: 'Shaheed Ahsan Ullah Master General Hospital',
-    area: 'Dhaka', phone: '02-9661068', rating: 4.1,
-    descKey: 'desc_bsmmu', badgeKey: 'badge_research_center'
-  },
-  {
-    id: 9, type: 'govt-hospital', name: 'MEGHNA UPAZILLA HEALTH COMPLEX',
-    area: 'Dhaka', phone: '02-9661068', rating: 3.4,
-    descKey: 'desc_bsmmu', badgeKey: 'badge_research_center'
-  },
-  {
-    id: 10, type: 'private-hospital', name: 'Square Hospital Ltd.',
-    area: 'Dhaka', phone: '02-8159457', rating: 4.8,
-    descKey: 'desc_square', badgeKey: 'badge_premium_care'
-  },
-  {
-    id: 11, type: 'private-hospital', name: 'United Hospital',
-    area: 'Dhaka', phone: '02-8836000', rating: 4.6,
-    descKey: 'desc_united', badgeKey: 'badge_specialized'
-  },
-  {
-    id: 12, type: 'private-hospital', name: 'Barishal Metropolitan Hospital',
-    area: 'Dhaka', phone: '02-8836000', rating: 4.0,
-    descKey: 'desc_united', badgeKey: 'badge_specialized'
-  },
-  {
-    id: 13, type: 'private-hospital', name: 'KMC Hospital',
-    area: 'Dhaka', phone: '02-8836000', rating: 4.3,
-    descKey: 'desc_united', badgeKey: 'badge_specialized'
-  },
-  {
-    id: 14, type: 'private-hospital', name: 'Arif Memorial Hospital',
-    area: 'Dhaka', phone: '02-8836000', rating: 3.9,
-    descKey: 'desc_united', badgeKey: 'badge_specialized'
-  },
-  {
-    id: 15, type: 'private-hospital', name: 'South Apollo Medical College & Hospital',
-    area: 'Dhaka', phone: '02-8836000', rating: 4.6,
-    descKey: 'desc_united', badgeKey: 'badge_specialized'
-  },
-  {
-    id: 16, type: 'private-hospital', name: 'Continental Hospital PLC',
-    area: 'Dhaka', phone: '02-8836000', rating: 3.8,
-    descKey: 'desc_united', badgeKey: 'badge_specialized'
-  },
-  {
-    id: 17, type: 'private-hospital', name: 'Rahat Anwar Hospital',
-    area: 'Dhaka', phone: '02-8836000', rating: 4.0,
-    descKey: 'desc_united', badgeKey: 'badge_specialized'
-  },
-  {
-    id: 18, type: 'private-hospital', name: 'The Life Care',
-    area: 'Dhaka', phone: '02-8836000', rating: 5.0,
-    descKey: 'desc_united', badgeKey: 'badge_specialized'
+    id: 8, type: 'private-hospital', name: 'Apollo Hospitals Dhaka',
+    area: 'Dhaka', district: 'Dhaka', phone: '02-8836000', rating: 4.7,
+    is_verified: true, badgeKey: 'badge_specialized'
   },
 ];
 
-export default function Health() {
-  const { t, isBn } = useLang();
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [search, setSearch] = useState('');
-  const [activeType, setActiveType] = useState(searchParams.get('type') || 'all');
+/* ── Animated Counter ─────────────────────────────────── */
+function Counter({ end, suffix = '' }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
 
   useEffect(() => {
-    setActiveType(searchParams.get('type') || 'all');
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        let start = 0;
+        const step = Math.ceil(end / 50);
+        const t = setInterval(() => {
+          start += step;
+          if (start >= end) { setCount(end); clearInterval(t); }
+          else setCount(start);
+        }, 30);
+        obs.disconnect();
+      }
+    }, { threshold: 0.5 });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [end]);
+
+  return <span ref={ref}>{count.toLocaleString()}{suffix}</span>;
+}
+
+/* ── Main Component ───────────────────────────────────── */
+export default function Health() {
+  const { t } = useLang();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState('');
+  const [typeFilter, setTypeFilter] = useState(searchParams.get('type') || '');
+  const [loading, setLoading] = useState(true);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
+  useEffect(() => {
+    setTypeFilter(searchParams.get('type') || '');
   }, [searchParams]);
+
+  useEffect(() => {
+    setLoading(true);
+    const tmt = setTimeout(() => setLoading(false), 400);
+    return () => clearTimeout(tmt);
+  }, [search, typeFilter]);
 
   const handleTypeChange = (key) => {
     const newParams = new URLSearchParams(searchParams);
-    if (key === 'all') newParams.delete('type');
+    if (!key) newParams.delete('type');
     else newParams.set('type', key);
     setSearchParams(newParams);
   };
 
   const filtered = SAMPLE.filter(item => {
-    const matchType = activeType === 'all' || item.type === activeType;
-    const matchSearch = !search || item.name.toLowerCase().includes(search.toLowerCase());
-    return matchType && matchSearch;
+    const matchesSearch = !search ||
+      item.name.toLowerCase().includes(search.toLowerCase()) ||
+      item.area.toLowerCase().includes(search.toLowerCase());
+    const matchesType = !typeFilter || item.type === typeFilter;
+    return matchesSearch && matchesType;
   });
 
   return (
-    <div style={{ background: 'var(--bg)', minHeight: '100vh', color: 'var(--text)', transition: 'background 0.3s' }}>
+    <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
 
-      {/* --- HERO SECTION --- */}
+      {/* ════════════════ HERO SECTION ════════════════ */}
       <div style={{
-        position: 'relative',
-        padding: '6rem 1rem 4rem',
-        textAlign: 'center',
-        borderBottom: '1px solid var(--border)',
+        position: 'relative', overflow: 'hidden',
         background: isDark
-          ? 'linear-gradient(to bottom, rgba(2,17,46,0.5), var(--bg))'
-          : 'linear-gradient(to bottom, rgba(230,57,70,0.05), var(--bg))'
+          ? 'linear-gradient(135deg, #0d0005 0%, #130008 40%, #080E1A 100%)'
+          : 'linear-gradient(135deg, #fff5f5 0%, #fef2f2 40%, #f1f5f9 100%)',
+        padding: '4rem 0 3rem',
       }}>
+        {/* Blobs */}
         <div style={{
-          position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)',
-          width: '400px', height: '200px', background: 'var(--red-light)',
-          filter: 'blur(100px)', borderRadius: '100%', pointerEvents: 'none', opacity: isDark ? 0.3 : 0.6
+          position: 'absolute', top: '-80px', left: '-80px',
+          width: 400, height: 400, borderRadius: '50%',
+          background: isDark
+            ? 'radial-gradient(circle, rgba(230,57,70,0.18) 0%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(230,57,70,0.08) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }} />
+        <div style={{
+          position: 'absolute', bottom: '-60px', right: '10%',
+          width: 300, height: 300, borderRadius: '50%',
+          background: isDark
+            ? 'radial-gradient(circle, rgba(230,57,70,0.1) 0%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(230,57,70,0.05) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }} />
+        <div style={{
+          position: 'absolute', inset: 0, opacity: isDark ? 0.03 : 0.06,
+          backgroundImage: `linear-gradient(var(--red) 1px, transparent 1px),
+                            linear-gradient(90deg, var(--red) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px',
+          pointerEvents: 'none',
         }} />
 
-        <div style={{ position: 'relative', zIndex: 1 }}>
+        <div className="container" style={{ position: 'relative' }}>
           <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: 'var(--red-light)', padding: '8px 20px',
-            borderRadius: '100px', color: 'var(--red)', fontSize: '0.75rem', fontWeight: 600,
-            marginBottom: '1.5rem', border: '1px solid var(--border)'
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'none' : 'translateY(24px)',
+            transition: 'all 0.6s cubic-bezier(0.16,1,0.3,1)',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
           }}>
-            <FiHeart size={14} /> {t('health.hero_badge')}
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                background: 'rgba(230,57,70,0.12)', border: '1px solid rgba(230,57,70,0.25)',
+                color: 'var(--red)', padding: '5px 14px', borderRadius: 999,
+                fontSize: '0.72rem', fontWeight: 800, letterSpacing: '1.5px', textTransform: 'uppercase',
+              }}>
+                <span style={{
+                  width: 7, height: 7, borderRadius: '50%', background: 'var(--red)',
+                  animation: 'pulse-dot 1.4s ease-in-out infinite',
+                }} />
+                {t("health.hero_badge") || "Verified Hospital Directory"}
+              </span>
+            </div>
+
+            <h1 style={{
+              fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 900,
+              lineHeight: 1.08, letterSpacing: '-1.5px', color: 'var(--text)',
+              marginBottom: '1rem', maxWidth: '700px', marginLeft: 'auto', marginRight: 'auto',
+            }}>
+              {t("health.hero_title") || "Find the Right Hospital"}<br />
+              <span style={{
+                background: 'linear-gradient(135deg, #E63946, #ff6b6b)',
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}>
+                {t("health.hero_highlight") || "For Your Health"}
+              </span>{' '}Bangladesh
+            </h1>
+            <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: 500, lineHeight: 1.7, margin: '0 auto 2rem' }}>
+              {t("health.hero_sub") || "Explore verified government and private hospitals across Bangladesh with contact details and ratings."}
+            </p>
+
+            {/* Stats */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
+              {[
+                { label: t("health.stat_hospitals") || "Hospitals Listed", value: 1500, suffix: '+', icon: <MdLocalHospital size={16} />, color: 'var(--red)' },
+                { label: t("health.stat_districts") || "Districts", value: 64, suffix: '', icon: <FiMapPin size={16} />, color: 'var(--cyan)' },
+                { label: t("health.stat_verified") || "Verified", value: 89, suffix: '%', icon: <FiShield size={16} />, color: 'var(--green)' },
+              ].map(s => (
+                <div key={s.label} style={{
+                  background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.02)',
+                  backdropFilter: 'blur(12px)',
+                  border: isDark ? '1px solid rgba(255,255,255,0.07)' : '1px solid rgba(0,0,0,0.06)',
+                  borderRadius: 16, padding: '1rem 1.25rem', minWidth: 110, textAlign: 'center',
+                }}>
+                  <div style={{ color: s.color, marginBottom: 4, display: 'flex', justifyContent: 'center' }}>{s.icon}</div>
+                  <div style={{ fontSize: '1.6rem', fontWeight: 900, color: 'var(--text)', lineHeight: 1 }}>
+                    <Counter end={s.value} suffix={s.suffix} />
+                  </div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: 4, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    {s.label}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <h1 style={{ fontSize: 'clamp(2rem, 8vw, 3.5rem)', fontWeight: 900, marginBottom: '1rem', letterSpacing: '-1.5px', color: 'var(--text)' }}>
-            {t('health.hero_title')}
-          </h1>
         </div>
       </div>
 
-      <div style={{ padding: '3rem 1.5rem', maxWidth: '1200px', margin: '0 auto' }}>
+      {/* ════════════════ MAIN CONTENT ════════════════ */}
+      <div className="container" style={{ padding: '2.5rem 1.5rem' }}>
 
-        {/* --- SEARCH & FILTER BAR --- */}
-        <div style={{ background: 'var(--surface)', padding: '20px', borderRadius: '24px', marginBottom: '3rem', border: '1px solid var(--border)' }}>
-          <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', marginBottom: '20px', paddingBottom: '5px' }}>
-            {TYPES.map(type => (
-              <button
-                key={type.key}
-                onClick={() => handleTypeChange(type.key)}
-                style={{
-                  padding: '10px 20px', borderRadius: '12px', border: 'none', cursor: 'pointer',
-                  whiteSpace: 'nowrap', fontSize: '0.85rem', fontWeight: 600,
-                  background: activeType === type.key ? 'var(--red)' : 'var(--surface-2)',
-                  color: activeType === type.key ? '#fff' : 'var(--text-muted)',
-                  transition: '0.3s'
-                }}
-              >
-                {t(type.label)}
-              </button>
+        {/* Search + Filter Bar */}
+        <div style={{
+          background: 'var(--surface)', border: '1px solid var(--border)',
+          borderRadius: 20, padding: '1.25rem', marginBottom: '2rem',
+          display: 'flex', flexDirection: 'column', gap: '1rem',
+        }}>
+          <div style={{ display: 'flex', gap: 10 }}>
+            <div style={{ flex: 1, position: 'relative' }}>
+              <FiSearch style={{
+                position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
+                color: 'var(--text-dim)', pointerEvents: 'none',
+              }} size={16} />
+              <input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder={t("health.search_placeholder") || "Search hospitals..."}
+                className="form-input"
+                style={{ paddingLeft: 42, height: 46, borderRadius: 12, fontSize: '0.9rem' }}
+              />
+            </div>
+            <button
+              type="button"
+              className="btn btn-primary"
+              style={{ height: 46, padding: '0 1.5rem', borderRadius: 12, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: 6 }}
+            >
+              <FiSearch size={14} /> {t("common.search") || "Search"}
+            </button>
+          </div>
+
+          {/* Type filters */}
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px', marginRight: 4 }}>
+              <FiFilter size={11} style={{ marginRight: 4 }} />{t("common.filter") || "Filter"}:
+            </span>
+            <button
+              onClick={() => handleTypeChange('')}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                padding: '6px 14px', borderRadius: 999, fontSize: '0.78rem', fontWeight: 700,
+                cursor: 'pointer', border: '1px solid', transition: 'all 0.18s',
+                background: !typeFilter ? 'var(--red)' : 'transparent',
+                borderColor: !typeFilter ? 'var(--red)' : 'var(--border-2)',
+                color: !typeFilter ? '#fff' : 'var(--text-muted)',
+              }}
+            >
+              {t("health.all") || "All"}
+            </button>
+            {TYPES.map(tp => {
+              const m = TYPE_META[tp];
+              const active = typeFilter === tp;
+              const Icon = m.icon;
+              return (
+                <button
+                  key={tp}
+                  onClick={() => handleTypeChange(tp)}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    padding: '6px 14px', borderRadius: 999, fontSize: '0.78rem', fontWeight: 700,
+                    cursor: 'pointer', border: '1px solid', transition: 'all 0.18s',
+                    background: active ? m.color : 'transparent',
+                    borderColor: active ? m.color : 'var(--border-2)',
+                    color: active ? '#fff' : 'var(--text-muted)',
+                  }}
+                  onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor = m.color; e.currentTarget.style.color = m.color; } }}
+                  onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor = 'var(--border-2)'; e.currentTarget.style.color = 'var(--text-muted)'; } }}
+                >
+                  <Icon size={12} /> {m.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Result meta */}
+        <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
+          <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+            {loading ? t("common.loading") : <><strong style={{ color: 'var(--text)' }}>{filtered.length}</strong> {t("health.found") || "hospitals found"}</>}
+          </span>
+          {(typeFilter || search) && (
+            <button
+              onClick={() => { setSearch(''); handleTypeChange(''); }}
+              style={{
+                fontSize: '0.78rem', color: 'var(--text-dim)', background: 'none',
+                border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4,
+              }}
+            >
+              {t("health.clear_filter") || "Clear all"} ×
+            </button>
+          )}
+        </div>
+
+        {/* Cards Grid */}
+        {loading ? (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px,1fr))', gap: '1rem' }}>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} style={{
+                background: 'var(--surface)', border: '1px solid var(--border)',
+                borderRadius: 16, padding: '1.5rem', minHeight: 180,
+              }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {[60, 100, 80, 40].map((w, j) => (
+                    <div key={j} style={{
+                      height: j === 0 ? 40 : 12, width: `${w}%`, borderRadius: 8,
+                      background: 'var(--surface-3)',
+                      animation: 'shimmer 1.6s infinite',
+                    }} />
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
+        ) : filtered.length === 0 ? (
+          <div style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            padding: '5rem 2rem', gap: '1rem', textAlign: 'center',
+          }}>
+            <FiFilter size={48} style={{ opacity: 0.4, color: 'var(--text-dim)' }} />
+            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)' }}>{t("health.no_results") || "No hospitals found"}</div>
+            <div style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>{t("health.no_results_sub") || "Try adjusting your search or filter."}</div>
+            <button onClick={() => { setSearch(''); handleTypeChange(''); }} className="btn btn-outline btn-sm">
+              {t("health.reset") || "Reset Filters"}
+            </button>
+          </div>
+        ) : (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+            gap: '1rem',
+          }}>
+            {filtered.map((item, i) => {
+              const meta = TYPE_META[item.type] || TYPE_META['govt-hospital'];
+              const Icon = meta.icon;
+              return (
+                <div
+                  key={item.id}
+                  style={{
+                    background: 'var(--surface)', border: '1px solid var(--border)',
+                    borderRadius: 18, padding: '1.5rem', position: 'relative',
+                    overflow: 'hidden', transition: 'all 0.24s cubic-bezier(0.4,0,0.2,1)',
+                    opacity: visible ? 1 : 0,
+                    transform: visible ? 'none' : 'translateY(20px)',
+                    transitionDelay: `${Math.min(i * 50, 300)}ms`,
+                    cursor: 'default',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.borderColor = meta.color + '40';
+                    e.currentTarget.style.boxShadow = `0 12px 40px ${meta.color}18`;
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.transform = 'none';
+                    e.currentTarget.style.borderColor = 'var(--border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
+                  <div style={{
+                    position: 'absolute', top: 0, left: 0, right: 0, height: 3,
+                    background: `linear-gradient(90deg, ${meta.color}, transparent)`,
+                    borderRadius: '18px 18px 0 0',
+                  }} />
 
-          <div style={{ position: 'relative' }}>
-            <FiSearch style={{ position: 'absolute', left: 20, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)' }} size={20} />
-            <input
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder={t('health.search_placeholder')}
-              style={{
-                width: '100%', boxSizing: 'border-box', height: '56px',
-                padding: '0 20px 0 55px', borderRadius: '16px',
-                background: 'var(--bg)', border: '1px solid var(--border)',
-                color: 'var(--text)', outline: 'none'
-              }}
-            />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+                    <div style={{
+                      width: 48, height: 48, borderRadius: 14,
+                      background: meta.bg, border: `1px solid ${meta.color}30`,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      color: meta.color,
+                    }}>
+                      <Icon size={22} />
+                    </div>
+                    <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                      {item.is_verified && (
+                        <span style={{
+                          display: 'inline-flex', alignItems: 'center', gap: 3,
+                          background: 'rgba(16,185,129,0.1)', color: 'var(--green)',
+                          border: '1px solid rgba(16,185,129,0.2)',
+                          padding: '3px 9px', borderRadius: 999, fontSize: '0.65rem', fontWeight: 800,
+                        }}>
+                          <FiShield size={9} /> Verified
+                        </span>
+                      )}
+                      {item.badgeKey && (
+                        <span style={{
+                          display: 'inline-flex', alignItems: 'center', gap: 3,
+                          background: `${meta.color}15`, color: meta.color,
+                          border: `1px solid ${meta.color}30`,
+                          padding: '3px 9px', borderRadius: 999, fontSize: '0.65rem', fontWeight: 800,
+                        }}>
+                          <FiActivity size={9} /> {t(`health.${item.badgeKey}`) || 'Specialized'}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <h3 style={{
+                    fontWeight: 800, color: 'var(--text)',
+                    marginBottom: '0.4rem', fontSize: '0.97rem', lineHeight: 1.35,
+                  }}>
+                    {item.name}
+                  </h3>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: '1rem' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                      <FiMapPin size={11} style={{ flexShrink: 0, color: meta.color, opacity: 0.7 }} />
+                      {item.area}{item.district && `, ${item.district}`}
+                    </span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.8rem', color: 'var(--amber)', fontWeight: 600 }}>
+                      <FiStar size={12} style={{ fill: 'var(--amber)', color: 'var(--amber)' }} />
+                      {item.rating} <span style={{ fontWeight: 400, color: 'var(--text-dim)' }}>/ 5</span>
+                    </span>
+                  </div>
+
+                  {/* Call-to-action footer */}
+                  <a
+                    href={`tel:${item.phone}`}
+                    style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      padding: '10px 14px', borderRadius: 12,
+                      background: `linear-gradient(135deg, ${meta.color}, ${meta.color}cc)`,
+                      color: '#fff', textDecoration: 'none', fontWeight: 700, fontSize: '0.85rem',
+                      boxShadow: `0 4px 14px ${meta.color}30`,
+                      transition: 'transform 0.2s',
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
+                    onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                  >
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                      <FiPhone size={15} /> {item.phone}
+                    </span>
+                    <FiExternalLink size={15} style={{ opacity: 0.8 }} />
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* ════════════════ HEALTH TIPS SECTION ════════════════ */}
+      <div style={{ background: 'var(--surface)', borderTop: '1px solid var(--border)', padding: '3rem 0' }}>
+        <div className="container">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1.75rem' }}>
+            <div style={{
+              width: 36, height: 36, borderRadius: 10,
+              background: 'rgba(230,57,70,0.12)', color: 'var(--red)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <FiHeart size={17} />
+            </div>
+            <div>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text)' }}>
+                {t("health.tips_title") || "Choosing the Right Hospital"}
+              </h2>
+              <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                {t("health.tips_sub") || "Key factors to consider before making a decision."}
+              </p>
+            </div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1rem' }}>
+            {[
+              { Icon: FiActivity, color: '#E63946', title: t("health.tip_emergency") || "24/7 Emergency", desc: t("health.tip_emergency_desc") || "Ensure the hospital provides round‑the‑clock emergency services." },
+              { Icon: FiUser, color: '#06B6D4', title: t("health.tip_doctors") || "Experienced Doctors", desc: t("health.tip_doctors_desc") || "Check the qualifications and experience of the medical team." },
+              { Icon: FiDroplet, color: '#10B981', title: t("health.tip_facilities") || "Modern Facilities", desc: t("health.tip_facilities_desc") || "Look for advanced ICUs, diagnostics, and operation theatres." },
+              { Icon: FiStar, color: '#F59E0B', title: t("health.tip_reviews") || "Patient Feedback", desc: t("health.tip_reviews_desc") || "Read online reviews and ask for personal recommendations." },
+            ].map((tip, i) => {
+              const Icon = tip.Icon;
+              return (
+                <div key={i} style={{
+                  background: 'var(--surface-2)', border: '1px solid var(--border)',
+                  borderRadius: 16, padding: '1.25rem',
+                  display: 'flex', gap: '1rem', alignItems: 'flex-start',
+                  transition: 'all 0.22s',
+                }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = tip.color + '40'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'none'; }}
+                >
+                  <div style={{
+                    width: 44, height: 44, borderRadius: 12, flexShrink: 0,
+                    background: `${tip.color}15`, display: 'flex', alignItems: 'center',
+                    justifyContent: 'center', color: tip.color,
+                  }}>
+                    <Icon size={20} />
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 700, color: 'var(--text)', fontSize: '0.9rem', marginBottom: 4 }}>{tip.title}</div>
+                    <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: 1.55 }}>{tip.desc}</div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
-
-        {/* --- HOSPITAL GRID --- */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '25px' }}>
-          {filtered.map(item => (
-            <div key={item.id} style={{
-              background: 'var(--surface)', borderRadius: '24px', padding: '24px',
-              border: '1px solid var(--border)', transition: '0.3s',
-              display: 'flex', flexDirection: 'column', justifyContent: 'space-between'
-            }}>
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                  <span style={{
-                    background: 'var(--cyan-light)', color: 'var(--cyan)',
-                    padding: '5px 12px', borderRadius: '8px', fontSize: '0.7rem', fontWeight: 700
-                  }}>
-                    {t(`health.${item.badgeKey}`)}
-                  </span>
-                  <MdLocalHospital size={22} color={item.type === 'govt-hospital' ? 'var(--red)' : 'var(--cyan)'} />
-                </div>
-
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '4px', color: 'var(--text)' }}>{item.name}</h3>
-
-                {/* --- RATING WITH ICON --- */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: '12px' }}>
-                  <FiStar size={14} style={{ fill: 'var(--amber)', color: 'var(--amber)' }} />
-                  <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--amber)' }}>{item.rating}</span>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>({t('health.rating')})</span>
-                </div>
-
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '20px' }}>{t(`health.${item.descKey}`)}</p>
-
-                <div style={{ borderTop: '1px solid var(--border)', paddingTop: '15px', marginBottom: '20px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '8px' }}>
-                    <FiMapPin size={14} /> {item.area}
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--green)', fontSize: '0.85rem' }}>
-                    <FiClock size={14} /> {t('health.open_24')}
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <a href={`tel:${item.phone}`} style={{
-                  flex: 1, height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: 'var(--red)', color: '#fff', borderRadius: '12px', fontWeight: 700, textDecoration: 'none', gap: 8, transition: 'transform 0.2s'
-                }}
-                  onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
-                  onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
-                >
-                  <FiPhone size={16} /> {t('common.contact')}
-                </a>
-                <button style={{
-                  width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: 'var(--surface-2)', border: 'none', borderRadius: '12px', color: 'var(--text)', cursor: 'pointer'
-                }}>
-                  <FiArrowRight size={20} />
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-
       </div>
+
+      <style>{`
+        @keyframes pulse-dot {
+          0%, 100% { opacity:1; transform:scale(1); }
+          50%       { opacity:0.5; transform:scale(1.4); }
+        }
+        @keyframes shimmer {
+          0%   { opacity:0.5; }
+          50%  { opacity:1; }
+          100% { opacity:0.5; }
+        }
+      `}</style>
     </div>
   );
 }
