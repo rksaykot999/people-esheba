@@ -7,58 +7,59 @@ import {
 import { useTheme } from '../context/ThemeContext';
 import { useLang } from '../context/LanguageContext';
 
-const CATS = [
-  { key: 'all', label: t('government.cat_all'), color: '#8B5CF6' },
-  { key: 'nid', label: t('government.cat_nid'), color: '#3B82F6' },
-  { key: 'schemes', label: t('government.cat_schemes'), color: '#10B981' },
-  { key: 'passport', label: t('government.cat_passport'), color: '#F59E0B' },
-  { key: 'land', label: t('government.cat_land'), color: '#EF4444' },
-  { key: 'utility', label: t('government.cat_utility'), color: '#06B6D4' },
-];
-
-const SAMPLE_GOV = [
-  // --- NID & Identity ---
-  {
-    id: 101, cat: 'nid', name: 'NID Bangladesh', area: 'Election Commission', phone: '105', rating: 4.5, reviews: '1M+', badgeKey: 'badge_identity',
-    price: 'Free / Reissue Fee', descKey: 'desc_nid', features: ['biometric', 'digital_copy']
-  },
-  {
-    id: 102, cat: 'nid', name: 'Birth Registration', area: 'Local Ward/Union', phone: '16122', rating: 4.1, reviews: '500k+', badgeKey: 'badge_official',
-    price: 'Govt Fee', descKey: 'desc_birth', features: ['online_verification', 'global_validity']
-  },
-
-  // --- Passport ---
-  {
-    id: 103, cat: 'passport', name: 'E-Passport Portal', area: 'DIP Bangladesh', phone: '16445', rating: 4.8, reviews: '2M+', badgeKey: 'badge_travel',
-    price: 'Fee starts 4025 BDT', descKey: 'desc_passport', features: ['appointment_system', 'sms_alerts']
-  },
-
-  // --- Gov Schemes ---
-  {
-    id: 104, cat: 'schemes', name: 'Protibondhi Allowance', area: 'Social Services', phone: '1098', rating: 4.7, reviews: '100k+', badgeKey: 'badge_social_safety',
-    price: 'Monthly Support', descKey: 'desc_protibondhi', features: ['mobile_banking', 'verified_list']
-  },
-  {
-    id: 105, cat: 'schemes', name: 'Old Age Allowance', area: 'Ministry of Social Welfare', phone: '16224', rating: 4.6, reviews: '80k+', badgeKey: 'badge_social_safety',
-    price: 'Direct Transfer', descKey: 'desc_old_age', features: ['easy_registration', 'transparent']
-  },
-
-  // --- Land Services ---
-  {
-    id: 106, cat: 'land', name: 'E-Mutation (Land)', area: 'Land Office', phone: '16122', rating: 4.3, reviews: '300k+', badgeKey: 'badge_property',
-    price: 'Fixed Govt Fee', descKey: 'desc_mutation', features: ['digital_records', 'track_progress']
-  },
-
-  // --- Utility ---
-  {
-    id: 107, cat: 'utility', name: 'EkPay', area: 'a2i Platform', phone: '333', rating: 4.9, reviews: '400k+', badgeKey: 'badge_payments',
-    price: 'Zero Charge', descKey: 'desc_ekpay', features: ['secure_gateway', 'instant_receipt']
-  }
-];
-
-export default function Government() {
+export default function Education() {
   const { theme } = useTheme();
   const { t } = useLang();
+
+  const CATS = [
+    { key: 'all', label: t('government.cat_all'), color: '#8B5CF6' },
+    { key: 'nid', label: t('government.cat_nid'), color: '#3B82F6' },
+    { key: 'schemes', label: t('government.cat_schemes'), color: '#10B981' },
+    { key: 'passport', label: t('government.cat_passport'), color: '#F59E0B' },
+    { key: 'land', label: t('government.cat_land'), color: '#EF4444' },
+    { key: 'utility', label: t('government.cat_utility'), color: '#06B6D4' },
+  ];
+
+  const SAMPLE_GOV = [
+    // --- NID & Identity ---
+    {
+      id: 101, cat: 'nid', name: 'NID Bangladesh', area: 'Election Commission', phone: '105', rating: 4.5, reviews: '1M+', badgeKey: 'badge_identity',
+      price: 'Free / Reissue Fee', descKey: 'desc_nid', features: ['biometric', 'digital_copy']
+    },
+    {
+      id: 102, cat: 'nid', name: 'Birth Registration', area: 'Local Ward/Union', phone: '16122', rating: 4.1, reviews: '500k+', badgeKey: 'badge_official',
+      price: 'Govt Fee', descKey: 'desc_birth', features: ['online_verification', 'global_validity']
+    },
+
+    // --- Passport ---
+    {
+      id: 103, cat: 'passport', name: 'E-Passport Portal', area: 'DIP Bangladesh', phone: '16445', rating: 4.8, reviews: '2M+', badgeKey: 'badge_travel',
+      price: 'Fee starts 4025 BDT', descKey: 'desc_passport', features: ['appointment_system', 'sms_alerts']
+    },
+
+    // --- Gov Schemes ---
+    {
+      id: 104, cat: 'schemes', name: 'Protibondhi Allowance', area: 'Social Services', phone: '1098', rating: 4.7, reviews: '100k+', badgeKey: 'badge_social_safety',
+      price: 'Monthly Support', descKey: 'desc_protibondhi', features: ['mobile_banking', 'verified_list']
+    },
+    {
+      id: 105, cat: 'schemes', name: 'Old Age Allowance', area: 'Ministry of Social Welfare', phone: '16224', rating: 4.6, reviews: '80k+', badgeKey: 'badge_social_safety',
+      price: 'Direct Transfer', descKey: 'desc_old_age', features: ['easy_registration', 'transparent']
+    },
+
+    // --- Land Services ---
+    {
+      id: 106, cat: 'land', name: 'E-Mutation (Land)', area: 'Land Office', phone: '16122', rating: 4.3, reviews: '300k+', badgeKey: 'badge_property',
+      price: 'Fixed Govt Fee', descKey: 'desc_mutation', features: ['digital_records', 'track_progress']
+    },
+
+    // --- Utility ---
+    {
+      id: 107, cat: 'utility', name: 'EkPay', area: 'a2i Platform', phone: '333', rating: 4.9, reviews: '400k+', badgeKey: 'badge_payments',
+      price: 'Zero Charge', descKey: 'desc_ekpay', features: ['secure_gateway', 'instant_receipt']
+    }
+  ];
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
   const [activeCat, setActiveCat] = useState(searchParams.get('cat') || 'all');
@@ -75,7 +76,7 @@ export default function Government() {
     const matchCat = activeCat === 'all' || item.cat === activeCat;
     const matchSearch = !search || 
       item.name.toLowerCase().includes(search.toLowerCase()) ||
-      item.desc.toLowerCase().includes(search.toLowerCase());
+      t(`government.${item.descKey}`).toLowerCase().includes(search.toLowerCase());
     return matchCat && matchSearch;
   });
 
