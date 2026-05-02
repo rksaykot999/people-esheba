@@ -2,15 +2,16 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import {
   FiHeart, FiSearch, FiPhone, FiMapPin, FiClock,
-  FiDroplet, FiUser, FiList, FiActivity, FiFilter, FiArrowRight
+  FiDroplet, FiUser, FiList, FiActivity, FiFilter, FiArrowRight,
+  FiStar // Added FiStar for ratings
 } from 'react-icons/fi';
 import { MdLocalHospital } from 'react-icons/md';
 import { useLang } from '../context/LanguageContext';
 
 const TYPES = [
-  { key: 'all', label: 'All', color: '#64748B' },
-  { key: 'govt-hospital', label: 'Government Hospital', color: '#E63946' },
-  { key: 'private-hospital', label: 'Private Hospital', color: '#06B6D4' },
+  { key: 'all', label: 'All', color: '#4b6b97' },
+  { key: 'govt-hospital', label: 'Government Hospital', color: '#a02832' },
+  { key: 'private-hospital', label: 'Private Hospital', color: '#3abdd4' },
 ];
 
 const SAMPLE = [
@@ -27,14 +28,98 @@ const SAMPLE = [
     badge: 'Research Center'
   },
   {
-    id: 3, type: 'private-hospital', name: 'Square Hospital Ltd.',
+    id: 3, type: 'govt-hospital', name: 'Barishal General Hospital',
+    area: 'Dhaka', phone: '02-9661068', rating: 3.9,
+    desc: 'Premier postgraduate medical institution and hospital for advanced treatment.',
+    badge: 'Research Center'
+  },
+  {
+    id: 4, type: 'govt-hospital', name: 'Government Employee Hospital',
+    area: 'Dhaka', phone: '02-9661068', rating: 4.3,
+    desc: 'Premier postgraduate medical institution and hospital for advanced treatment.',
+    badge: 'Research Center'
+  },
+  {
+    id: 5, type: 'govt-hospital', name: '250 Bed General Hospital, Noakhali',
+    area: 'Dhaka', phone: '02-9661068', rating: 3.8,
+    desc: 'Premier postgraduate medical institution and hospital for advanced treatment.',
+    badge: 'Research Center'
+  },
+  {
+    id: 6, type: 'govt-hospital', name: 'BIU, Green Model Town, Mugda, Dhaka',
+    area: 'Dhaka', phone: '02-9661068', rating: 4.1,
+    desc: 'Premier postgraduate medical institution and hospital for advanced treatment.',
+    badge: 'Research Center'
+  },
+  {
+    id: 7, type: 'govt-hospital', name: 'Shaheed Suhrawardy Medical College and Hospital',
+    area: 'Dhaka', phone: '02-9661068', rating: 4.2,
+    desc: 'Premier postgraduate medical institution and hospital for advanced treatment.',
+    badge: 'Research Center'
+  },
+  {
+    id: 8, type: 'govt-hospital', name: 'Shaheed Ahsan Ullah Master General Hospital',
+    area: 'Dhaka', phone: '02-9661068', rating: 4.1,
+    desc: 'Premier postgraduate medical institution and hospital for advanced treatment.',
+    badge: 'Research Center'
+  },
+  {
+    id: 9, type: 'govt-hospital', name: 'MEGHNA UPAZILLA HEALTH COMPLEX',
+    area: 'Dhaka', phone: '02-9661068', rating: 3.4,
+    desc: 'Premier postgraduate medical institution and hospital for advanced treatment.',
+    badge: 'Research Center'
+  },
+  {
+    id: 10, type: 'private-hospital', name: 'Square Hospital Ltd.',
     area: 'Dhaka', phone: '02-8159457', rating: 4.8,
     desc: 'Leading private healthcare provider with international standard facilities.',
     badge: 'Premium Care'
   },
   {
-    id: 4, type: 'private-hospital', name: 'United Hospital',
+    id: 11, type: 'private-hospital', name: 'United Hospital',
     area: 'Dhaka', phone: '02-8836000', rating: 4.6,
+    desc: 'Specialized multidisciplinary hospital known for cardiac and oncology care.',
+    badge: 'Specialized'
+  },
+  {
+    id: 12, type: 'private-hospital', name: 'Barishal Metropolitan Hospital',
+    area: 'Dhaka', phone: '02-8836000', rating: 4.0,
+    desc: 'Specialized multidisciplinary hospital known for cardiac and oncology care.',
+    badge: 'Specialized'
+  },
+  {
+    id: 13, type: 'private-hospital', name: 'KMC Hospital',
+    area: 'Dhaka', phone: '02-8836000', rating: 4.3,
+    desc: 'Specialized multidisciplinary hospital known for cardiac and oncology care.',
+    badge: 'Specialized'
+  },
+  {
+    id: 14, type: 'private-hospital', name: 'Arif Memorial Hospital',
+    area: 'Dhaka', phone: '02-8836000', rating: 3.9,
+    desc: 'Specialized multidisciplinary hospital known for cardiac and oncology care.',
+    badge: 'Specialized'
+  },
+  {
+    id: 15, type: 'private-hospital', name: 'South Apollo Medical College & Hospital',
+    area: 'Dhaka', phone: '02-8836000', rating: 4.6,
+    desc: 'Specialized multidisciplinary hospital known for cardiac and oncology care.',
+    badge: 'Specialized'
+  },
+  {
+    id: 16, type: 'private-hospital', name: 'Continental Hospital PLC',
+    area: 'Dhaka', phone: '02-8836000', rating: 3.8,
+    desc: 'Specialized multidisciplinary hospital known for cardiac and oncology care.',
+    badge: 'Specialized'
+  },
+  {
+    id: 17, type: 'private-hospital', name: 'Rahat Anwar Hospital',
+    area: 'Dhaka', phone: '02-8836000', rating: 4.0,
+    desc: 'Specialized multidisciplinary hospital known for cardiac and oncology care.',
+    badge: 'Specialized'
+  },
+  {
+    id: 18, type: 'private-hospital', name: 'The Life Care',
+    area: 'Dhaka', phone: '02-8836000', rating: 5.0,
     desc: 'Specialized multidisciplinary hospital known for cardiac and oncology care.',
     badge: 'Specialized'
   },
@@ -46,7 +131,6 @@ export default function Health() {
   const [search, setSearch] = useState('');
   const [activeType, setActiveType] = useState(searchParams.get('type') || 'all');
 
-  // Sync state with URL params
   useEffect(() => {
     setActiveType(searchParams.get('type') || 'all');
   }, [searchParams]);
@@ -65,10 +149,16 @@ export default function Health() {
   });
 
   return (
-    <div style={{ background: '#09090b', minHeight: '100vh', color: '#fff', fontFamily: "'Inter', sans-serif" }}>
+    <div style={{ background: '#011f2b', minHeight: '100vh', color: '#f6cccc', fontFamily: "'Inter', sans-serif" }}>
 
-      {/* --- HERO SECTION --- */}
-      <div style={{ position: 'relative', padding: '6rem 1rem 4rem', textAlign: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+      {/* --- HERO SECTION: Background updated to Gradient --- */}
+      <div style={{
+        position: 'relative',
+        padding: '6rem 1rem 4rem',
+        textAlign: 'center',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+        background: 'linear-gradient(to bottom, #02112e81, #02112e81)' // New Gradient Background
+      }}>
         <div style={{
           position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)',
           width: '400px', height: '200px', background: 'rgba(230, 57, 70, 0.1)',
@@ -79,7 +169,7 @@ export default function Health() {
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             background: 'rgba(230, 57, 70, 0.1)', padding: '8px 20px',
-            borderRadius: '100px', color: '#fb7185', fontSize: '0.75rem', fontWeight: 600,
+            borderRadius: '100px', color: '#f90921', fontSize: '0.75rem', fontWeight: 600,
             marginBottom: '1.5rem', border: '1px solid rgba(230, 57, 70, 0.2)'
           }}>
             <FiHeart size={14} /> Health & Medical Network
@@ -102,7 +192,7 @@ export default function Health() {
                 style={{
                   padding: '10px 20px', borderRadius: '12px', border: 'none', cursor: 'pointer',
                   whiteSpace: 'nowrap', fontSize: '0.85rem', fontWeight: 600,
-                  background: activeType === type.key ? '#e63946' : 'rgba(255,255,255,0.05)',
+                  background: activeType === type.key ? '#52272b' : 'rgba(255,255,255,0.05)',
                   color: activeType === type.key ? '#fff' : '#94a3b8',
                   transition: '0.3s'
                 }}
@@ -121,7 +211,7 @@ export default function Health() {
               style={{
                 width: '100%', boxSizing: 'border-box', height: '56px',
                 padding: '0 20px 0 55px', borderRadius: '16px',
-                background: '#000', border: '1px solid rgba(255,255,255,0.1)',
+                background: '#5e3153', border: '1px solid rgba(255,255,255,0.1)',
                 color: '#fff', outline: 'none'
               }}
             />
@@ -142,13 +232,21 @@ export default function Health() {
                 }}>
                   {item.badge}
                 </span>
-                <MdLocalHospital size={22} color={item.type === 'govt-hospital' ? '#e63946' : '#06b6d4'} />
+                <MdLocalHospital size={22} color={item.type === 'govt-hospital' ? '#e63946' : '#2c494e'} />
               </div>
 
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '10px' }}>{item.name}</h3>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '4px' }}>{item.name}</h3>
+
+              {/* --- RATING WITH ICON --- */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: '12px' }}>
+                <FiStar size={14} style={{ fill: '#fbbf24', color: '#fbbf24' }} />
+                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#fbbf24' }}>{item.rating}</span>
+                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>(Reviews)</span>
+              </div>
+
               <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '20px' }}>{item.desc}</p>
 
-              <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '15px', marginBottom: '20px' }}>
+              <div style={{ borderTop: '1px solid rgba(247, 240, 240, 0.05)', paddingTop: '15px', marginBottom: '20px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#94a3b8', fontSize: '0.85rem', marginBottom: '8px' }}>
                   <FiMapPin size={14} /> {item.area}
                 </div>
@@ -166,7 +264,7 @@ export default function Health() {
                 </a>
                 <button style={{
                   width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: 'rgba(255,255,255,0.05)', border: 'none', borderRadius: '12px', color: '#fff'
+                  background: 'rgba(75, 68, 68, 0.95)', border: 'none', borderRadius: '12px', color: '#fff'
                 }}>
                   <FiArrowRight size={20} />
                 </button>
