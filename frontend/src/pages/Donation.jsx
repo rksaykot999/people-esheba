@@ -1,123 +1,199 @@
-import { useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { useLang } from '../context/LanguageContext';
-import { useAuth } from '../context/AuthContext';
-import api from '../services/api';
-import { FiPlus, FiArrowRight, FiCalendar, FiUser } from 'react-icons/fi';
+import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { 
+  FiHeart, FiPlus, FiPlusCircle, FiActivity, 
+  FiBook, FiCloudLightning, FiCoffee, FiBox, FiArrowRight 
+} from 'react-icons/fi';
 
-const CATS = ['all','medical','education','disaster','food','other'];
-const CAT_COLORS = { medical:'var(--red)', education:'var(--cyan)', disaster:'var(--amber)', food:'var(--green)', other:'var(--purple)' };
+const DONATE_CATS = [
+  { key: 'all', label: 'All', color: '#8B5CF6' },
+  { key: 'medical', label: 'Medical Aid', color: '#EF4444' },
+  { key: 'education', label: 'Education Fund', color: '#06B6D4' },
+  { key: 'disaster', label: 'Disaster', color: '#F59E0B' },
+  { key: 'food', label: 'Food', color: '#10B981' },
+  { key: 'other', label: 'Other', color: '#EC4899' },
+];
 
-export default function Donation() {
-  const { t, isBn } = useLang();
-  const { isAuth }  = useAuth();
-  const [params, setParams] = useSearchParams();
-  const catQuery = params.get('category') || 'all';
+const HELP_REQUESTS = [
+  // --- Medical Aid ---
+  {
+    id: 1, cat: 'medical', title: 'Emergency Kidney Transplant Support',
+    name: 'Rahim Uddin', location: 'Barishal', amount: '50,000 BDT Needed',
+    desc: 'Critical medical emergency. Patient needs immediate surgery support at Barishal Medical College.',
+    urgency: 'High', date: '2026-05-02'
+  },
+  {
+    id: 5, cat: 'medical', title: 'Thalassemia Treatment for 8yr Child',
+    name: 'Mitu Akter', location: 'Dhaka', amount: '25,000 BDT Needed',
+    desc: 'Monthly blood transfusion and medication costs for a young child from a low-income family.',
+    urgency: 'High', date: '2026-05-01'
+  },
 
-  const [items, setItems]   = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [total, setTotal]   = useState(0);
-  const [page, setPage]     = useState(1);
-  const [pages, setPages]   = useState(1);
+  // --- Education Fund ---
+  {
+    id: 2, cat: 'education', title: 'Tuition Fees for Orphan Student',
+    name: 'Sumi Akter', location: 'Dhaka', amount: '12,000 BDT Needed',
+    desc: 'Support a brilliant student to continue her HSC studies after losing her father. Needs help with exam fees.',
+    urgency: 'Medium', date: '2026-05-01'
+  },
+  {
+    id: 6, cat: 'education', title: 'Medical Admission Coaching Fee',
+    name: 'Tanvir Hossain', location: 'Rajshahi', amount: '15,000 BDT Needed',
+    desc: 'A meritorious student from a rural background needs support for his medical admission preparation.',
+    urgency: 'Medium', date: '2026-04-28'
+  },
 
-  useEffect(() => { setPage(1); }, [catQuery]);
+  // --- Disaster Relief ---
+  {
+    id: 3, cat: 'disaster', title: 'Flood Relief Materials for Sylhet',
+    name: 'Local Community', location: 'Sylhet', amount: 'Any Amount',
+    desc: 'Providing dry food and clean water to families affected by sudden flash floods in Sunamganj.',
+    urgency: 'High', date: '2026-05-02'
+  },
+  {
+    id: 7, cat: 'disaster', title: 'Rebuilding Home After Fire',
+    name: 'Anwar Ali', location: 'Gazipur', amount: '30,000 BDT Needed',
+    desc: 'A short circuit caused a fire that destroyed a small family home. Need funds for tin and wood.',
+    urgency: 'High', date: '2026-04-25'
+  },
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const q = new URLSearchParams({ page, limit:12, ...(catQuery!=='all'&&{category:catQuery}) });
-      const { data } = await api.get(`/donations?${q}`);
-      setItems(data.data.rows); setTotal(data.data.total); setPages(data.data.pages);
-    } catch { setItems([]); } finally { setLoading(false); }
+  // --- Food Support ---
+  {
+    id: 4, cat: 'food', title: 'Iftar Program for Street Children',
+    name: 'Volunteer Group', location: 'Chittagong', amount: '5,000 BDT Needed',
+    desc: 'Help us provide nutritious Iftar meals to 100 street children daily throughout Ramadan.',
+    urgency: 'Normal', date: '2026-04-30'
+  },
+  {
+    id: 8, cat: 'food', title: 'Monthly Grocery for Elderly Couple',
+    name: 'Ayesha Begum', location: 'Khulna', amount: '3,500 BDT Needed',
+    desc: 'An elderly couple with no income source needs help with basic food supplies for the month.',
+    urgency: 'Normal', date: '2026-05-02'
+  },
+
+  // --- Agriculture & Other ---
+  {
+    id: 9, cat: 'other', title: 'Seeds & Fertilizer for Poor Farmer',
+    name: 'Moklesur Rahman', location: 'Rangpur', amount: '8,000 BDT Needed',
+    desc: 'Support a farmer to start his seasonal cultivation after a heavy crop loss last year.',
+    urgency: 'Medium', date: '2026-04-27'
+  },
+  {
+    id: 10, cat: 'other', title: 'Wheelchair for Disabled Youth',
+    name: 'Jamil Ahmed', location: 'Comilla', amount: '10,000 BDT Needed',
+    desc: 'A 19-year-old boy needs a wheelchair to regain his mobility and start a small tea stall.',
+    urgency: 'High', date: '2026-05-01'
+  }
+];
+
+
+export default function Donate() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeCat = searchParams.get('category') || 'all';
+
+  const handleCatChange = (key) => {
+    const newParams = new URLSearchParams(searchParams);
+    if (key === 'all') newParams.delete('category');
+    else newParams.set('category', key);
+    setSearchParams(newParams);
   };
 
-  useEffect(() => { fetchData(); }, [page, catQuery]); // eslint-disable-line
-
-  const handleCat = (c) => {
-    const newParams = new URLSearchParams(params);
-    if (c && c !== 'all') newParams.set('category', c);
-    else newParams.delete('category');
-    setParams(newParams);
-  };
+  const filteredRequests = HELP_REQUESTS.filter(req => 
+    activeCat === 'all' || req.cat === activeCat
+  );
 
   return (
-    <div>
-      <div className="page-header">
-        <div className="container" style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', flexWrap:'wrap', gap:'1rem' }}>
-          <div>
-            <h1 className="section-title" style={{ marginBottom:6 }}>{t('donation.title')}</h1>
-            <p style={{ color:'var(--text-muted)', fontSize:'0.95rem' }}>{t('donation.sub')}</p>
+    <div style={{ background: '#09090b', minHeight: '100vh', color: '#fff', fontFamily: "'Inter', sans-serif" }}>
+      
+      {/* --- HERO SECTION --- */}
+      <div style={{ padding: '8rem 1rem 4rem', textAlign: 'center', position: 'relative' }}>
+         <div style={{
+          position: 'absolute', top: '20%', left: '50%', transform: 'translateX(-50%)',
+          width: '400px', height: '200px', background: 'rgba(239, 68, 68, 0.1)',
+          filter: 'blur(100px)', borderRadius: '100%', pointerEvents: 'none'
+        }} />
+        
+        <h1 style={{ fontSize: '3.5rem', fontWeight: 900, marginBottom: '1rem', letterSpacing: '-1px' }}>
+          Help Requests
+        </h1>
+        <p style={{ color: '#a1a1aa', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto', marginBottom: '3rem' }}>
+          Support people in need across Bangladesh through verified community requests.
+        </p>
+
+        {/* --- ACTION BUTTONS & FILTERS --- */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem' }}>
+          <button style={{
+            background: '#ef4444', color: '#fff', border: 'none', padding: '14px 28px',
+            borderRadius: '12px', fontSize: '1rem', fontWeight: 700, cursor: 'pointer',
+            display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 10px 20px rgba(239, 68, 68, 0.2)'
+          }}>
+            <FiPlusCircle size={20} /> Post Help Request
+          </button>
+
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center' }}>
+            {DONATE_CATS.map(c => (
+              <button
+                key={c.key}
+                onClick={() => handleCatChange(c.key)}
+                style={{
+                  padding: '10px 20px', borderRadius: '10px', border: activeCat === c.key ? `2px solid ${c.color}` : '1px solid rgba(255,255,255,0.1)',
+                  background: activeCat === c.key ? `${c.color}15` : 'transparent',
+                  color: activeCat === c.key ? c.color : '#71717a',
+                  fontWeight: 600, cursor: 'pointer', transition: '0.2s'
+                }}
+              >
+                {c.label}
+              </button>
+            ))}
           </div>
-          {isAuth && <Link to="/donation/new" className="btn btn-primary"><FiPlus size={14}/>{t('donation.new')}</Link>}
         </div>
       </div>
 
-      <div className="container" style={{ padding:'2rem 1.5rem' }}>
-        {/* Category tabs */}
-        <div style={{ display:'flex', gap:7, marginBottom:'1.75rem', flexWrap:'wrap' }}>
-          {CATS.map(c => (
-            <button key={c} onClick={()=>handleCat(c)} className={`btn btn-sm ${catQuery===c?'btn-primary':'btn-ghost'}`}
-              style={catQuery!==c&&c!=='all'?{borderColor:CAT_COLORS[c],color:CAT_COLORS[c]}:{}}>
-              {t(`donation.${c}`) || c}
-            </button>
-          ))}
-        </div>
-
-        <p style={{ fontSize:'0.82rem', color:'var(--text-muted)', marginBottom:'1.25rem' }}>
-          {loading ? t('common.loading') : `${total} requests found`}
-        </p>
-
-        {loading ? (
-          <div style={{ display:'flex', justifyContent:'center', padding:'3rem' }}><div className="spinner"/></div>
-        ) : items.length === 0 ? (
-          <div className="empty"><div className="empty-icon">❤️</div><div>{t('common.noResults')}</div></div>
-        ) : (
-          <div className="grid-3">
-            {items.map(d => {
-              const pct = Math.min(100, Math.round((d.amount_raised / d.amount_needed) * 100));
-              return (
-                <div key={d.id} className="card fade-up" style={{ overflow:'hidden' }}>
-                  <div style={{ background:'var(--surface-2)', height:6 }}>
-                    <div style={{ height:'100%', width:`${pct}%`, background:`linear-gradient(90deg, ${CAT_COLORS[d.category]||'var(--red)'}, ${CAT_COLORS[d.category]||'var(--red)'}88)`, transition:'width 0.5s ease' }}/>
-                  </div>
-                  <div style={{ padding:'1.25rem' }}>
-                    <div style={{ display:'flex', gap:7, marginBottom:'0.75rem', flexWrap:'wrap' }}>
-                      {d.is_urgent && <span className="badge badge-red">⚡ {t('donation.urgent')}</span>}
-                      <span className="badge" style={{ background:`${CAT_COLORS[d.category]||'var(--red)'}18`, color:CAT_COLORS[d.category]||'var(--red)' }}>{d.category}</span>
-                    </div>
-                    <h3 style={{ fontWeight:700, color:'var(--text)', marginBottom:6, fontSize:'0.95rem', lineHeight:1.4 }}>{d.title}</h3>
-                    <p style={{ fontSize:'0.8rem', color:'var(--text-muted)', marginBottom:'1rem', lineHeight:1.6 }}>{d.description?.substring(0,90)}...</p>
-                    <div style={{ marginBottom:'0.75rem' }}>
-                      <div style={{ display:'flex', justifyContent:'space-between', fontSize:'0.75rem', color:'var(--text-muted)', marginBottom:5 }}>
-                        <span>৳{Number(d.amount_raised).toLocaleString()} {isBn?'সংগ্রহ':'raised'}</span>
-                        <span style={{ fontWeight:700, color:'var(--text)' }}>{pct}%</span>
-                      </div>
-                      <div className="progress-track"><div className="progress-fill" style={{ width:`${pct}%`, background:`linear-gradient(90deg,${CAT_COLORS[d.category]||'var(--red)'},${CAT_COLORS[d.category]||'var(--red)'}88)` }}/></div>
-                      <div style={{ fontSize:'0.73rem', color:'var(--text-dim)', marginTop:4 }}>
-                        {isBn?'লক্ষ্য':'Target'}: ৳{Number(d.amount_needed).toLocaleString()}
-                      </div>
-                    </div>
-                    <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', fontSize:'0.75rem', color:'var(--text-dim)', marginBottom:'0.9rem' }}>
-                      <span style={{ display:'flex', alignItems:'center', gap:4 }}><FiUser size={11}/>{d.poster_name}</span>
-                      {d.deadline && <span style={{ display:'flex', alignItems:'center', gap:4 }}><FiCalendar size={11}/>{new Date(d.deadline).toLocaleDateString()}</span>}
-                    </div>
-                    <Link to={`/donation/${d.id}`} className="btn btn-primary btn-sm" style={{ width:'100%', justifyContent:'center' }}>
-                      {t('donation.donate')} <FiArrowRight size={12}/>
-                    </Link>
+      {/* --- CONTENT AREA --- */}
+      <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 1.5rem 5rem' }}>
+        {filteredRequests.length > 0 ? (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+            {filteredRequests.map(req => (
+              <div key={req.id} style={{
+                background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)',
+                padding: '24px', borderRadius: '24px', transition: '0.3s'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                  <span style={{ 
+                    background: req.urgency === 'High' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255,255,255,0.05)',
+                    color: req.urgency === 'High' ? '#ef4444' : '#a1a1aa',
+                    padding: '4px 12px', borderRadius: '100px', fontSize: '0.7rem', fontWeight: 800
+                  }}>
+                    {req.urgency} Priority
+                  </span>
+                  <span style={{ color: '#71717a', fontSize: '0.8rem' }}>{req.date}</span>
+                </div>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '10px' }}>{req.title}</h3>
+                <p style={{ color: '#71717a', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: 1.6 }}>{req.desc}</p>
+                
+                <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem', marginBottom: '1.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', color: '#10b981', fontWeight: 700, fontSize: '0.9rem' }}>
+                    <span>{req.amount}</span>
+                    <span style={{ color: '#71717a' }}>{req.location}</span>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
 
-        {pages > 1 && (
-          <div className="pagination">
-            <button className="page-btn" onClick={()=>setPage(p=>p-1)} disabled={page===1}>‹</button>
-            {Array.from({length:Math.min(5,pages)},(_,i)=>i+Math.max(1,page-2)).filter(p=>p<=pages).map(p=>(
-              <button key={p} className={`page-btn${p===page?' active':''}`} onClick={()=>setPage(p)}>{p}</button>
+                <button style={{
+                  width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'rgba(255,255,255,0.03)', color: '#fff', fontWeight: 600, cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
+                }}>
+                  Donate Now <FiArrowRight />
+                </button>
+              </div>
             ))}
-            <button className="page-btn" onClick={()=>setPage(p=>p+1)} disabled={page===pages}>›</button>
+          </div>
+        ) : (
+          /* Empty State - যখন কোনো ডাটা থাকবে না */
+          <div style={{ textAlign: 'center', padding: '5rem 0' }}>
+            <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>❤️</div>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: 700 }}>No requests found</h3>
+            <p style={{ color: '#71717a' }}>Try switching categories or check back later.</p>
           </div>
         )}
       </div>
