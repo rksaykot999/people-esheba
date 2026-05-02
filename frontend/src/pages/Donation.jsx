@@ -85,12 +85,12 @@ export default function Donation() {
                       {d.is_urgent && <span className="badge badge-red">⚡ {t('donation.urgent')}</span>}
                       <span className="badge" style={{ background:`${CAT_COLORS[d.category]||'var(--red)'}18`, color:CAT_COLORS[d.category]||'var(--red)' }}>{d.category}</span>
                     </div>
-                    <h3 style={{ fontWeight:700, color:'#fff', marginBottom:6, fontSize:'0.95rem', lineHeight:1.4 }}>{d.title}</h3>
+                    <h3 style={{ fontWeight:700, color:'var(--text)', marginBottom:6, fontSize:'0.95rem', lineHeight:1.4 }}>{d.title}</h3>
                     <p style={{ fontSize:'0.8rem', color:'var(--text-muted)', marginBottom:'1rem', lineHeight:1.6 }}>{d.description?.substring(0,90)}...</p>
                     <div style={{ marginBottom:'0.75rem' }}>
                       <div style={{ display:'flex', justifyContent:'space-between', fontSize:'0.75rem', color:'var(--text-muted)', marginBottom:5 }}>
                         <span>৳{Number(d.amount_raised).toLocaleString()} {isBn?'সংগ্রহ':'raised'}</span>
-                        <span style={{ fontWeight:700, color:'#fff' }}>{pct}%</span>
+                        <span style={{ fontWeight:700, color:'var(--text)' }}>{pct}%</span>
                       </div>
                       <div className="progress-track"><div className="progress-fill" style={{ width:`${pct}%`, background:`linear-gradient(90deg,${CAT_COLORS[d.category]||'var(--red)'},${CAT_COLORS[d.category]||'var(--red)'}88)` }}/></div>
                       <div style={{ fontSize:'0.73rem', color:'var(--text-dim)', marginTop:4 }}>

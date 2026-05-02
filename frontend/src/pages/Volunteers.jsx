@@ -130,7 +130,7 @@ export default function Volunteers() {
                   <span className="badge badge-green">{CAT_ICONS[v.category]||'🙌'} {v.category}</span>
                 </div>
                 <div style={{ display:'flex', alignItems:'center', gap:5, marginBottom:3 }}>
-                  <span style={{ fontWeight:700, color:'#fff', fontSize:'0.95rem' }}>{v.name}</span>
+                  <span style={{ fontWeight:700, color:'var(--text)', fontSize:'0.95rem' }}>{v.name}</span>
                   {v.is_verified && <FiShield size={13} style={{ color:'var(--cyan)' }}/>}
                 </div>
                 {v.district   && <div style={{ fontSize:'0.78rem', color:'var(--text-muted)', display:'flex', alignItems:'center', gap:4, marginBottom:4 }}><FiMapPin size={11}/>{v.district}</div>}
@@ -163,8 +163,8 @@ export default function Volunteers() {
       {showReg && (
         <div style={{ position:'fixed', inset:0, zIndex:999, display:'flex', alignItems:'center', justifyContent:'center', padding:'1rem' }}>
           <div onClick={closeReg} style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.7)', backdropFilter:'blur(6px)' }}/>
-          <div style={{ position:'relative', background:'var(--surface)', border:'1px solid var(--border)', borderRadius:20, width:'100%', maxWidth:480, padding:'2rem', animation:'fadeUp 0.25s ease', maxHeight:'90vh', overflowY:'auto' }}>
-            <h2 style={{ fontWeight:800, fontSize:'1.2rem', marginBottom:'1.5rem', color:'#fff' }}>🙌 {t('volunteers.register')}</h2>
+          <div style={{ position: 'relative', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 20, width: '100%', maxWidth: 480, padding: '2rem', animation: 'fadeUp 0.25s ease', maxHeight: '90vh', overflowY: 'auto' }}>
+            <h2 style={{ fontWeight: 800, fontSize: '1.2rem', marginBottom: '1.5rem', color: 'var(--text)' }}>🙌 {t('volunteers.register')}</h2>
             <form onSubmit={handleRegister} style={{ display:'flex', flexDirection:'column', gap:'1rem' }}>
               <div className="form-group">
                 <label className="form-label">{isBn?'বিভাগ':'Category'}</label>

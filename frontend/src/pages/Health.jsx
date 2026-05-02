@@ -3,15 +3,16 @@ import { useSearchParams, Link } from 'react-router-dom';
 import {
   FiHeart, FiSearch, FiPhone, FiMapPin, FiClock,
   FiDroplet, FiUser, FiList, FiActivity, FiFilter, FiArrowRight,
-  FiStar // Added FiStar for ratings
+  FiStar
 } from 'react-icons/fi';
 import { MdLocalHospital } from 'react-icons/md';
 import { useLang } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 
 const TYPES = [
-  { key: 'all', label: 'All', color: '#4b6b97' },
-  { key: 'govt-hospital', label: 'Government Hospital', color: '#a02832' },
-  { key: 'private-hospital', label: 'Private Hospital', color: '#3abdd4' },
+  { key: 'all', label: 'nav.all', color: 'var(--text-dim)' },
+  { key: 'govt-hospital', label: 'health.govt_hospital', color: 'var(--red)' },
+  { key: 'private-hospital', label: 'health.private_hospital', color: 'var(--cyan)' },
 ];
 
 const SAMPLE = [
@@ -126,7 +127,9 @@ const SAMPLE = [
 ];
 
 export default function Health() {
-  const { t } = useLang();
+  const { t, isBn } = useLang();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
   const [activeType, setActiveType] = useState(searchParams.get('type') || 'all');
@@ -149,33 +152,35 @@ export default function Health() {
   });
 
   return (
-    <div style={{ background: '#011f2b', minHeight: '100vh', color: '#f6cccc', fontFamily: "'Inter', sans-serif" }}>
+    <div style={{ background: 'var(--bg)', minHeight: '100vh', color: 'var(--text)', transition: 'background 0.3s' }}>
 
-      {/* --- HERO SECTION: Background updated to Gradient --- */}
+      {/* --- HERO SECTION --- */}
       <div style={{
         position: 'relative',
         padding: '6rem 1rem 4rem',
         textAlign: 'center',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
-        background: 'linear-gradient(to bottom, #02112e81, #02112e81)' // New Gradient Background
+        borderBottom: '1px solid var(--border)',
+        background: isDark 
+          ? 'linear-gradient(to bottom, rgba(2,17,46,0.5), var(--bg))' 
+          : 'linear-gradient(to bottom, rgba(230,57,70,0.05), var(--bg))'
       }}>
         <div style={{
           position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)',
-          width: '400px', height: '200px', background: 'rgba(230, 57, 70, 0.1)',
-          filter: 'blur(100px)', borderRadius: '100%', pointerEvents: 'none'
+          width: '400px', height: '200px', background: 'var(--red-light)',
+          filter: 'blur(100px)', borderRadius: '100%', pointerEvents: 'none', opacity: isDark ? 0.3 : 0.6
         }} />
 
         <div style={{ position: 'relative', zIndex: 1 }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: 'rgba(230, 57, 70, 0.1)', padding: '8px 20px',
-            borderRadius: '100px', color: '#f90921', fontSize: '0.75rem', fontWeight: 600,
-            marginBottom: '1.5rem', border: '1px solid rgba(230, 57, 70, 0.2)'
+            background: 'var(--red-light)', padding: '8px 20px',
+            borderRadius: '100px', color: 'var(--red)', fontSize: '0.75rem', fontWeight: 600,
+            marginBottom: '1.5rem', border: '1px solid var(--border)'
           }}>
-            <FiHeart size={14} /> Health & Medical Network
+            <FiHeart size={14} /> {t('health.hero_badge')}
           </div>
-          <h1 style={{ fontSize: '3.5rem', fontWeight: 900, marginBottom: '1rem', letterSpacing: '-1.5px' }}>
-            Find Best Healthcare
+          <h1 style={{ fontSize: 'clamp(2rem, 8vw, 3.5rem)', fontWeight: 900, marginBottom: '1rem', letterSpacing: '-1.5px', color: 'var(--text)' }}>
+            {t('health.hero_title')}
           </h1>
         </div>
       </div>
@@ -183,8 +188,8 @@ export default function Health() {
       <div style={{ padding: '3rem 1.5rem', maxWidth: '1200px', margin: '0 auto' }}>
 
         {/* --- SEARCH & FILTER BAR --- */}
-        <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '24px', marginBottom: '3rem', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', marginBottom: '20px' }}>
+        <div style={{ background: 'var(--surface)', padding: '20px', borderRadius: '24px', marginBottom: '3rem', border: '1px solid var(--border)' }}>
+          <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', marginBottom: '20px', paddingBottom: '5px' }}>
             {TYPES.map(type => (
               <button
                 key={type.key}
@@ -192,79 +197,85 @@ export default function Health() {
                 style={{
                   padding: '10px 20px', borderRadius: '12px', border: 'none', cursor: 'pointer',
                   whiteSpace: 'nowrap', fontSize: '0.85rem', fontWeight: 600,
-                  background: activeType === type.key ? '#52272b' : 'rgba(255,255,255,0.05)',
-                  color: activeType === type.key ? '#fff' : '#94a3b8',
+                  background: activeType === type.key ? 'var(--red)' : 'var(--surface-2)',
+                  color: activeType === type.key ? '#fff' : 'var(--text-muted)',
                   transition: '0.3s'
                 }}
               >
-                {type.label}
+                {t(type.label)}
               </button>
             ))}
           </div>
 
           <div style={{ position: 'relative' }}>
-            <FiSearch style={{ position: 'absolute', left: 20, top: '50%', transform: 'translateY(-50%)', color: '#64748b' }} size={20} />
+            <FiSearch style={{ position: 'absolute', left: 20, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)' }} size={20} />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="Search hospitals, clinics or areas..."
+              placeholder={t('health.search_placeholder')}
               style={{
                 width: '100%', boxSizing: 'border-box', height: '56px',
                 padding: '0 20px 0 55px', borderRadius: '16px',
-                background: '#5e3153', border: '1px solid rgba(255,255,255,0.1)',
-                color: '#fff', outline: 'none'
+                background: 'var(--bg)', border: '1px solid var(--border)',
+                color: 'var(--text)', outline: 'none'
               }}
             />
           </div>
         </div>
 
         {/* --- HOSPITAL GRID --- */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '25px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '25px' }}>
           {filtered.map(item => (
             <div key={item.id} style={{
-              background: '#111113', borderRadius: '24px', padding: '24px',
-              border: '1px solid rgba(255,255,255,0.05)', transition: '0.3s'
+              background: 'var(--surface)', borderRadius: '24px', padding: '24px',
+              border: '1px solid var(--border)', transition: '0.3s',
+              display: 'flex', flexDirection: 'column', justifyContent: 'space-between'
             }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                <span style={{
-                  background: 'rgba(6, 182, 212, 0.1)', color: '#22d3ee',
-                  padding: '5px 12px', borderRadius: '8px', fontSize: '0.7rem', fontWeight: 700
-                }}>
-                  {item.badge}
-                </span>
-                <MdLocalHospital size={22} color={item.type === 'govt-hospital' ? '#e63946' : '#2c494e'} />
-              </div>
-
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '4px' }}>{item.name}</h3>
-
-              {/* --- RATING WITH ICON --- */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: '12px' }}>
-                <FiStar size={14} style={{ fill: '#fbbf24', color: '#fbbf24' }} />
-                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#fbbf24' }}>{item.rating}</span>
-                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>(Reviews)</span>
-              </div>
-
-              <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '20px' }}>{item.desc}</p>
-
-              <div style={{ borderTop: '1px solid rgba(247, 240, 240, 0.05)', paddingTop: '15px', marginBottom: '20px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#94a3b8', fontSize: '0.85rem', marginBottom: '8px' }}>
-                  <FiMapPin size={14} /> {item.area}
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                  <span style={{
+                    background: 'var(--cyan-light)', color: 'var(--cyan)',
+                    padding: '5px 12px', borderRadius: '8px', fontSize: '0.7rem', fontWeight: 700
+                  }}>
+                    {item.badge}
+                  </span>
+                  <MdLocalHospital size={22} color={item.type === 'govt-hospital' ? 'var(--red)' : 'var(--cyan)'} />
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#10b981', fontSize: '0.85rem' }}>
-                  <FiClock size={14} /> Open 24 Hours
+
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '4px', color: 'var(--text)' }}>{item.name}</h3>
+
+                {/* --- RATING WITH ICON --- */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: '12px' }}>
+                  <FiStar size={14} style={{ fill: 'var(--amber)', color: 'var(--amber)' }} />
+                  <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--amber)' }}>{item.rating}</span>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>({t('health.rating')})</span>
+                </div>
+
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '20px' }}>{item.desc}</p>
+
+                <div style={{ borderTop: '1px solid var(--border)', paddingTop: '15px', marginBottom: '20px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '8px' }}>
+                    <FiMapPin size={14} /> {item.area}
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--green)', fontSize: '0.85rem' }}>
+                    <FiClock size={14} /> {t('health.open_24')}
+                  </div>
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: '10px' }}>
                 <a href={`tel:${item.phone}`} style={{
                   flex: 1, height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: '#e63946', color: '#fff', borderRadius: '12px', fontWeight: 700, textDecoration: 'none', gap: 8
-                }}>
-                  <FiPhone size={16} /> Contact
+                  background: 'var(--red)', color: '#fff', borderRadius: '12px', fontWeight: 700, textDecoration: 'none', gap: 8, transition: 'transform 0.2s'
+                }}
+                onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+                >
+                  <FiPhone size={16} /> {t('common.contact')}
                 </a>
                 <button style={{
                   width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: 'rgba(75, 68, 68, 0.95)', border: 'none', borderRadius: '12px', color: '#fff'
+                  background: 'var(--surface-2)', border: 'none', borderRadius: '12px', color: 'var(--text)', cursor: 'pointer'
                 }}>
                   <FiArrowRight size={20} />
                 </button>
@@ -276,4 +287,4 @@ export default function Health() {
       </div>
     </div>
   );
-}
+}

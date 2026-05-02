@@ -4,6 +4,7 @@ import {
   FiSearch, FiPhone, FiMapPin, FiStar,
   FiFilter, FiArrowRight, FiCheckCircle, FiTag
 } from 'react-icons/fi';
+import { useTheme } from '../context/ThemeContext';
 
 const CATS = [
   { key: 'all', label: 'All Services', color: '#8B5CF6' },
@@ -122,6 +123,8 @@ const SAMPLE = [
 ];
 
 export default function Services() {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
   const [activeCat, setActiveCat] = useState(searchParams.get('cat') || 'all');
@@ -141,15 +144,15 @@ export default function Services() {
   });
 
   return (
-    <div style={{ background: '#09090b', minHeight: '100vh', color: '#fff', fontFamily: "'Inter', sans-serif", overflowX: 'hidden' }}>
+    <div style={{ background: 'var(--bg)', minHeight: '100vh', color: 'var(--text)', fontFamily: "'Inter', sans-serif", overflowX: 'hidden' }}>
 
       {/* --- HERO SECTION --- */}
       <div style={{
         position: 'relative',
         padding: '8rem 1rem 6rem',
         textAlign: 'center',
-        background: '#09090b',
-        borderBottom: '1px solid rgba(255,255,255,0.05)'
+        background: 'var(--bg)',
+        borderBottom: '1px solid var(--border)'
       }}>
         {/* Background Grid */}
         <div style={{
@@ -195,13 +198,13 @@ export default function Services() {
               { val: '64', label: 'Districts', icon: <FiMapPin size={20} /> }
             ].map((s, i) => (
               <div key={i} style={{
-                background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)',
+                background: 'var(--surface)', border: '1px solid var(--border)',
                 padding: '30px', borderRadius: '24px', flex: '1', minWidth: '200px',
                 backdropFilter: 'blur(12px)'
               }}>
                 <div style={{ color: '#8b5cf6', marginBottom: '12px', display: 'flex', justifyContent: 'center' }}>{s.icon}</div>
-                <h2 style={{ fontSize: '2.2rem', fontWeight: 800, margin: 0, color: '#fff' }}>{s.val}</h2>
-                <p style={{ color: '#71717a', fontSize: '0.8rem', fontWeight: 600, marginTop: '5px', textTransform: 'uppercase', letterSpacing: '1px' }}>{s.label}</p>
+                <h2 style={{ fontSize: '2.2rem', fontWeight: 800, margin: 0, color: 'var(--text)' }}>{s.val}</h2>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600, marginTop: '5px', textTransform: 'uppercase', letterSpacing: '1px' }}>{s.label}</p>
               </div>
             ))}
           </div>
@@ -213,7 +216,7 @@ export default function Services() {
 
         {/* Filter & Search Bar */}
         <div style={{
-          background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)',
+          background: 'var(--surface)', border: '1px solid var(--border)',
           padding: '24px', borderRadius: '32px', marginBottom: '4rem'
         }}>
           {/* Category Buttons */}
@@ -225,8 +228,8 @@ export default function Services() {
                 style={{
                   padding: '12px 24px', borderRadius: '16px', border: 'none', cursor: 'pointer',
                   whiteSpace: 'nowrap', fontSize: '0.9rem', fontWeight: 600,
-                  background: activeCat === c.key ? '#8b5cf6' : 'rgba(255,255,255,0.03)',
-                  color: activeCat === c.key ? '#fff' : '#71717a',
+                  background: activeCat === c.key ? '#8b5cf6' : 'var(--surface-2)',
+                  color: activeCat === c.key ? '#fff' : 'var(--text-muted)',
                   transition: '0.2s all'
                 }}
               >
@@ -248,9 +251,9 @@ export default function Services() {
                 height: '64px',
                 padding: '0 160px 0 56px',
                 borderRadius: '20px',
-                background: 'rgba(0,0,0,0.3)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                color: '#fff',
+                background: 'var(--bg)',
+                border: '1px solid var(--border)',
+                color: 'var(--text)',
                 fontSize: '1rem',
                 outline: 'none'
               }}
@@ -285,8 +288,8 @@ export default function Services() {
           ) : (
             filtered.map(item => (
               <div key={item.id} style={{
-                background: '#18181b', borderRadius: '28px', padding: '28px',
-                border: '1px solid rgba(255,255,255,0.05)', position: 'relative',
+                background: 'var(--surface)', borderRadius: '28px', padding: '28px',
+                border: '1px solid var(--border)', position: 'relative',
                 transition: 'transform 0.3s ease, border-color 0.3s ease'
               }}
                 onMouseEnter={e => {
@@ -295,7 +298,7 @@ export default function Services() {
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)';
+                  e.currentTarget.style.borderColor = 'var(--border)';
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
@@ -312,16 +315,16 @@ export default function Services() {
                 </div>
 
                 <h3 style={{ fontSize: '1.35rem', fontWeight: 700, marginBottom: '12px' }}>{item.name}</h3>
-                <p style={{ color: '#71717a', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '24px' }}>{item.desc}</p>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '24px' }}>{item.desc}</p>
 
                 <div style={{
-                  borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '20px',
+                  borderTop: '1px solid var(--border)', paddingTop: '20px',
                   display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '28px'
                 }}>
                   <div style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
                     <FiTag size={16} /> {item.price}
                   </div>
-                  <div style={{ fontSize: '0.85rem', color: '#71717a', display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 8 }}>
                     <FiMapPin size={16} /> {item.area} ({item.reviews} reviews)
                   </div>
                 </div>
@@ -335,8 +338,8 @@ export default function Services() {
                   </a>
                   <button style={{
                     width: '52px', height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)',
-                    borderRadius: '16px', color: '#fff', cursor: 'pointer'
+                    background: 'var(--surface-2)', border: '1px solid var(--border)',
+                    borderRadius: '16px', color: 'var(--text)', cursor: 'pointer'
                   }}>
                     <FiArrowRight size={22} />
                   </button>
