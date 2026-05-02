@@ -1,106 +1,183 @@
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { FiBell, FiSearch, FiClock, FiExternalLink, FiBook, FiBriefcase, FiAward, FiShield, FiFilter, FiCalendar } from 'react-icons/fi';
+import { useState } from 'react';
+import { 
+  FiBell, FiBookOpen, FiBriefcase, FiAward, 
+  FiFileText, FiArrowRight, FiClock, FiExternalLink, FiActivity 
+} from 'react-icons/fi';
 
-const CATS = [
-  { key:'all',           label:'All Notices',        color:'#64748B' },
-  { key:'school-college',label:'School & College',   color:'#E63946' },
-  { key:'university',    label:'University',         color:'#F59E0B' },
-  { key:'admission',     label:'Admission News',     color:'#06B6D4' },
-  { key:'job-circular',  label:'Job Circular',       color:'#8B5CF6' },
-  { key:'exam',          label:'Exam & Admit Card',  color:'#EC4899' },
-  { key:'internship',    label:'Internship',         color:'#10B981' },
-  { key:'scholarship',   label:'Scholarships',       color:'#10B981' },
-  { key:'gazette',       label:'Gov. Gazettes',      color:'#64748B' },
+// ১. ক্যাটাগরি লিস্ট (স্ক্রিনশট ২১ ও ২৩ এর সাথে মিল রেখে)
+const NOTICE_CATS = [
+  { id: 'academic', label: 'Academic Notices', icon: <FiBookOpen />, color: '#8B5CF6' },
+  { id: 'career', label: 'Career Hub', icon: <FiBriefcase />, color: '#06B6D4' },
+  { id: 'scholarship', label: 'Scholarships', icon: <FiAward />, color: '#F59E0B' },
+  { id: 'government', label: 'Gov Gazettes', icon: <FiFileText />, color: '#10B981' },
+  { id: 'donate', label: 'Donation Requests', icon: <FiActivity />, color: '#EF4444' },
 ];
 
-const SAMPLE = [
-  { id:1,  cat:'school-college', title:'2025 SSC Routine Published by BISE Dhaka',           date:'2025-03-10', source:'BISE Dhaka' },
-  { id:2,  cat:'school-college', title:'HSC Registration Form Submission Deadline Extended', date:'2025-02-28', source:'Education Board' },
-  { id:3,  cat:'university',     title:'Dhaka University Admission Test 2024-25 Schedule',   date:'2025-04-01', source:'DU' },
-  { id:4,  cat:'university',     title:'BUET Admission Notice 2024-25',                       date:'2025-03-15', source:'BUET' },
-  { id:5,  cat:'admission',      title:'GST Cluster Admission Result 2024-25 Published',     date:'2025-05-02', source:'GST Cluster' },
-  { id:6,  cat:'admission',      title:'National University Honours Admission Circular',      date:'2025-04-12', source:'NU Bangladesh' },
-  { id:7,  cat:'job-circular',   title:'Bangladesh Civil Service (BCS) 46th Circular',       date:'2025-01-20', source:'BPSC' },
-  { id:8,  cat:'job-circular',   title:'Sonali Bank Recruitment Circular 2025',              date:'2025-02-14', source:'Sonali Bank' },
-  { id:9,  cat:'exam',           title:'44th BCS Written Exam Schedule Announced',           date:'2025-03-05', source:'BPSC' },
-  { id:10, cat:'exam',           title:'SSC 2025 Exam Admit Card Download Started',          date:'2025-04-18', source:'BISE Dhaka' },
-  { id:11, cat:'internship',     title:'ICTD Government Internship Program 2025',            date:'2025-04-25', source:'ICT Division' },
-  { id:12, cat:'scholarship',    title:'Prime Minister Education Trust Scholarship 2025',     date:'2025-03-22', source:'PMO' },
-  { id:13, cat:'scholarship',    title:'Chinese Government Scholarship 2025-26',             date:'2025-02-10', source:'Chinese Embassy' },
-  { id:14, cat:'gazette',        title:'Bangladesh Gazette: Financial Act Amendment 2025',   date:'2025-04-08', source:'MoF' },
+// ২. ডাটাবেস (এক্সপার্ট লেভেল ইনফরমেশন সহ)
+const NOTICES_DATA = [
+  {
+    id: 1, cat: 'academic', title: 'HSC Examination Schedule 2026 Released',
+    date: 'May 02, 2026', org: 'Education Board', urgent: true,
+    desc: 'The official routine for HSC candidates of all boards has been published. Exams start from June 15.'
+  },
+  {
+    id: 2, cat: 'academic', title: 'University Admission Test: Unit A Results',
+    date: 'May 01, 2026', org: 'Dhaka University', urgent: false,
+    desc: 'The results for the Science unit admission test are now available on the official portal.'
+  },
+  {
+    id: 3, cat: 'career', title: 'Senior Software Engineer - National Data Center',
+    date: 'Apr 30, 2026', org: 'ICT Division', urgent: true,
+    desc: 'New job circular for the Bangladesh Government digitization project. Minimum 5 years experience required.'
+  },
+  {
+    id: 4, cat: 'career', title: 'Bank Asia Trainee Officer Recruitment',
+    date: 'Apr 28, 2026', org: 'Bank Asia Ltd', urgent: false,
+    desc: 'Fresh graduates are encouraged to apply for the Management Trainee program. Deadline: May 20.'
+  },
+  {
+    id: 5, cat: 'scholarship', title: 'Prime Minister Achievement Award 2026',
+    date: 'May 01, 2026', org: 'PMO Office', urgent: true,
+    desc: 'Applications are open for merit-based scholarships for university students across the country.'
+  },
+  {
+    id: 6, cat: 'scholarship', title: 'Full-Free Studentship for Undergraduates',
+    date: 'Apr 25, 2026', org: 'Education Ministry', urgent: false,
+    desc: 'Special grants for students from low-income families to continue their higher education.'
+  },
+  {
+    id: 7, cat: 'government', title: 'New Labor Law Amendments 2026',
+    date: 'Apr 20, 2026', org: 'Ministry of Law', urgent: false,
+    desc: 'The official gazette for the updated labor regulations has been published for public review.'
+  },
+  {
+    id: 8, cat: 'donate', title: 'Emergency Medical Aid for Flood Victims',
+    date: 'May 02, 2026', org: 'Red Crescent', urgent: true,
+    desc: 'Urgent collection of medicine and dry food for the affected people in Sylhet region.'
+  },
+  {
+    id: 9, cat: 'donate', title: 'Education Fund for Orphans - 2026',
+    date: 'May 01, 2026', org: 'People E-Sheba', urgent: false,
+    desc: 'Help us provide school supplies and tuition fees for 500 underprivileged children.'
+  }
 ];
 
 export default function Notices() {
-  const [searchParams] = useSearchParams();
-  const [search, setSearch]       = useState('');
-  const [activeCat, setActiveCat] = useState(searchParams.get('cat') || 'all');
-
-  // Sync state with URL params
-  useEffect(() => {
-    setActiveCat(searchParams.get('cat') || 'all');
-  }, [searchParams]);
-
-  const filtered = SAMPLE.filter(item => {
-    const matchCat    = activeCat === 'all' || item.cat === activeCat;
-    const matchSearch = !search || item.title.toLowerCase().includes(search.toLowerCase()) || item.source.toLowerCase().includes(search.toLowerCase());
-    return matchCat && matchSearch;
-  });
+  const [activeTab, setActiveTab] = useState('academic');
 
   return (
-    <div style={{ minHeight:'100vh', padding:'2rem 1rem' }}>
-      <div className="container" style={{ maxWidth:900 }}>
-        <div style={{ marginBottom:'2rem' }}>
-          <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-            <div style={{ width:44, height:44, borderRadius:12, background:'rgba(100,116,139,0.12)', display:'flex', alignItems:'center', justifyContent:'center', color:'#64748B' }}>
-              <FiBell size={22}/>
-            </div>
-            <div>
-              <h1 style={{ fontSize:'1.6rem', fontWeight:800, color:'var(--text)', margin:0 }}>Notices</h1>
-              <p style={{ fontSize:'0.85rem', color:'var(--text-muted)', margin:0 }}>Academic, Career, Scholarships & Government Notices</p>
-            </div>
+    <div style={{ background: '#09090b', minHeight: '100vh', color: '#fff', fontFamily: "'Inter', sans-serif" }}>
+      
+      {/* --- HERO SECTION --- */}
+      <div style={{ 
+        position: 'relative', padding: '8rem 1rem 4rem', textAlign: 'center', overflow: 'hidden',
+        borderBottom: '1px solid rgba(255,255,255,0.05)'
+      }}>
+        {/* Background Gradients */}
+        <div style={{
+          position: 'absolute', top: '10%', left: '-5%', width: '400px', height: '400px',
+          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.07) 0%, transparent 70%)',
+          filter: 'blur(80px)', pointerEvents: 'none'
+        }} />
+
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{ 
+            display: 'inline-flex', alignItems: 'center', gap: 8, 
+            background: 'rgba(139, 92, 246, 0.1)', padding: '8px 20px', 
+            borderRadius: '100px', color: '#a78bfa', fontSize: '0.75rem', fontWeight: 700,
+            marginBottom: '1.5rem', border: '1px solid rgba(139, 92, 246, 0.2)'
+          }}>
+            <FiBell /> Official Updates & Bulletins
           </div>
+          <h1 style={{ fontSize: '4rem', fontWeight: 900, marginBottom: '1rem', letterSpacing: '-2px' }}>
+            Notice Center
+          </h1>
+          <p style={{ color: '#71717a', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto' }}>
+            Stay informed with the latest academic, career, and donation updates tailored for you.
+          </p>
         </div>
-        <div style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:'1.5rem' }}>
-          {CATS.map(c => (
-            <button key={c.key} onClick={() => setActiveCat(c.key)}
-              style={{ padding:'7px 14px', borderRadius:20, border:`1px solid ${activeCat===c.key ? c.color : 'var(--border)'}`, background: activeCat===c.key ? `${c.color}15` : 'var(--surface-2)', color: activeCat===c.key ? c.color : 'var(--text-muted)', fontSize:'0.82rem', fontWeight:600, cursor:'pointer', transition:'all 0.2s' }}
-            >{c.label}</button>
+      </div>
+
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '4rem 1.5rem' }}>
+        
+        {/* --- CATEGORY SELECTOR --- */}
+        <div style={{ 
+          display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', 
+          gap: '15px', marginBottom: '3rem' 
+        }}>
+          {NOTICE_CATS.map(cat => (
+            <button
+              key={cat.id}
+              onClick={() => setActiveTab(cat.id)}
+              style={{
+                background: activeTab === cat.id ? 'rgba(139, 92, 246, 0.1)' : 'rgba(255,255,255,0.02)',
+                border: `1px solid ${activeTab === cat.id ? '#8b5cf6' : 'rgba(255,255,255,0.05)'}`,
+                padding: '20px', borderRadius: '20px', color: '#fff', cursor: 'pointer',
+                transition: '0.3s all', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px'
+              }}
+            >
+              <div style={{ color: activeTab === cat.id ? '#8b5cf6' : '#71717a', fontSize: '1.5rem' }}>
+                {cat.icon}
+              </div>
+              <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{cat.label}</span>
+            </button>
           ))}
         </div>
-        <div style={{ position:'relative', maxWidth:460, marginBottom:'2rem' }}>
-          <FiSearch style={{ position:'absolute', left:14, top:'50%', transform:'translateY(-50%)', color:'var(--text-dim)' }} size={15}/>
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search notices..." className="form-input" style={{ paddingLeft:40, borderRadius:24 }}/>
-        </div>
-        <div style={{ display:'flex', flexDirection:'column', gap:'0.75rem' }}>
-          {filtered.map(item => {
-            const iColor = CATS.find(c => c.key === item.cat)?.color || '#64748B';
-            const iLabel = CATS.find(c => c.key === item.cat)?.label || item.cat;
-            return (
-              <a key={item.id} href="#"
-                style={{ display:'flex', alignItems:'center', justifyContent:'space-between', background:'var(--surface)', border:'1px solid var(--border)', borderRadius:14, padding:'1rem 1.25rem', textDecoration:'none', transition:'all 0.2s' }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor=iColor; e.currentTarget.style.background='var(--surface-2)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor='var(--border)'; e.currentTarget.style.background='var(--surface)'; }}
-              >
-                <div style={{ flex:1, minWidth:0 }}>
-                  <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:6 }}>
-                    <span style={{ fontSize:'0.72rem', fontWeight:600, padding:'2px 8px', borderRadius:10, background:`${iColor}15`, color:iColor, whiteSpace:'nowrap' }}>{iLabel}</span>
-                    <span style={{ fontSize:'0.75rem', color:'var(--text-dim)', display:'flex', alignItems:'center', gap:4, whiteSpace:'nowrap' }}><FiClock size={11}/>{item.date}</span>
-                  </div>
-                  <div style={{ fontSize:'0.92rem', fontWeight:600, color:'var(--text)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{item.title}</div>
-                  <div style={{ fontSize:'0.78rem', color:'var(--text-muted)', marginTop:3 }}>Source: {item.source}</div>
+
+        {/* --- NOTICE LIST --- */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {NOTICES_DATA.filter(n => n.cat === activeTab).map(notice => (
+            <div key={notice.id} style={{
+              background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)',
+              padding: '24px', borderRadius: '24px', display: 'flex', justifyContent: 'space-between',
+              alignItems: 'center', flexWrap: 'wrap', gap: '20px'
+            }}>
+              <div style={{ flex: 1, minWidth: '300px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '0.75rem', color: '#8b5cf6', fontWeight: 700, textTransform: 'uppercase' }}>
+                    {notice.org}
+                  </span>
+                  {notice.urgent && (
+                    <span style={{ background: '#ef4444', color: '#fff', fontSize: '0.65rem', padding: '2px 8px', borderRadius: '4px', fontWeight: 900 }}>
+                      URGENT
+                    </span>
+                  )}
                 </div>
-                <FiExternalLink size={15} style={{ color:'var(--text-dim)', flexShrink:0, marginLeft:16 }}/>
-              </a>
-            );
-          })}
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '8px', color: '#fff' }}>
+                  {notice.title}
+                </h3>
+                <p style={{ color: '#71717a', fontSize: '0.9rem', lineHeight: 1.5 }}>{notice.desc}</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 15, marginTop: '15px', color: '#52525b', fontSize: '0.8rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><FiClock /> {notice.date}</div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <button style={{
+                  padding: '12px 24px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'transparent', color: '#fff', fontWeight: 600, cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', gap: 8
+                }}>
+                  <FiExternalLink size={16} /> View Details
+                </button>
+                <button style={{
+                  padding: '12px 18px', borderRadius: '12px', border: 'none',
+                  background: '#8b5cf6', color: '#fff', cursor: 'pointer'
+                }}>
+                  <FiArrowRight size={20} />
+                </button>
+              </div>
+            </div>
+          ))}
+
+          {/* Empty State */}
+          {NOTICES_DATA.filter(n => n.cat === activeTab).length === 0 && (
+            <div style={{ textAlign: 'center', padding: '4rem', color: '#52525b' }}>
+              <FiBell size={40} style={{ marginBottom: '1rem', opacity: 0.2 }} />
+              <p>No current updates in this category.</p>
+            </div>
+          )}
         </div>
-        {filtered.length === 0 && (
-          <div style={{ textAlign:'center', padding:'4rem 1rem', color:'var(--text-muted)' }}>
-            <FiFilter size={32} style={{ opacity:0.3, display:'block', margin:'0 auto 12px' }}/>
-            <p>No notices found. Try adjusting your search or filter.</p>
-          </div>
-        )}
       </div>
     </div>
   );
