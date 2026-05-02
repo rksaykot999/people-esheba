@@ -95,28 +95,35 @@ export default function Pharmacy() {
   return (
     <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
 
-      {/* ═══ HERO ═══ */}
+      {/* ════════════════ HERO SECTION ════════════════ */}
       <div style={{
         position: 'relative', overflow: 'hidden',
         background: isDark
-          ? 'linear-gradient(135deg, #0a1628 0%, #0f1d32 40%, #080E1A 100%)'
-          : 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 40%, #f1f5f9 100%)',
+          ? 'linear-gradient(135deg, #0d0005 0%, #130008 40%, #080E1A 100%)'
+          : 'linear-gradient(135deg, #fff5f5 0%, #fef2f2 40%, #f1f5f9 100%)',
         padding: '4rem 0 3rem',
       }}>
         <div style={{
           position: 'absolute', top: '-80px', left: '-80px',
           width: 400, height: 400, borderRadius: '50%',
           background: isDark
-            ? 'radial-gradient(circle, rgba(16,185,129,0.18) 0%, transparent 70%)'
-            : 'radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%)',
+            ? 'radial-gradient(circle, rgba(230,57,70,0.18) 0%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(230,57,70,0.08) 0%, transparent 70%)',
           pointerEvents: 'none',
         }} />
         <div style={{
           position: 'absolute', bottom: '-60px', right: '10%',
           width: 300, height: 300, borderRadius: '50%',
           background: isDark
-            ? 'radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 70%)'
-            : 'radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%)',
+            ? 'radial-gradient(circle, rgba(230,57,70,0.1) 0%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(230,57,70,0.05) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }} />
+        <div style={{
+          position: 'absolute', inset: 0, opacity: isDark ? 0.03 : 0.06,
+          backgroundImage: `linear-gradient(var(--red) 1px, transparent 1px),
+                            linear-gradient(90deg, var(--red) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px',
           pointerEvents: 'none',
         }} />
 
@@ -130,12 +137,12 @@ export default function Pharmacy() {
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
               <span style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
-                background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.25)',
-                color: '#10B981', padding: '5px 14px', borderRadius: 999,
+                background: 'rgba(230,57,70,0.12)', border: '1px solid rgba(230,57,70,0.25)',
+                color: 'var(--red)', padding: '5px 14px', borderRadius: 999,
                 fontSize: '0.72rem', fontWeight: 800, letterSpacing: '1.5px', textTransform: 'uppercase',
               }}>
                 <span style={{
-                  width: 7, height: 7, borderRadius: '50%', background: '#10B981',
+                  width: 7, height: 7, borderRadius: '50%', background: 'var(--red)',
                   animation: 'pulse-dot 1.4s ease-in-out infinite',
                 }} />
                 {t("pharmacy.hero_badge") || "Trusted Pharmacy Directory"}
@@ -149,7 +156,7 @@ export default function Pharmacy() {
             }}>
               {t("pharmacy.hero_title") || "Find Medicines Near You"}<br />
               <span style={{
-                background: 'linear-gradient(135deg, #10B981, #34d399)',
+                background: 'linear-gradient(135deg, #E63946, #ff6b6b)',
                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
               }}>
@@ -163,9 +170,9 @@ export default function Pharmacy() {
             {/* Stats */}
             <div style={{ display: 'flex', justifyContent: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
               {[
-                { label: t("pharmacy.stat_listed") || "Pharmacies Listed", value: 800, suffix: '+', icon: <MdLocalPharmacy size={16} />, color: '#10B981' },
-                { label: t("pharmacy.stat_areas") || "Areas Covered", value: 45, suffix: '', icon: <FiMapPin size={16} />, color: '#06B6D4' },
-                { label: t("pharmacy.stat_verified") || "Verified", value: 92, suffix: '%', icon: <FiCheckCircle size={16} />, color: '#8B5CF6' },
+                { label: t("pharmacy.stat_listed") || "Pharmacies Listed", value: 800, suffix: '+', icon: <MdLocalPharmacy size={16} />, color: 'var(--red)' },
+                { label: t("pharmacy.stat_areas") || "Areas Covered", value: 45, suffix: '', icon: <FiMapPin size={16} />, color: 'var(--cyan)' },
+                { label: t("pharmacy.stat_verified") || "Verified", value: 92, suffix: '%', icon: <FiCheckCircle size={16} />, color: 'var(--green)' },
               ].map(s => (
                 <div key={s.label} style={{
                   background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.02)',

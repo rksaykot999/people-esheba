@@ -12,11 +12,11 @@ import {
 
 const TYPES = ['full-time', 'part-time', 'freelance', 'internship', 'govt'];
 const TYPE_COLORS = {
-  'full-time' : '#10B981',
-  'part-time' : '#06B6D4',
-  'freelance' : '#8B5CF6',
+  'full-time': '#10B981',
+  'part-time': '#06B6D4',
+  'freelance': '#8B5CF6',
   'internship': '#F59E0B',
-  'govt'      : '#E63946'
+  'govt': '#E63946'
 };
 
 export default function Jobs({ forcedType = '', forcedRemote = false, title = '', subtitle = '' }) {
@@ -95,25 +95,34 @@ export default function Jobs({ forcedType = '', forcedRemote = false, title = ''
 
   return (
     <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
-      {/* ═══ HERO ═══ */}
+      {/* ════════════════ HERO SECTION ════════════════ */}
       <div style={{
         position: 'relative', overflow: 'hidden',
         background: isDark
-          ? 'linear-gradient(135deg, #0a1628 0%, #0f1d32 40%, #080E1A 100%)'
-          : 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 40%, #f1f5f9 100%)',
+          ? 'linear-gradient(135deg, #0d0005 0%, #130008 40%, #080E1A 100%)'
+          : 'linear-gradient(135deg, #fff5f5 0%, #fef2f2 40%, #f1f5f9 100%)',
         padding: '4rem 0 3rem',
       }}>
         <div style={{
           position: 'absolute', top: '-80px', left: '-80px', width: 400, height: 400, borderRadius: '50%',
           background: isDark
-            ? 'radial-gradient(circle, rgba(6,182,212,0.18) 0%, transparent 70%)'
-            : 'radial-gradient(circle, rgba(6,182,212,0.08) 0%, transparent 70%)',
+            ? 'radial-gradient(circle, rgba(230,57,70,0.18) 0%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(230,57,70,0.08) 0%, transparent 70%)',
+          pointerEvents: 'none',
         }} />
         <div style={{
           position: 'absolute', bottom: '-60px', right: '10%', width: 300, height: 300, borderRadius: '50%',
           background: isDark
-            ? 'radial-gradient(circle, rgba(6,182,212,0.1) 0%, transparent 70%)'
-            : 'radial-gradient(circle, rgba(6,182,212,0.05) 0%, transparent 70%)',
+            ? 'radial-gradient(circle, rgba(230,57,70,0.1) 0%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(230,57,70,0.05) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }} />
+        <div style={{
+          position: 'absolute', inset: 0, opacity: isDark ? 0.03 : 0.06,
+          backgroundImage: `linear-gradient(var(--red) 1px, transparent 1px),
+                            linear-gradient(90deg, var(--red) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px',
+          pointerEvents: 'none',
         }} />
         <div className="container" style={{ position: 'relative' }}>
           <div style={{
@@ -125,8 +134,8 @@ export default function Jobs({ forcedType = '', forcedRemote = false, title = ''
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
               <span style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
-                background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.25)',
-                color: 'var(--cyan)', padding: '5px 14px', borderRadius: 999,
+                background: 'rgba(230,57,70,0.12)', border: '1px solid rgba(230,57,70,0.25)',
+                color: 'var(--red)', padding: '5px 14px', borderRadius: 999,
                 fontSize: '0.72rem', fontWeight: 800, letterSpacing: '1.5px', textTransform: 'uppercase',
               }}>
                 {t("jobs.hero_badge")}
@@ -139,7 +148,7 @@ export default function Jobs({ forcedType = '', forcedRemote = false, title = ''
             }}>
               {title || t("jobs.hero_title")}{' '}
               <span style={{
-                background: 'linear-gradient(135deg, #06B6D4, #3b82f6)',
+                background: 'linear-gradient(135deg, #E63946, #ff6b6b)',
                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
               }}>
@@ -244,7 +253,7 @@ export default function Jobs({ forcedType = '', forcedRemote = false, title = ''
                       }
                     }}
                   >
-                    {t(`jobs.${tp.replace('-','')}`) || tp}
+                    {t(`jobs.${tp.replace('-', '')}`) || tp}
                   </button>
                 );
               })}
@@ -281,9 +290,9 @@ export default function Jobs({ forcedType = '', forcedRemote = false, title = ''
                 <FiBriefcase size={12} /> {typeFilter}
               </span>
             )}
-              <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                {loading ? t("common.loading") : <><strong style={{ color: 'var(--text)' }}>{total}</strong> {t("jobs.found")}</>}
-              </span>
+            <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+              {loading ? t("common.loading") : <><strong style={{ color: 'var(--text)' }}>{total}</strong> {t("jobs.found")}</>}
+            </span>
           </div>
           {isAuth && (
             <Link to="/jobs/new" className="btn btn-primary btn-sm">
