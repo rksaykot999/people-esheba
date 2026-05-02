@@ -4,7 +4,7 @@ import { useTheme } from '../context/ThemeContext';
 import {
   FiUser, FiSearch, FiMapPin, FiFilter, FiExternalLink,
   FiShield, FiAward, FiClock, FiHeart, FiSmile, FiPhone,
-  FiStar, FiGlobe
+  FiStar, FiGlobe, FiChevronRight
 } from 'react-icons/fi';
 import { MdHealthAndSafety, MdScience, MdPerson, MdLocalHospital, MdSchool } from 'react-icons/md';
 
