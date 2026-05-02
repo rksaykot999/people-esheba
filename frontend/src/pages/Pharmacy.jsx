@@ -95,15 +95,14 @@ export default function Pharmacy() {
   return (
     <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
 
-      {/* ════════════ HERO SECTION ════════════ */}
+      {/* ═══ HERO ═══ */}
       <div style={{
         position: 'relative', overflow: 'hidden',
         background: isDark
-          ? 'linear-gradient(135deg, #0a1c14 0%, #081c14 40%, #080E1A 100%)'
-          : 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 40%, #f1f5f9 100%)',
+          ? 'linear-gradient(135deg, #0a1628 0%, #0f1d32 40%, #080E1A 100%)'
+          : 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 40%, #f1f5f9 100%)',
         padding: '4rem 0 3rem',
       }}>
-        {/* Blobs */}
         <div style={{
           position: 'absolute', top: '-80px', left: '-80px',
           width: 400, height: 400, borderRadius: '50%',
@@ -118,13 +117,6 @@ export default function Pharmacy() {
           background: isDark
             ? 'radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 70%)'
             : 'radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} />
-        <div style={{
-          position: 'absolute', inset: 0, opacity: isDark ? 0.03 : 0.06,
-          backgroundImage: `linear-gradient(#10B981 1px, transparent 1px),
-                            linear-gradient(90deg, #10B981 1px, transparent 1px)`,
-          backgroundSize: '60px 60px',
           pointerEvents: 'none',
         }} />
 
