@@ -394,12 +394,12 @@ export default function Health() {
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                     <div style={{
-                      width: 48, height: 48, borderRadius: 14,
+                      width: 26, height: 26, borderRadius: 10,
                       background: meta.bg, border: `1px solid ${meta.color}30`,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       color: meta.color,
                     }}>
-                      <Icon size={22} />
+                      <Icon size={16} />
                     </div>
                     <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
                       {item.is_verified && (
@@ -474,11 +474,11 @@ export default function Health() {
         <div className="container">
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1.75rem' }}>
             <div style={{
-              width: 36, height: 36, borderRadius: 10,
+              width: 32, height: 32, borderRadius: 8,
               background: 'rgba(230,57,70,0.12)', color: 'var(--red)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              <FiHeart size={17} />
+              <FiHeart size={15} />
             </div>
             <div>
               <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text)' }}>
@@ -508,11 +508,11 @@ export default function Health() {
                   onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'none'; }}
                 >
                   <div style={{
-                    width: 44, height: 44, borderRadius: 12, flexShrink: 0,
+                    width: 38, height: 38, borderRadius: 10, flexShrink: 0,
                     background: `${tip.color}15`, display: 'flex', alignItems: 'center',
                     justifyContent: 'center', color: tip.color,
                   }}>
-                    <Icon size={20} />
+                    <Icon size={16} />
                   </div>
                   <div>
                     <div style={{ fontWeight: 700, color: 'var(--text)', fontSize: '0.9rem', marginBottom: 4 }}>{tip.title}</div>
