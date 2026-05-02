@@ -32,6 +32,15 @@ import Services     from './pages/Services';
 import Notices      from './pages/Notices';
 import Finance      from './pages/Finance';
 import Government   from './pages/Government';
+import Doctors      from './pages/Doctors';
+import Pharmacy     from './pages/Pharmacy';
+import GovtJobs     from './pages/GovtJobs';
+import FullTimeJobs from './pages/FullTimeJobs';
+import RemoteJobs   from './pages/RemoteJobs';
+import School       from './pages/School';
+import College      from './pages/College';
+import University   from './pages/University';
+import Scholarships from './pages/Scholarships';
 
 // Admin pages
 import AdminDashboard    from './pages/admin/AdminDashboard';
@@ -96,6 +105,15 @@ function AppRoutes() {
           <Route path="notices"        element={<Notices />} />
           <Route path="finance"        element={<Finance />} />
           <Route path="government"     element={<Government />} />
+          <Route path="doctors"        element={<Doctors />} />
+          <Route path="pharmacy"       element={<Pharmacy />} />
+          <Route path="jobs/govt"      element={<GovtJobs />} />
+          <Route path="jobs/fulltime"  element={<FullTimeJobs />} />
+          <Route path="jobs/remote"    element={<RemoteJobs />} />
+          <Route path="education/school"      element={<School />} />
+          <Route path="education/college"     element={<College />} />
+          <Route path="education/university"  element={<University />} />
+          <Route path="education/scholarships" element={<Scholarships />} />
 
           <Route path="*"              element={<NotFound />} />
         </Route>

@@ -19,14 +19,14 @@ const TYPE_COLORS = {
   'govt'      : '#E63946'
 };
 
-export default function Jobs() {
+export default function Jobs({ forcedType = '', forcedRemote = false, title = '', subtitle = '' }) {
   const { t, isBn } = useLang();
   const { isAuth } = useAuth();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
   const [params, setParams] = useSearchParams();
-  const typeFilter = params.get('type') || '';
+  const typeFilter = forcedType || params.get('type') || '';
   const querySearch = params.get('search') || '';
 
   const [jobs, setJobs] = useState([]);
@@ -35,7 +35,7 @@ export default function Jobs() {
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
   const [search, setSearch] = useState(querySearch);
-  const [remote, setRemote] = useState(false);
+  const [remote, setRemote] = useState(forcedRemote);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -129,11 +129,7 @@ export default function Jobs() {
                 color: 'var(--cyan)', padding: '5px 14px', borderRadius: 999,
                 fontSize: '0.72rem', fontWeight: 800, letterSpacing: '1.5px', textTransform: 'uppercase',
               }}>
-                <span style={{
-                  width: 7, height: 7, borderRadius: '50%', background: 'var(--cyan)',
-                  animation: 'pulse-dot 1.4s ease-in-out infinite',
-                }} />
-                Join the workforce
+                {t("jobs.hero_badge")}
               </span>
             </div>
             <h1 style={{
@@ -141,17 +137,17 @@ export default function Jobs() {
               lineHeight: 1.08, letterSpacing: '-1.5px', color: 'var(--text)',
               marginBottom: '1rem', maxWidth: '700px',
             }}>
-              Find Your Next{' '}
+              {title || t("jobs.hero_title")}{' '}
               <span style={{
                 background: 'linear-gradient(135deg, #06B6D4, #3b82f6)',
                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
               }}>
-                Opportunity
+                {title ? '' : t("jobs.hero_highlight")}
               </span>
             </h1>
             <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: 500, lineHeight: 1.7, margin: '0 auto 2rem' }}>
-              Browse full‑time, part‑time, freelance, internship, and government jobs across Bangladesh.
+              {subtitle || t("jobs.hero_sub")}
             </p>
             {/* Stats row */}
             <div style={{ display: 'flex', justifyContent: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
@@ -193,7 +189,7 @@ export default function Jobs() {
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder={isBn ? 'চাকরি বা কোম্পানি খুঁজুন...' : 'Search jobs or companies...'}
+                placeholder={t("jobs.search_placeholder")}
                 className="form-input"
                 style={{ paddingLeft: 42, height: 46, borderRadius: 12, fontSize: '0.9rem' }}
               />
@@ -203,71 +199,73 @@ export default function Jobs() {
             </button>
           </form>
 
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px', marginRight: 4 }}>
-              <FiBriefcase size={11} style={{ marginRight: 4 }} /> Type:
-            </span>
-            <button
-              onClick={() => handleType('')}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                padding: '6px 14px', borderRadius: 999, fontSize: '0.78rem', fontWeight: 700,
-                cursor: 'pointer', border: '1px solid', transition: 'all 0.18s',
-                background: !typeFilter ? 'var(--cyan)' : 'transparent',
-                borderColor: !typeFilter ? 'var(--cyan)' : 'var(--border-2)',
-                color: !typeFilter ? '#fff' : 'var(--text-muted)',
-              }}
-            >
-              All Types
-            </button>
-            {TYPES.map(tp => {
-              const active = typeFilter === tp;
-              return (
-                <button
-                  key={tp}
-                  onClick={() => handleType(tp)}
-                  style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 6,
-                    padding: '6px 14px', borderRadius: 999, fontSize: '0.78rem', fontWeight: 700,
-                    cursor: 'pointer', border: '1px solid', transition: 'all 0.18s',
-                    background: active ? TYPE_COLORS[tp] : 'transparent',
-                    borderColor: active ? TYPE_COLORS[tp] : 'var(--border-2)',
-                    color: active ? '#fff' : TYPE_COLORS[tp],
-                  }}
-                  onMouseEnter={e => {
-                    if (!active) {
-                      e.currentTarget.style.borderColor = TYPE_COLORS[tp];
-                      e.currentTarget.style.background = `${TYPE_COLORS[tp]}10`;
-                    }
-                  }}
-                  onMouseLeave={e => {
-                    if (!active) {
-                      e.currentTarget.style.borderColor = 'var(--border-2)';
-                      e.currentTarget.style.background = 'transparent';
-                    }
-                  }}
-                >
-                  {t(`jobs.${tp.replace('-','')}`) || tp}
-                </button>
-              );
-            })}
-            <label style={{
-              display: 'flex', alignItems: 'center', gap: 7, cursor: 'pointer',
-              fontSize: '0.78rem', fontWeight: 700, color: remote ? 'var(--cyan)' : 'var(--text-muted)',
-              background: remote ? 'rgba(6,182,212,0.08)' : 'var(--surface-2)',
-              border: `1px solid ${remote ? 'var(--cyan)' : 'var(--border-2)'}`,
-              padding: '6px 14px', borderRadius: 999, transition: 'all 0.18s',
-              userSelect: 'none',
-            }}>
-              <input
-                type="checkbox"
-                checked={remote}
-                onChange={e => setRemote(e.target.checked)}
-                style={{ width: 14, height: 14, accentColor: 'var(--cyan)' }}
-              />
-              <FiHome size={12} /> {isBn ? 'রিমোট' : 'Remote only'}
-            </label>
-          </div>
+          {(!forcedType && !forcedRemote) && (
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px', marginRight: 4 }}>
+                <FiBriefcase size={11} style={{ marginRight: 4 }} /> Type:
+              </span>
+              <button
+                onClick={() => handleType('')}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  padding: '6px 14px', borderRadius: 999, fontSize: '0.78rem', fontWeight: 700,
+                  cursor: 'pointer', border: '1px solid', transition: 'all 0.18s',
+                  background: !typeFilter ? 'var(--cyan)' : 'transparent',
+                  borderColor: !typeFilter ? 'var(--cyan)' : 'var(--border-2)',
+                  color: !typeFilter ? '#fff' : 'var(--text-muted)',
+                }}
+              >
+                All Types
+              </button>
+              {TYPES.map(tp => {
+                const active = typeFilter === tp;
+                return (
+                  <button
+                    key={tp}
+                    onClick={() => handleType(tp)}
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 6,
+                      padding: '6px 14px', borderRadius: 999, fontSize: '0.78rem', fontWeight: 700,
+                      cursor: 'pointer', border: '1px solid', transition: 'all 0.18s',
+                      background: active ? TYPE_COLORS[tp] : 'transparent',
+                      borderColor: active ? TYPE_COLORS[tp] : 'var(--border-2)',
+                      color: active ? '#fff' : TYPE_COLORS[tp],
+                    }}
+                    onMouseEnter={e => {
+                      if (!active) {
+                        e.currentTarget.style.borderColor = TYPE_COLORS[tp];
+                        e.currentTarget.style.background = `${TYPE_COLORS[tp]}10`;
+                      }
+                    }}
+                    onMouseLeave={e => {
+                      if (!active) {
+                        e.currentTarget.style.borderColor = 'var(--border-2)';
+                        e.currentTarget.style.background = 'transparent';
+                      }
+                    }}
+                  >
+                    {t(`jobs.${tp.replace('-','')}`) || tp}
+                  </button>
+                );
+              })}
+              <label style={{
+                display: 'flex', alignItems: 'center', gap: 7, cursor: 'pointer',
+                fontSize: '0.78rem', fontWeight: 700, color: remote ? 'var(--cyan)' : 'var(--text-muted)',
+                background: remote ? 'rgba(6,182,212,0.08)' : 'var(--surface-2)',
+                border: `1px solid ${remote ? 'var(--cyan)' : 'var(--border-2)'}`,
+                padding: '6px 14px', borderRadius: 999, transition: 'all 0.18s',
+                userSelect: 'none',
+              }}>
+                <input
+                  type="checkbox"
+                  checked={remote}
+                  onChange={e => setRemote(e.target.checked)}
+                  style={{ width: 14, height: 14, accentColor: 'var(--cyan)' }}
+                />
+                <FiHome size={12} /> {isBn ? 'রিমোট' : 'Remote only'}
+              </label>
+            </div>
+          )}
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: 8 }}>
@@ -283,9 +281,9 @@ export default function Jobs() {
                 <FiBriefcase size={12} /> {typeFilter}
               </span>
             )}
-            <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-              {loading ? 'Loading...' : <><strong style={{ color: 'var(--text)' }}>{total}</strong> jobs found</>}
-            </span>
+              <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                {loading ? t("common.loading") : <><strong style={{ color: 'var(--text)' }}>{total}</strong> {t("jobs.found")}</>}
+              </span>
           </div>
           {isAuth && (
             <Link to="/jobs/new" className="btn btn-primary btn-sm">

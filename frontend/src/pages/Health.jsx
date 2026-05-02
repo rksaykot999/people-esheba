@@ -2,13 +2,12 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { FiHeart, FiSearch, FiPhone, FiMapPin, FiClock, FiDroplet, FiUser, FiList, FiActivity, FiFilter } from 'react-icons/fi';
 import { MdLocalHospital } from 'react-icons/md';
+import { useLang } from '../context/LanguageContext';
 
 const TYPES = [
   { key: 'all',              label: 'All',                color: '#64748B' },
   { key: 'govt-hospital',    label: 'Government Hospital',color: '#E63946' },
   { key: 'private-hospital', label: 'Private Hospital',  color: '#06B6D4' },
-  { key: 'pharmacy',         label: 'Pharmacy',           color: '#10B981' },
-  { key: 'doctors',          label: 'Find Doctors',       color: '#8B5CF6' },
 ];
 
 const SAMPLE = [
@@ -16,13 +15,10 @@ const SAMPLE = [
   { id:2, type:'govt-hospital',    name:'BSMMU (PG Hospital)',              area:'Dhaka',      phone:'02-9661062',  hours:'24/7',         badge:'Government' },
   { id:3, type:'private-hospital', name:'Square Hospital Ltd.',             area:'Dhaka',      phone:'02-8159457',  hours:'24/7',         badge:'Private' },
   { id:4, type:'private-hospital', name:'United Hospital',                  area:'Dhaka',      phone:'02-8836000',  hours:'24/7',         badge:'Private' },
-  { id:5, type:'pharmacy',         name:'Nipa Medical',                     area:'Mirpur',     phone:'01XXXXXXXXX', hours:'8am-10pm',     badge:'Pharmacy' },
-  { id:6, type:'pharmacy',         name:'ACI Pharmacy',                     area:'Gulshan',    phone:'01XXXXXXXXX', hours:'8am-11pm',     badge:'Pharmacy' },
-  { id:7, type:'doctors',          name:'Dr. Md. Aminul Islam',             area:'Dhaka',      phone:'01XXXXXXXXX', hours:'Sat-Thu 9-5',  badge:'Cardiologist' },
-  { id:8, type:'doctors',          name:'Dr. Farzana Hossain',              area:'Chittagong', phone:'01XXXXXXXXX', hours:'Sun-Thu 10-4', badge:'Pediatrician' },
 ];
 
 export default function Health() {
+  const { t } = useLang();
   const [searchParams] = useSearchParams();
   const [search, setSearch]         = useState('');
   const [activeType, setActiveType] = useState(searchParams.get('type') || 'all');
@@ -48,24 +44,24 @@ export default function Health() {
               <FiHeart size={22}/>
             </div>
             <div>
-              <h1 style={{ fontSize:'1.6rem', fontWeight:800, color:'var(--text)', margin:0 }}>Health Services</h1>
-              <p style={{ fontSize:'0.85rem', color:'var(--text-muted)', margin:0 }}>Hospitals, Pharmacies & Doctors across Bangladesh</p>
+              <h1 style={{ fontSize:'1.6rem', fontWeight:800, color:'var(--text)', margin:0 }}>{t("health.title")}</h1>
+              <p style={{ fontSize:'0.85rem', color:'var(--text-muted)', margin:0 }}>{t("health.sub")}</p>
             </div>
           </div>
           <Link to="/blood" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'6px 14px', borderRadius:20, background:'rgba(230,57,70,0.08)', border:'1px solid rgba(230,57,70,0.2)', color:'var(--red)', fontSize:'0.82rem', fontWeight:600, textDecoration:'none' }}>
-            <FiDroplet size={13}/> Go to Blood Donation
+            <FiDroplet size={13}/> {t("health.blood")}
           </Link>
         </div>
         <div style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:'1.5rem' }}>
-          {TYPES.map(t => (
-            <button key={t.key} onClick={() => setActiveType(t.key)}
-              style={{ padding:'7px 14px', borderRadius:20, border:`1px solid ${activeType===t.key ? t.color : 'var(--border)'}`, background: activeType===t.key ? `${t.color}15` : 'var(--surface-2)', color: activeType===t.key ? t.color : 'var(--text-muted)', fontSize:'0.82rem', fontWeight:600, cursor:'pointer', transition:'all 0.2s' }}
-            >{t.label}</button>
+          {TYPES.map(t_item => (
+            <button key={t_item.key} onClick={() => setActiveType(t_item.key)}
+              style={{ padding:'7px 14px', borderRadius:20, border:`1px solid ${activeType===t_item.key ? t_item.color : 'var(--border)'}`, background: activeType===t_item.key ? `${t_item.color}15` : 'var(--surface-2)', color: activeType===t_item.key ? t_item.color : 'var(--text-muted)', fontSize:'0.82rem', fontWeight:600, cursor:'pointer', transition:'all 0.2s' }}
+            >{t_item.key === 'all' ? t("emergency.all") : t(`health.${t_item.key.replace('-','_')}`)}</button>
           ))}
         </div>
         <div style={{ position:'relative', maxWidth:460, marginBottom:'2rem' }}>
           <FiSearch style={{ position:'absolute', left:14, top:'50%', transform:'translateY(-50%)', color:'var(--text-dim)' }} size={15}/>
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name or area..." className="form-input" style={{ paddingLeft:40, borderRadius:24 }}/>
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t("common.search")} className="form-input" style={{ paddingLeft:40, borderRadius:24 }}/>
         </div>
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(280px, 1fr))', gap:'1rem' }}>
           {filtered.map(item => (

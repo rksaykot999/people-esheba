@@ -170,7 +170,7 @@ export default function EmergencyPage() {
                   width:7, height:7, borderRadius:'50%', background:'var(--red)',
                   animation:'pulse-dot 1.4s ease-in-out infinite',
                 }}/>
-                Live Emergency Services
+                {t("emergency.live_badge")}
               </span>
             </div>
 
@@ -179,26 +179,25 @@ export default function EmergencyPage() {
               lineHeight:1.08, letterSpacing:'-1.5px', color:'var(--text)',
               marginBottom:'1rem', maxWidth:'700px', marginLeft:'auto', marginRight:'auto',
             }}>
-              Emergency<br/>
+              {t("emergency.hero_title")}<br/>
               <span style={{
                 background:'linear-gradient(135deg, #E63946, #ff6b6b)',
                 WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent',
                 backgroundClip:'text',
               }}>
-                Services
+                {t("emergency.hero_highlight")}
               </span>{' '}Bangladesh
             </h1>
             <p style={{ color:'var(--text-muted)', fontSize:'1rem', maxWidth:500, lineHeight:1.7, margin:'0 auto 2rem' }}>
-              Instantly connect to verified hospitals, police stations, fire services,
-              ambulances and more — all in one place.
+              {t("emergency.hero_sub")}
             </p>
 
             {/* Stats */}
             <div style={{ display:'flex', justifyContent:'center', gap:'1.25rem', flexWrap:'wrap' }}>
               {[
-                { label:'Services', value:500, suffix:'+', icon:<FiShield size={16}/>, color:'var(--red)' },
-                { label:'Districts', value:64,  suffix:'',  icon:<FiMapPin size={16}/>, color:'var(--cyan)' },
-                { label:'Verified',  value:98,  suffix:'%', icon:<FiCheckCircle size={16}/>, color:'var(--green)' },
+                { label:t("emergency.stat_services"), value:500, suffix:'+', icon:<FiShield size={16}/>, color:'var(--red)' },
+                { label:t("emergency.stat_districts"), value:64,  suffix:'',  icon:<FiMapPin size={16}/>, color:'var(--cyan)' },
+                { label:t("emergency.stat_verified"),  value:98,  suffix:'%', icon:<FiCheckCircle size={16}/>, color:'var(--green)' },
               ].map(s => (
                 <div key={s.label} style={{
                   background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.02)',
@@ -229,7 +228,7 @@ export default function EmergencyPage() {
           <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:'1rem' }}>
             <FiZap size={14} style={{ color:'var(--amber)' }}/>
             <span style={{ fontSize:'0.72rem', fontWeight:800, color:'var(--text-dim)', letterSpacing:'1.5px', textTransform:'uppercase' }}>
-              Quick Dial — Critical Numbers
+              {t("emergency.quick_dial")}
             </span>
           </div>
           <div style={{
@@ -308,20 +307,20 @@ export default function EmergencyPage() {
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="Search hospitals, police stations, fire stations..."
+                placeholder={t("emergency.search")}
                 className="form-input"
                 style={{ paddingLeft:42, height:46, borderRadius:12, fontSize:'0.9rem' }}
               />
             </div>
             <button type="submit" className="btn btn-primary" style={{ height:46, padding:'0 1.5rem', borderRadius:12, fontSize:'0.85rem' }}>
-              <FiSearch size={14}/> Search
+              <FiSearch size={14}/> {t("common.search")}
             </button>
           </form>
 
           {/* Type filters */}
           <div style={{ display:'flex', gap:8, flexWrap:'wrap', alignItems:'center' }}>
             <span style={{ fontSize:'0.72rem', color:'var(--text-dim)', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.8px', marginRight:4 }}>
-              <FiActivity size={11} style={{ marginRight:4 }}/>Filter:
+              <FiActivity size={11} style={{ marginRight:4 }}/>{t("common.filter")}:
             </span>
             <button
               onClick={() => { setParams({}); setPage(1); }}
@@ -334,7 +333,7 @@ export default function EmergencyPage() {
                 color: !typeFilter ? '#fff' : 'var(--text-muted)',
               }}
             >
-              All Services
+              {t("emergency.all")}
             </button>
             {TYPES.map(tp => {
               const m = TYPE_META[tp];
@@ -355,7 +354,7 @@ export default function EmergencyPage() {
                   onMouseEnter={e => { if(!active){ e.currentTarget.style.borderColor=m.color; e.currentTarget.style.color=m.color; }}}
                   onMouseLeave={e => { if(!active){ e.currentTarget.style.borderColor='var(--border-2)'; e.currentTarget.style.color='var(--text-muted)'; }}}
                 >
-                  <Icon size={12}/> {m.label}
+                  <Icon size={12}/> {m.key === 'all' ? t("emergency.all") : t("emergency." + m.key)}
                 </button>
               );
             })}
@@ -374,11 +373,11 @@ export default function EmergencyPage() {
                 padding:'4px 12px', borderRadius:999, fontSize:'0.75rem', fontWeight:700,
               }}>
                 {React.createElement(TYPE_META[typeFilter]?.icon, { size: 12 })}
-                {' '}{TYPE_META[typeFilter]?.label}
+                {' '}{t("emergency." + typeFilter)}
               </span>
             )}
             <span style={{ fontSize:'0.82rem', color:'var(--text-muted)' }}>
-              {loading ? 'Loading...' : <><strong style={{ color:'var(--text)' }}>{total}</strong> services found</>}
+              {loading ? t("common.loading") : <><strong style={{ color:'var(--text)' }}>{total}</strong> {t("emergency.found")}</>}
             </span>
           </div>
           {typeFilter && (
@@ -389,7 +388,7 @@ export default function EmergencyPage() {
                 border:'none', cursor:'pointer', display:'flex', alignItems:'center', gap:4,
               }}
             >
-              Clear filter ×
+              {t("emergency.clear_filter")} ×
             </button>
           )}
         </div>
@@ -420,10 +419,10 @@ export default function EmergencyPage() {
             padding:'5rem 2rem', gap:'1rem', textAlign:'center',
           }}>
             <MdLocalHospital size={48} style={{ opacity:0.4, color:'var(--text-dim)' }} />
-            <div style={{ fontSize:'1.1rem', fontWeight:700, color:'var(--text)' }}>No services found</div>
-            <div style={{ fontSize:'0.88rem', color:'var(--text-muted)' }}>Try adjusting your search or filter</div>
+            <div style={{ fontSize:'1.1rem', fontWeight:700, color:'var(--text)' }}>{t("emergency.no_results")}</div>
+            <div style={{ fontSize:'0.88rem', color:'var(--text-muted)' }}>{t("emergency.no_results_sub")}</div>
             <button onClick={() => { setParams({}); setSearch(''); setPage(1); fetchData(); }} className="btn btn-outline btn-sm">
-              Reset Filters
+              {t("emergency.reset")}
             </button>
           </div>
         ) : (
@@ -544,7 +543,7 @@ export default function EmergencyPage() {
                       background:'var(--surface-3)', color:'var(--text-dim)',
                       fontSize:'0.8rem', fontWeight:600, textAlign:'center',
                     }}>
-                      No phone available
+                      {t("emergency.no_phone")}
                     </div>
                   )}
                 </div>
@@ -578,16 +577,16 @@ export default function EmergencyPage() {
               <FiAlertTriangle size={17}/>
             </div>
             <div>
-              <h2 style={{ fontSize:'1.2rem', fontWeight:800, color:'var(--text)' }}>Emergency Safety Tips</h2>
-              <p style={{ fontSize:'0.78rem', color:'var(--text-muted)' }}>What to do in critical situations</p>
+              <h2 style={{ fontSize:'1.2rem', fontWeight:800, color:'var(--text)' }}>{t("emergency.tips_title")}</h2>
+              <p style={{ fontSize:'0.78rem', color:'var(--text-muted)' }}>{t("emergency.tips_sub")}</p>
             </div>
           </div>
           <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(240px, 1fr))', gap:'1rem' }}>
             {[
-              { Icon: FiAlertTriangle, color:'#E63946', title:'Stay Calm', desc:'Take a deep breath. A clear head helps you make better decisions in an emergency.' },
-              { Icon: FiMapPin, color:'#06B6D4', title:'Share Location', desc:'Always share your exact location — district, thana, and landmark — when calling for help.' },
-              { Icon: FiPhone, color:'#10B981', title:'Call 999 First', desc:'For life-threatening emergencies, always dial 999 first. It connects to all services.' },
-              { Icon: FiHeart, color:'#F59E0B', title:'Basic First Aid', desc:'Learn CPR and basic first aid. It can save a life while waiting for professional help.' },
+              { Icon: FiAlertTriangle, color:'#E63946', title:t("emergency.tips.calm_title"), desc:t("emergency.tips.calm_desc") },
+              { Icon: FiMapPin, color:'#06B6D4', title:t("emergency.tips.loc_title"), desc:t("emergency.tips.loc_desc") },
+              { Icon: FiPhone, color:'#10B981', title:t("emergency.tips.call_title"), desc:t("emergency.tips.call_desc") },
+              { Icon: FiHeart, color:'#F59E0B', title:t("emergency.tips.aid_title"), desc:t("emergency.tips.aid_desc") },
             ].map((tip, i) => {
               const Icon = tip.Icon;
               return (

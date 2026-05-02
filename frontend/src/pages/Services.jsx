@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { FiList, FiSearch, FiPhone, FiMapPin, FiStar, FiFilter, FiHome, FiTruck, FiTool, FiActivity, FiUsers, FiWifi } from 'react-icons/fi';
+import { useLang } from '../context/LanguageContext';
 
 const CATS = [
   { key:'all',          label:'All Services',          color:'#64748B' },
@@ -28,6 +29,7 @@ const SAMPLE = [
 ];
 
 export default function Services() {
+  const { t } = useLang();
   const [searchParams] = useSearchParams();
   const [search, setSearch]       = useState('');
   const [activeCat, setActiveCat] = useState(searchParams.get('cat') || 'all');
@@ -53,8 +55,8 @@ export default function Services() {
               <FiList size={22}/>
             </div>
             <div>
-              <h1 style={{ fontSize:'1.6rem', fontWeight:800, color:'var(--text)', margin:0 }}>Services</h1>
-              <p style={{ fontSize:'0.85rem', color:'var(--text-muted)', margin:0 }}>Home, Transport, Repairs, Telemedicine & More</p>
+              <h1 style={{ fontSize:'1.6rem', fontWeight:800, color:'var(--text)', margin:0 }}>{t("services.title")}</h1>
+              <p style={{ fontSize:'0.85rem', color:'var(--text-muted)', margin:0 }}>{t("services.sub")}</p>
             </div>
           </div>
         </div>
@@ -62,12 +64,12 @@ export default function Services() {
           {CATS.map(c => (
             <button key={c.key} onClick={() => setActiveCat(c.key)}
               style={{ padding:'7px 14px', borderRadius:20, border:`1px solid ${activeCat===c.key ? c.color : 'var(--border)'}`, background: activeCat===c.key ? `${c.color}15` : 'var(--surface-2)', color: activeCat===c.key ? c.color : 'var(--text-muted)', fontSize:'0.82rem', fontWeight:600, cursor:'pointer', transition:'all 0.2s' }}
-            >{c.label}</button>
+            >{c.key === 'all' ? t("emergency.all") : t("services." + c.key)}</button>
           ))}
         </div>
         <div style={{ position:'relative', maxWidth:460, marginBottom:'2rem' }}>
           <FiSearch style={{ position:'absolute', left:14, top:'50%', transform:'translateY(-50%)', color:'var(--text-dim)' }} size={15}/>
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search services or area..." className="form-input" style={{ paddingLeft:40, borderRadius:24 }}/>
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t("services.search_placeholder")} className="form-input" style={{ paddingLeft:40, borderRadius:24 }}/>
         </div>
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(280px, 1fr))', gap:'1rem' }}>
           {filtered.map(item => (
@@ -92,7 +94,8 @@ export default function Services() {
         {filtered.length === 0 && (
           <div style={{ textAlign:'center', padding:'4rem 1rem', color:'var(--text-muted)' }}>
             <FiFilter size={32} style={{ opacity:0.3, display:'block', margin:'0 auto 12px' }}/>
-            <p>No results found. Try adjusting your search or filter.</p>
+            <p>{t("services.no_results")}</p>
+            <p style={{ fontSize: '0.85rem' }}>{t("services.no_results_sub")}</p>
           </div>
         )}
       </div>

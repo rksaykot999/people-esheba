@@ -93,6 +93,17 @@ export default function Navbar() {
   }, [searchOpen]);
 
   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (activeMenu && !event.target.closest("#mega-nav") && !event.target.closest("#user-menu-wrap")) {
+        setActiveMenu(null);
+        setNoticesSub(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [activeMenu]);
+
+  useEffect(() => {
     document.body.style.overflow = mobile ? "hidden" : "unset";
     return () => {
       document.body.style.overflow = "unset";
@@ -171,25 +182,25 @@ export default function Navbar() {
       items: [
         {
           icon: <FiPlusSquare size={15} />,
-          label: t("health.title"),
+          label: t("health.govt_hospital"),
           to: "/health?type=govt-hospital",
         },
         {
           icon: <FiActivity size={15} />,
-          label: t("common.active"),
+          label: t("health.private_hospital"),
           to: "/health?type=private-hospital",
+        },
+        {
+          icon: <FiUser size={15} />,
+          label: t("health.doctors"),
+          to: "/doctors",
         },
         {
           icon: <FiList size={15} />,
           label: t("health.pharmacy"),
-          to: "/health?type=pharmacy",
+          to: "/pharmacy",
         },
         { icon: <FiDroplet size={15} />, label: t("nav.blood"), to: "/blood" },
-        {
-          icon: <FiUser size={15} />,
-          label: t("health.doctors"),
-          to: "/health?type=doctors",
-        },
       ],
     },
     {
@@ -206,17 +217,17 @@ export default function Navbar() {
         {
           icon: <FiShield size={15} />,
           label: t("jobs.govt"),
-          to: "/jobs?type=govt",
+          to: "/jobs/govt",
         },
         {
           icon: <FiMonitor size={15} />,
           label: t("jobs.fullTime"),
-          to: "/jobs?type=private",
+          to: "/jobs/fulltime",
         },
         {
           icon: <FiWifi size={15} />,
           label: t("jobs.remote"),
-          to: "/jobs?type=remote",
+          to: "/jobs/remote",
         },
         { icon: <FiEdit size={15} />, label: t("jobs.post"), to: "/jobs/new" },
       ],
@@ -230,27 +241,27 @@ export default function Navbar() {
         {
           icon: <FiBook size={15} />,
           label: t("education.govt_school"),
-          to: "/education?type=govt-school",
+          to: "/education/school",
         },
         {
           icon: <FiBook size={15} />,
           label: t("education.govt_college"),
-          to: "/education?type=govt-college",
+          to: "/education/college",
         },
         {
           icon: <FiAward size={15} />,
           label: t("education.public_uni"),
-          to: "/education?type=public-uni",
+          to: "/education/university",
         },
         {
           icon: <FiAward size={15} />,
           label: t("education.private_uni"),
-          to: "/education?type=private-uni",
+          to: "/education/university",
         },
         {
           icon: <FiAward size={15} />,
           label: t("education.scholarships"),
-          to: "/education?type=scholarships",
+          to: "/education/scholarships",
         },
       ],
     },
@@ -787,6 +798,14 @@ export default function Navbar() {
                 onMouseLeave={closeDrop}
               >
                 <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (activeMenu === cat.key) {
+                      setActiveMenu(null);
+                    } else {
+                      openDrop(cat.key);
+                    }
+                  }}
                   style={{
                     display: "flex",
                     alignItems: "center",
