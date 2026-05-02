@@ -5,65 +5,60 @@ import {
   FiFilter, FiArrowRight, FiCheckCircle, FiShield, FiExternalLink
 } from 'react-icons/fi';
 import { useTheme } from '../context/ThemeContext';
+import { useLang } from '../context/LanguageContext';
 
 const CATS = [
-  { key: 'all', label: 'All Services', color: '#8B5CF6' },
-  { key: 'nid', label: 'NID & Identity', color: '#3B82F6' },
-  { key: 'schemes', label: 'Gov Schemes', color: '#10B981' },
-  { key: 'passport', label: 'Passport & Visa', color: '#F59E0B' },
-  { key: 'land', label: 'Land Services', color: '#EF4444' },
-  { key: 'utility', label: 'Utility Bills', color: '#06B6D4' },
+  { key: 'all', label: t('government.cat_all'), color: '#8B5CF6' },
+  { key: 'nid', label: t('government.cat_nid'), color: '#3B82F6' },
+  { key: 'schemes', label: t('government.cat_schemes'), color: '#10B981' },
+  { key: 'passport', label: t('government.cat_passport'), color: '#F59E0B' },
+  { key: 'land', label: t('government.cat_land'), color: '#EF4444' },
+  { key: 'utility', label: t('government.cat_utility'), color: '#06B6D4' },
 ];
 
 const SAMPLE_GOV = [
   // --- NID & Identity ---
   {
-    id: 101, cat: 'nid', name: 'NID Bangladesh', area: 'Election Commission', phone: '105', rating: 4.5, reviews: '1M+', badge: 'Identity',
-    price: 'Free / Reissue Fee', desc: 'Download your smart NID card, correct information, or track your application status online.',
-    features: ['Biometric Verification', 'Digital Copy']
+    id: 101, cat: 'nid', name: 'NID Bangladesh', area: 'Election Commission', phone: '105', rating: 4.5, reviews: '1M+', badgeKey: 'badge_identity',
+    price: 'Free / Reissue Fee', descKey: 'desc_nid', features: ['biometric', 'digital_copy']
   },
   {
-    id: 102, cat: 'nid', name: 'Birth Registration', area: 'Local Ward/Union', phone: '16122', rating: 4.1, reviews: '500k+', badge: 'Official',
-    price: 'Govt Fee', desc: 'Apply for new birth certificates or verify existing ones through the BDRIS portal.',
-    features: ['Online Verification', 'Global Validity']
+    id: 102, cat: 'nid', name: 'Birth Registration', area: 'Local Ward/Union', phone: '16122', rating: 4.1, reviews: '500k+', badgeKey: 'badge_official',
+    price: 'Govt Fee', descKey: 'desc_birth', features: ['online_verification', 'global_validity']
   },
 
   // --- Passport ---
   {
-    id: 103, cat: 'passport', name: 'E-Passport Portal', area: 'DIP Bangladesh', phone: '16445', rating: 4.8, reviews: '2M+', badge: 'Travel',
-    price: 'Fee starts 4025 BDT', desc: 'Official portal for E-Passport applications, appointment scheduling, and status tracking.',
-    features: ['Appointment System', 'SMS Alerts']
+    id: 103, cat: 'passport', name: 'E-Passport Portal', area: 'DIP Bangladesh', phone: '16445', rating: 4.8, reviews: '2M+', badgeKey: 'badge_travel',
+    price: 'Fee starts 4025 BDT', descKey: 'desc_passport', features: ['appointment_system', 'sms_alerts']
   },
 
   // --- Gov Schemes ---
   {
-    id: 104, cat: 'schemes', name: 'Protibondhi Allowance', area: 'Social Services', phone: '1098', rating: 4.7, reviews: '100k+', badge: 'Social Safety',
-    price: 'Monthly Support', desc: 'Monthly financial assistance program for persons with disabilities across Bangladesh.',
-    features: ['Mobile Banking Pay', 'Verified List']
+    id: 104, cat: 'schemes', name: 'Protibondhi Allowance', area: 'Social Services', phone: '1098', rating: 4.7, reviews: '100k+', badgeKey: 'badge_social_safety',
+    price: 'Monthly Support', descKey: 'desc_protibondhi', features: ['mobile_banking', 'verified_list']
   },
   {
-    id: 105, cat: 'schemes', name: 'Old Age Allowance', area: 'Ministry of Social Welfare', phone: '16224', rating: 4.6, reviews: '80k+', badge: 'Social Safety',
-    price: 'Direct Transfer', desc: 'Financial security program providing monthly stipends to senior citizens in rural and urban areas.',
-    features: ['Easy Registration', 'Transparent']
+    id: 105, cat: 'schemes', name: 'Old Age Allowance', area: 'Ministry of Social Welfare', phone: '16224', rating: 4.6, reviews: '80k+', badgeKey: 'badge_social_safety',
+    price: 'Direct Transfer', descKey: 'desc_old_age', features: ['easy_registration', 'transparent']
   },
 
   // --- Land Services ---
   {
-    id: 106, cat: 'land', name: 'E-Mutation (Land)', area: 'Land Office', phone: '16122', rating: 4.3, reviews: '300k+', badge: 'Property',
-    price: 'Fixed Govt Fee', desc: 'Apply for land mutation (Namari) online without visiting physical offices for initial steps.',
-    features: ['Digital Records', 'Track Progress']
+    id: 106, cat: 'land', name: 'E-Mutation (Land)', area: 'Land Office', phone: '16122', rating: 4.3, reviews: '300k+', badgeKey: 'badge_property',
+    price: 'Fixed Govt Fee', descKey: 'desc_mutation', features: ['digital_records', 'track_progress']
   },
 
   // --- Utility ---
   {
-    id: 107, cat: 'utility', name: 'EkPay', area: 'a2i Platform', phone: '333', rating: 4.9, reviews: '400k+', badge: 'Payments',
-    price: 'Zero Charge', desc: 'Integrated payment gateway to pay all government utility bills (Water, Gas, Electricity) in one place.',
-    features: ['Secure Gateway', 'Instant Receipt']
+    id: 107, cat: 'utility', name: 'EkPay', area: 'a2i Platform', phone: '333', rating: 4.9, reviews: '400k+', badgeKey: 'badge_payments',
+    price: 'Zero Charge', descKey: 'desc_ekpay', features: ['secure_gateway', 'instant_receipt']
   }
 ];
 
 export default function Government() {
   const { theme } = useTheme();
+  const { t } = useLang();
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
   const [activeCat, setActiveCat] = useState(searchParams.get('cat') || 'all');
@@ -111,14 +106,14 @@ export default function Government() {
             borderRadius: '100px', color: '#10b981', fontSize: '0.75rem', fontWeight: 600,
             marginBottom: '2rem', border: '1px solid rgba(16, 185, 129, 0.2)'
           }}>
-            <FiShield size={14} /> Official Government Portals
+            <FiShield size={14} /> {t('government.hero_badge')}
           </div>
 
           <h1 style={{ fontSize: '4.5rem', fontWeight: 900, marginBottom: '1.5rem', letterSpacing: '-2px', lineHeight: 1 }}>
-            Citizen <span style={{ color: '#10b981' }}>Services</span>
+            {t('government.hero_title')} <span style={{ color: '#10b981' }}>{t('government.hero_highlight')}</span>
           </h1>
           <p style={{ color: '#a1a1aa', fontSize: '1.25rem', maxWidth: '650px', margin: '0 auto', marginBottom: '4rem' }}>
-            Access all essential Bangladesh government services, digital forms, and social safety net programs.
+            {t('government.hero_sub')}
           </p>
         </div>
       </div>
@@ -155,7 +150,7 @@ export default function Government() {
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="Search by service name (e.g. NID, Passport, Bill)..."
+              placeholder={t('government.search_placeholder')}
               style={{
                 width: '100%', boxSizing: 'border-box', height: '64px',
                 padding: '0 160px 0 56px', borderRadius: '20px',
@@ -168,7 +163,7 @@ export default function Government() {
               padding: '0 28px', borderRadius: '14px', border: 'none',
               background: '#10b981', color: '#fff', fontWeight: 700, cursor: 'pointer'
             }}>
-              Search
+              {t('government.search_button')}
             </button>
           </div>
         </div>
@@ -190,7 +185,7 @@ export default function Government() {
                   padding: '6px 14px', borderRadius: '10px', fontSize: '0.7rem', fontWeight: 800,
                   textTransform: 'uppercase'
                 }}>
-                  {item.badge}
+                  {t(`government.${item.badgeKey}`)}
                 </span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#f59e0b', fontWeight: 700 }}>
                   <FiStar size={16} fill="#f59e0b" /> {item.rating}
@@ -199,7 +194,7 @@ export default function Government() {
 
               <h3 style={{ fontSize: '1.35rem', fontWeight: 700, marginBottom: '12px' }}>{item.name}</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '24px', height: '3.2rem', overflow: 'hidden' }}>
-                {item.desc}
+                {t(`government.${item.descKey}`)}
               </p>
 
               <div style={{ borderTop: '1px solid var(--border)', paddingTop: '20px', display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '28px' }}>
@@ -216,13 +211,13 @@ export default function Government() {
                   flex: 1, height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: 'var(--surface-2)', color: 'var(--text)', borderRadius: '16px', fontWeight: 700, textDecoration: 'none', border: '1px solid var(--border)'
                 }}>
-                  <FiPhone size={18} style={{ marginRight: 10 }} /> Helpline
+                  <FiPhone size={18} style={{ marginRight: 10 }} /> {t('government.helpline')}
                 </a>
                 <button style={{
                   flex: 1.5, height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: '#10b981', color: '#fff', borderRadius: '16px', fontWeight: 700, border: 'none', cursor: 'pointer', gap: 8
                 }}>
-                  Apply Online <FiExternalLink size={18} />
+                  {t('government.apply_online')} <FiExternalLink size={18} />
                 </button>
               </div>
             </div>
