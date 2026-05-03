@@ -3,13 +3,15 @@ import { useLang } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import {
   FiUser, FiSearch, FiMapPin, FiFilter, FiExternalLink,
-  FiShield, FiAward, FiClock, FiHeart, FiSmile, FiPhone,
-  FiStar, FiGlobe, FiChevronRight
+  FiShield, FiAward, FiClock, FiHeart, FiStar, FiGlobe, FiChevronRight
 } from 'react-icons/fi';
 import { MdHealthAndSafety, MdScience, MdPerson, MdLocalHospital, MdSchool } from 'react-icons/md';
 
 /* ── Constants ──────────────────────────────────────────── */
-const SPECIALTIES = ['Cardiologist', 'Pediatrician', 'Neurologist', 'Gynecologist', 'Medicine', 'Orthopedic', 'Ophthalmologist', 'ENT', 'Dermatologist'];
+const SPECIALTIES = [
+  'Cardiologist', 'Pediatrician', 'Neurologist', 'Gynecologist',
+  'Medicine', 'Orthopedic', 'Ophthalmologist', 'ENT', 'Dermatologist'
+];
 
 const SPECIALTY_META = {
   'Cardiologist': { color: '#EF4444', bg: 'rgba(239,68,68,0.1)', icon: MdHealthAndSafety, labelKey: 'health.cardio' },
@@ -33,10 +35,11 @@ const SAMPLE_DOCTORS = [
   { id: 7, name: 'Dr. Tariqul Islam', specialty: 'Orthopedic', area: 'Comilla', phone: '017XXXXXXXX', hours: 'Sat–Wed 10-5', is_verified: true, rating: 4.7 },
 ];
 
-/* ── Animated Counter (same as College) ─────────────────── */
+/* ── Animated Counter ─────────────────────────────────── */
 function Counter({ end, suffix = '' }) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
+
   useEffect(() => {
     const obs = new IntersectionObserver(([e]) => {
       if (e.isIntersecting) {
@@ -53,6 +56,7 @@ function Counter({ end, suffix = '' }) {
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, [end]);
+
   return <span ref={ref}>{count.toLocaleString()}{suffix}</span>;
 }
 
@@ -60,11 +64,12 @@ function Counter({ end, suffix = '' }) {
 export default function Doctors() {
   const { t, isBn } = useLang();
   const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   const [search, setSearch] = useState('');
   const [specialtyFilter, setSpecialtyFilter] = useState('');
   const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
-  const isDark = theme === 'dark';
 
   useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
   useEffect(() => {
@@ -87,6 +92,13 @@ export default function Doctors() {
     return meta?.labelKey ? t(meta.labelKey) : s;
   };
 
+  // Stats for hero section
+  const stats = [
+    { label: t("health.stat_doctors") || "Doctors Listed", value: 240, suffix: '+', icon: <FiUser size={16} />, color: '#8B5CF6' },
+    { label: t("health.stat_specialties") || "Specialties", value: 38, suffix: '+', icon: <FiGlobe size={16} />, color: '#EC4899' },
+    { label: t("health.stat_verified") || "Verified", value: 91, suffix: '%', icon: <FiShield size={16} />, color: '#10B981' },
+  ];
+
   return (
     <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
 
@@ -94,11 +106,11 @@ export default function Doctors() {
       <div style={{
         position: 'relative', overflow: 'hidden',
         background: isDark
-          ? 'linear-gradient(135deg, #0a0410 0%, #1a0f16 40%, #0f0a18 100%)'
-          : 'linear-gradient(135deg, #f5f3ff 0%, #fdf2f8 40%, #f9fafb 100%)',
+          ? 'linear-gradient(135deg, #0d0005 0%, #130008 40%, #080E1A 100%)'
+          : 'linear-gradient(135deg, #fff5f5 0%, #fef2f2 40%, #f1f5f9 100%)',
         padding: '4rem 0 3rem',
       }}>
-        {/* Animated blobs (adapted colors) */}
+        {/* Animated blobs */}
         <div style={{
           position: 'absolute', top: '-80px', left: '-80px',
           width: 400, height: 400, borderRadius: '50%',
@@ -117,8 +129,8 @@ export default function Doctors() {
         }} />
         <div style={{
           position: 'absolute', inset: 0, opacity: isDark ? 0.03 : 0.06,
-          backgroundImage: `linear-gradient(#8B5CF6 1px, transparent 1px),
-                            linear-gradient(90deg, #8B5CF6 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(var(--red) 1px, transparent 1px),
+                            linear-gradient(90deg, var(--red) 1px, transparent 1px)`,
           backgroundSize: '60px 60px',
           pointerEvents: 'none',
         }} />
@@ -134,11 +146,11 @@ export default function Doctors() {
               <span style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
                 background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.25)',
-                color: '#8B5CF6', padding: '5px 14px', borderRadius: 999,
+                color: '#a78bfa', padding: '5px 14px', borderRadius: 999,
                 fontSize: '0.72rem', fontWeight: 800, letterSpacing: '1.5px', textTransform: 'uppercase',
               }}>
                 <span style={{
-                  width: 7, height: 7, borderRadius: '50%', background: '#8B5CF6',
+                  width: 7, height: 7, borderRadius: '50%', background: '#a78bfa',
                   animation: 'pulse-dot 1.4s ease-in-out infinite',
                 }} />
                 {t("health.doctors_live_badge") || "Verified Medical Professionals"}
@@ -152,7 +164,7 @@ export default function Doctors() {
             }}>
               {t("health.doctors_title") || "Find Trusted Doctors"}<br />
               <span style={{
-                background: 'linear-gradient(135deg, #8B5CF6, #EC4899)',
+                background: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
               }}>
@@ -165,11 +177,7 @@ export default function Doctors() {
 
             {/* Stats */}
             <div style={{ display: 'flex', justifyContent: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
-              {[
-                { label: t("health.stat_doctors") || "Doctors Listed", value: 240, suffix: '+', icon: <FiUser size={16} />, color: '#8B5CF6' },
-                { label: t("health.stat_specialties") || "Specialties", value: 38, suffix: '+', icon: <FiGlobe size={16} />, color: '#EC4899' },
-                { label: t("health.stat_verified") || "Verified", value: 91, suffix: '%', icon: <FiShield size={16} />, color: '#10B981' },
-              ].map(s => (
+              {stats.map(s => (
                 <div key={s.label} style={{
                   background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.02)',
                   backdropFilter: 'blur(12px)',
@@ -218,8 +226,7 @@ export default function Doctors() {
               className="btn btn-primary"
               style={{
                 height: 46, padding: '0 1.5rem', borderRadius: 12, fontSize: '0.85rem',
-                display: 'flex', alignItems: 'center', gap: 6,
-                background: '#8B5CF6', borderColor: '#8B5CF6',
+                display: 'flex', alignItems: 'center', gap: 6, background: '#8b5cf6', borderColor: '#8b5cf6'
               }}
             >
               <FiSearch size={14} /> {t("common.search") || "Search"}
@@ -245,9 +252,9 @@ export default function Doctors() {
               {t("health.all") || "All"}
             </button>
             {SPECIALTIES.map(sp => {
-              const m = SPECIALTY_META[sp];
+              const meta = SPECIALTY_META[sp];
               const active = specialtyFilter === sp;
-              const Icon = m.icon;
+              const Icon = meta.icon;
               return (
                 <button
                   key={sp}
@@ -256,11 +263,11 @@ export default function Doctors() {
                     display: 'inline-flex', alignItems: 'center', gap: 6,
                     padding: '6px 14px', borderRadius: 999, fontSize: '0.78rem', fontWeight: 700,
                     cursor: 'pointer', border: '1px solid', transition: 'all 0.18s',
-                    background: active ? m.color : 'transparent',
-                    borderColor: active ? m.color : 'var(--border-2)',
+                    background: active ? meta.color : 'transparent',
+                    borderColor: active ? meta.color : 'var(--border-2)',
                     color: active ? '#fff' : 'var(--text-muted)',
                   }}
-                  onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor = m.color; e.currentTarget.style.color = m.color; } }}
+                  onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor = meta.color; e.currentTarget.style.color = meta.color; } }}
                   onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor = 'var(--border-2)'; e.currentTarget.style.color = 'var(--text-muted)'; } }}
                 >
                   <Icon size={12} /> {getSpecialtyLabel(sp)}
@@ -290,7 +297,7 @@ export default function Doctors() {
 
         {/* Cards Grid */}
         {loading ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px,1fr))', gap: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px,1fr))', gap: '1rem' }}>
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} style={{
                 background: 'var(--surface)', border: '1px solid var(--border)',
@@ -323,8 +330,8 @@ export default function Doctors() {
         ) : (
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-            gap: '1rem',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+            gap: '1.25rem',
           }}>
             {filtered.map((item, i) => {
               const meta = SPECIALTY_META[item.specialty] || { color: '#8B5CF6', bg: 'rgba(139,92,246,0.1)', icon: MdHealthAndSafety };
@@ -417,18 +424,26 @@ export default function Doctors() {
                     </span>
                   </div>
 
-                  <div style={{
-                    padding: '10px 14px', borderRadius: 12,
-                    background: `linear-gradient(135deg, ${meta.color}, ${meta.color}cc)`,
-                    color: '#fff', textDecoration: 'none', fontWeight: 700, fontSize: '0.85rem',
-                    boxShadow: `0 4px 14px ${meta.color}30`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  }}>
+                  <button
+                    onClick={() => window.open('#', '_blank')}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px', borderRadius: 12,
+                      background: `linear-gradient(135deg, ${meta.color}, ${meta.color}cc)`,
+                      color: '#fff', fontWeight: 700, fontSize: '0.85rem',
+                      boxShadow: `0 4px 14px ${meta.color}30`,
+                      transition: 'transform 0.2s',
+                      border: 'none', cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
+                    onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                  >
                     <span style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                       <FiExternalLink size={14} /> {t("health.view_profile") || "View Profile"}
                     </span>
                     <FiChevronRight size={15} style={{ opacity: 0.7 }} />
-                  </div>
+                  </button>
                 </div>
               );
             })}
@@ -436,7 +451,7 @@ export default function Doctors() {
         )}
       </div>
 
-      {/* ════════════════ HEALTH TIPS ════════════════ */}
+      {/* ════════════════ HEALTH TIPS SECTION ════════════════ */}
       <div style={{ background: 'var(--surface)', borderTop: '1px solid var(--border)', padding: '3rem 0' }}>
         <div className="container">
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1.75rem' }}>
@@ -492,7 +507,6 @@ export default function Doctors() {
         </div>
       </div>
 
-      {/* Animations */}
       <style>{`
         @keyframes pulse-dot {
           0%, 100% { opacity:1; transform:scale(1); }
@@ -502,10 +516,6 @@ export default function Doctors() {
           0%   { opacity:0.5; }
           50%  { opacity:1; }
           100% { opacity:0.5; }
-        }
-        @keyframes fadeInUp {
-          from { opacity:0; transform:translateY(20px); }
-          to   { opacity:1; transform:none; }
         }
       `}</style>
     </div>
