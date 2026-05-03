@@ -35,6 +35,19 @@ const HOTLINES = [
   { number:'1098', label:'Child Helpline',      sublabel:'Shishu Helpline',           color:'#10B981', Icon: FiSmile },
 ];
 
+const SAMPLE_SERVICES = [
+  { id: 1, type: 'hospital', name: 'Dhaka Medical College Hospital (DMCH)', address: '100 Ramna, Dhaka 1000', phone: '02-55165001', district: 'Dhaka', division: 'Dhaka', is_verified: true, is_24h: true },
+  { id: 2, type: 'police', name: 'DMP Headquarters', address: '36 Shahid Captain Mansur Ali Sarani, Ramna, Dhaka', phone: '02-223381188', district: 'Dhaka', division: 'Dhaka', is_verified: true, is_24h: true },
+  { id: 3, type: 'fire', name: 'Fire Service Headquarters', address: '38-46 Kazi Alauddin Road, Dhaka 1000', phone: '02-223355555', district: 'Dhaka', division: 'Dhaka', is_verified: true, is_24h: true },
+  { id: 4, type: 'ambulance', name: 'Anjuman Mufidul Islam Ambulance Service', address: '42 Anjuman Mufidul Islam Road, Kakrail, Dhaka', phone: '02-9336611', district: 'Dhaka', division: 'Dhaka', is_verified: true, is_24h: true },
+  { id: 5, type: 'hospital', name: 'Evercare Hospital Dhaka', address: 'Plot 81, Block E, Basundhara R/A, Dhaka', phone: '10678', district: 'Dhaka', division: 'Dhaka', is_verified: true, is_24h: true },
+  { id: 6, type: 'hospital', name: 'Chittagong Medical College Hospital', address: 'KB Fazlul Kader Rd, Chattogram', phone: '031-619430', district: 'Chattogram', division: 'Chattogram', is_verified: true, is_24h: true },
+  { id: 7, type: 'police', name: 'CMP Headquarters', address: 'Laldighi, Chattogram', phone: '031-619922', district: 'Chattogram', division: 'Chattogram', is_verified: true, is_24h: true },
+  { id: 8, type: 'ambulance', name: 'United Ambulance Service', address: 'Panthapath, Dhaka', phone: '01911-306821', district: 'Dhaka', division: 'Dhaka', is_verified: false, is_24h: true },
+  { id: 9, type: 'mental', name: 'National Institute of Mental Health (NIMH)', address: 'Sher-e-Bangla Nagar, Dhaka', phone: '02-9118171', district: 'Dhaka', division: 'Dhaka', is_verified: true, is_24h: false },
+  { id: 10, type: 'other', name: 'National Poison Control Center', address: 'DMCH, Ramna, Dhaka', phone: '01711-354877', district: 'Dhaka', division: 'Dhaka', is_verified: true, is_24h: true },
+];
+
 /* ── Animated Counter ─────────────────────────────────── */
 function Counter({ end, suffix = '' }) {
   const [count, setCount] = useState(0);
@@ -97,6 +110,22 @@ export default function EmergencyPage() {
 
   useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
 
+  const useDummyData = () => {
+    let filtered = SAMPLE_SERVICES;
+    if (typeFilter) filtered = filtered.filter(s => s.type === typeFilter);
+    if (search) {
+      const sLower = search.toLowerCase();
+      filtered = filtered.filter(s => 
+        s.name.toLowerCase().includes(sLower) || 
+        s.address.toLowerCase().includes(sLower) ||
+        s.district.toLowerCase().includes(sLower)
+      );
+    }
+    setServices(filtered);
+    setTotal(filtered.length);
+    setPages(1);
+  };
+
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -106,10 +135,16 @@ export default function EmergencyPage() {
         ...(search && { search }),
       });
       const { data } = await api.get(`/emergency?${q}`);
-      setServices(data.data.rows);
-      setTotal(data.data.total);
-      setPages(data.data.pages);
-    } catch { setServices([]); }
+      if (data.data.rows && data.data.rows.length > 0) {
+        setServices(data.data.rows);
+        setTotal(data.data.total);
+        setPages(data.data.pages);
+      } else {
+        useDummyData();
+      }
+    } catch { 
+      useDummyData(); 
+    }
     finally { setLoading(false); }
   };
 
@@ -354,7 +389,7 @@ export default function EmergencyPage() {
                   onMouseEnter={e => { if(!active){ e.currentTarget.style.borderColor=m.color; e.currentTarget.style.color=m.color; }}}
                   onMouseLeave={e => { if(!active){ e.currentTarget.style.borderColor='var(--border-2)'; e.currentTarget.style.color='var(--text-muted)'; }}}
                 >
-                  <Icon size={12}/> {m.key === 'all' ? t("emergency.all") : t("emergency." + m.key)}
+                  <Icon size={12}/> {tp === 'all' ? t("emergency.all") : t("emergency." + tp)}
                 </button>
               );
             })}

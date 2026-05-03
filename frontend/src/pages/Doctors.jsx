@@ -3,7 +3,8 @@ import { useLang } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import {
   FiUser, FiSearch, FiMapPin, FiFilter, FiExternalLink,
-  FiShield, FiAward, FiClock, FiHeart, FiStar, FiGlobe, FiChevronRight
+  FiShield, FiAward, FiClock, FiHeart, FiStar, FiGlobe, FiChevronRight,
+  FiPhone
 } from 'react-icons/fi';
 import { MdHealthAndSafety, MdScience, MdPerson, MdLocalHospital, MdSchool } from 'react-icons/md';
 
