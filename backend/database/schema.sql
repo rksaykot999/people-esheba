@@ -240,6 +240,103 @@ CREATE TABLE IF NOT EXISTS announcements (
   FOREIGN KEY (admin_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+-- ── Doctors ───────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS doctors (
+  id          INT PRIMARY KEY AUTO_INCREMENT,
+  name        VARCHAR(200) NOT NULL,
+  specialty   VARCHAR(100) NOT NULL,
+  area        VARCHAR(100),
+  district    VARCHAR(60),
+  division    VARCHAR(60),
+  phone       VARCHAR(30),
+  hours       VARCHAR(100),
+  rating      DECIMAL(2,1) NOT NULL DEFAULT 0,
+  is_verified TINYINT(1)   NOT NULL DEFAULT 0,
+  is_active   TINYINT(1)   NOT NULL DEFAULT 1,
+  created_by  INT,
+  created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+  INDEX idx_specialty (specialty),
+  INDEX idx_district  (district)
+) ENGINE=InnoDB;
+
+-- ── Pharmacies ────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS pharmacies (
+  id          INT PRIMARY KEY AUTO_INCREMENT,
+  name        VARCHAR(200) NOT NULL,
+  area        VARCHAR(100),
+  district    VARCHAR(60),
+  division    VARCHAR(60),
+  phone       VARCHAR(30),
+  hours       VARCHAR(100),
+  is_24h      TINYINT(1)   NOT NULL DEFAULT 0,
+  is_verified TINYINT(1)   NOT NULL DEFAULT 0,
+  is_active   TINYINT(1)   NOT NULL DEFAULT 1,
+  created_by  INT,
+  created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+  INDEX idx_district (district)
+) ENGINE=InnoDB;
+
+-- ── Notices ───────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS notices (
+  id          INT PRIMARY KEY AUTO_INCREMENT,
+  title       VARCHAR(300) NOT NULL,
+  category    ENUM('govt','education','job','health','general') NOT NULL DEFAULT 'general',
+  source      VARCHAR(200),
+  link        VARCHAR(500),
+  description TEXT,
+  is_active   TINYINT(1)   NOT NULL DEFAULT 1,
+  created_by  INT,
+  created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+  INDEX idx_category (category),
+  INDEX idx_active   (is_active)
+) ENGINE=InnoDB;
+
+-- ── Education Institutions (schools / colleges / universities) ─
+CREATE TABLE IF NOT EXISTS education_institutions (
+  id          INT PRIMARY KEY AUTO_INCREMENT,
+  name        VARCHAR(200) NOT NULL,
+  type        ENUM('school','college','university') NOT NULL DEFAULT 'school',
+  district    VARCHAR(60),
+  division    VARCHAR(60),
+  address     VARCHAR(255),
+  phone       VARCHAR(30),
+  website     VARCHAR(300),
+  description TEXT,
+  is_verified TINYINT(1)   NOT NULL DEFAULT 0,
+  is_active   TINYINT(1)   NOT NULL DEFAULT 1,
+  created_by  INT,
+  created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+  INDEX idx_type     (type),
+  INDEX idx_district (district)
+) ENGINE=InnoDB;
+
+-- ── Scholarships ──────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS scholarships (
+  id          INT PRIMARY KEY AUTO_INCREMENT,
+  title       VARCHAR(300) NOT NULL,
+  provider    VARCHAR(200),
+  deadline    DATE,
+  amount      VARCHAR(100),
+  link        VARCHAR(500),
+  description TEXT,
+  category    VARCHAR(60)  NOT NULL DEFAULT 'general',
+  is_active   TINYINT(1)   NOT NULL DEFAULT 1,
+  created_by  INT,
+  created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+  INDEX idx_category (category),
+  INDEX idx_active   (is_active)
+) ENGINE=InnoDB;
+
 -- ── Seed default SOS contacts ─────────────────────────────────
 INSERT IGNORE INTO sos_contacts (name, number, type, icon) VALUES
   ('National Emergency', '999',  'emergency', '🆘'),

@@ -53,6 +53,11 @@ import AdminEmergency    from './pages/admin/AdminEmergency';
 import AdminReports      from './pages/admin/AdminReports';
 import AdminAnalytics    from './pages/admin/AdminAnalytics';
 import AdminNotifications from './pages/admin/AdminNotifications';
+import AdminDoctors      from './pages/admin/AdminDoctors';
+import AdminPharmacy     from './pages/admin/AdminPharmacy';
+import AdminNotices      from './pages/admin/AdminNotices';
+import AdminEducation    from './pages/admin/AdminEducation';
+import AdminScholarships from './pages/admin/AdminScholarships';
 
 // AI Chatbot (floating)
 import AIChatbot from './components/ui/AIChatbot';
@@ -134,6 +139,12 @@ function AppRoutes() {
           <Route path="reports"        element={<AdminReports />} />
           <Route path="analytics"      element={<AdminAnalytics />} />
           <Route path="notifications"  element={<AdminNotifications />} />
+          {/* New content management pages */}
+          <Route path="doctors"        element={<AdminDoctors />} />
+          <Route path="pharmacy"       element={<AdminPharmacy />} />
+          <Route path="notices"        element={<AdminNotices />} />
+          <Route path="education"      element={<AdminEducation />} />
+          <Route path="scholarships"   element={<AdminScholarships />} />
         </Route>
       </Routes>
 

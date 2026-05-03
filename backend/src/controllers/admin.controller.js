@@ -269,3 +269,32 @@ exports.getAnalytics = async (req, res) => {
     ok(res, { topJobs, topDonations, bloodByGroup, volunteerByCategory });
   } catch { err(res, 'Failed', 500); }
 };
+
+/* ── Blood donors extras ──────────────────────────────────── */
+exports.deleteBloodDonor = async (req, res) => {
+  await db.execute('DELETE FROM blood_donors WHERE id=?', [req.params.id]);
+  ok(res, null, 'Deleted');
+};
+exports.verifyBloodDonor = async (req, res) => {
+  await db.execute('UPDATE users u JOIN blood_donors b ON u.id=b.user_id SET u.is_verified=1 WHERE b.id=?', [req.params.id]);
+  ok(res, null, 'Verified');
+};
+
+/* ── Volunteers extras ────────────────────────────────────── */
+exports.deleteVolunteer = async (req, res) => {
+  await db.execute('DELETE FROM volunteers WHERE id=?', [req.params.id]);
+  ok(res, null, 'Deleted');
+};
+exports.verifyVolunteer = async (req, res) => {
+  await db.execute('UPDATE users u JOIN volunteers v ON u.id=v.user_id SET u.is_verified=1 WHERE v.id=?', [req.params.id]);
+  ok(res, null, 'Verified');
+};
+
+/* ── Jobs extras ──────────────────────────────────────────── */
+exports.updateJobStatus = async (req, res) => {
+  const { status } = req.body;
+  if (!['active','closed','draft'].includes(status)) return err(res, 'Invalid status', 400);
+  await db.execute('UPDATE jobs SET status=? WHERE id=?', [status, req.params.id]);
+  ok(res, null, `Job ${status}`);
+};
+

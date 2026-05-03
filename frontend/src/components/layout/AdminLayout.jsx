@@ -5,21 +5,28 @@ import { useLang } from '../../context/LanguageContext';
 import { useTheme } from '../../context/ThemeContext';
 import {
   FiGrid, FiUsers, FiHeart, FiBriefcase, FiDroplet, FiUsers as FiVol,
-  FiAlertTriangle, FiFlag, FiBarChart2, FiBell, FiSettings,
-  FiLogOut, FiMenu, FiX, FiExternalLink, FiChevronRight,
+  FiAlertTriangle, FiFlag, FiBarChart2, FiBell, FiActivity,
+  FiLogOut, FiMenu, FiX, FiExternalLink, FiBook, FiFileText, FiAward,
 } from 'react-icons/fi';
 
 const NAV_ITEMS = (t) => [
-  { icon:<FiGrid/>,         label:t('admin.dashboard'),     to:'/admin' },
-  { icon:<FiUsers/>,        label:t('admin.users'),         to:'/admin/users' },
-  { icon:<FiHeart/>,        label:t('admin.donations'),     to:'/admin/donations' },
-  { icon:<FiBriefcase/>,    label:t('admin.jobs'),          to:'/admin/jobs' },
-  { icon:<FiDroplet/>,      label:t('admin.blood'),         to:'/admin/blood' },
-  { icon:<FiVol/>,          label:t('admin.volunteers'),    to:'/admin/volunteers' },
-  { icon:<FiAlertTriangle/>,label:t('admin.emergency'),     to:'/admin/emergency' },
-  { icon:<FiFlag/>,         label:t('admin.reports'),       to:'/admin/reports' },
-  { icon:<FiBarChart2/>,    label:t('admin.analytics'),     to:'/admin/analytics' },
-  { icon:<FiBell/>,         label:t('admin.notifications'), to:'/admin/notifications' },
+  { icon:<FiGrid/>,         label:t('admin.dashboard'),     to:'/admin',              group:'core' },
+  { icon:<FiUsers/>,        label:t('admin.users'),         to:'/admin/users',        group:'core' },
+  { icon:<FiHeart/>,        label:t('admin.donations'),     to:'/admin/donations',    group:'core' },
+  { icon:<FiBriefcase/>,    label:t('admin.jobs'),          to:'/admin/jobs',         group:'core' },
+  { icon:<FiDroplet/>,      label:t('admin.blood'),         to:'/admin/blood',        group:'core' },
+  { icon:<FiVol/>,          label:t('admin.volunteers'),    to:'/admin/volunteers',   group:'core' },
+  { icon:<FiAlertTriangle/>,label:t('admin.emergency'),     to:'/admin/emergency',    group:'core' },
+  // Content management
+  { icon:<FiActivity/>,     label: t('nav.doctors') || 'Doctors',       to:'/admin/doctors',      group:'content' },
+  { icon:<span>💊</span>,   label: 'Pharmacy',                           to:'/admin/pharmacy',     group:'content' },
+  { icon:<FiFileText/>,     label: t('nav.notices') || 'Notices',        to:'/admin/notices',      group:'content' },
+  { icon:<FiBook/>,         label: t('nav.education') || 'Education',    to:'/admin/education',    group:'content' },
+  { icon:<FiAward/>,        label: 'Scholarships',                        to:'/admin/scholarships', group:'content' },
+  // System
+  { icon:<FiFlag/>,         label:t('admin.reports'),       to:'/admin/reports',      group:'system' },
+  { icon:<FiBarChart2/>,    label:t('admin.analytics'),     to:'/admin/analytics',    group:'system' },
+  { icon:<FiBell/>,         label:t('admin.notifications'), to:'/admin/notifications', group:'system' },
 ];
 
 export default function AdminLayout() {
@@ -60,21 +67,36 @@ export default function AdminLayout() {
 
         {/* Nav */}
         <nav style={{ flex:1, padding:'0.75rem 0.5rem', overflowY:'auto' }}>
-          {NAV_ITEMS(t).map((item) => (
-            <NavLink key={item.to} to={item.to} end={item.to==='/admin'} onClick={() => setMobileOpen(false)}
-              style={({ isActive }) => ({
-                display:'flex', alignItems:'center', gap:10, padding:collapsed?'10px':'9px 12px',
-                borderRadius:9, textDecoration:'none', marginBottom:2, transition:'all 0.18s',
-                background: isActive?'rgba(230,57,70,0.12)':'transparent',
-                color: isActive?'var(--red)':'var(--text-muted)',
-                fontWeight: isActive?700:500, fontSize:'0.84rem',
-                justifyContent: collapsed?'center':'flex-start',
-                border: isActive?'1px solid rgba(230,57,70,0.2)':'1px solid transparent',
-              })}>
-              <span style={{ fontSize:'1rem', flexShrink:0 }}>{item.icon}</span>
-              {(!collapsed || mobileOpen) && <span style={{ whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{item.label}</span>}
-            </NavLink>
-          ))}
+          {(() => {
+            let lastGroup = null;
+            const GROUP_LABELS = { core:'Core', content:'Content', system:'System' };
+            return NAV_ITEMS(t).map((item) => {
+              const showDivider = !collapsed && item.group && item.group !== lastGroup;
+              lastGroup = item.group;
+              return (
+                <div key={item.to}>
+                  {showDivider && (
+                    <div style={{ fontSize:'0.65rem', fontWeight:700, color:'var(--text-dim)', letterSpacing:'0.08em', textTransform:'uppercase', padding:'8px 12px 4px', marginTop: lastGroup ? 4 : 0 }}>
+                      {GROUP_LABELS[item.group]}
+                    </div>
+                  )}
+                  <NavLink to={item.to} end={item.to==='/admin'} onClick={() => setMobileOpen(false)}
+                    style={({ isActive }) => ({
+                      display:'flex', alignItems:'center', gap:10, padding:collapsed?'10px':'9px 12px',
+                      borderRadius:9, textDecoration:'none', marginBottom:2, transition:'all 0.18s',
+                      background: isActive?'rgba(230,57,70,0.12)':'transparent',
+                      color: isActive?'var(--red)':'var(--text-muted)',
+                      fontWeight: isActive?700:500, fontSize:'0.84rem',
+                      justifyContent: collapsed?'center':'flex-start',
+                      border: isActive?'1px solid rgba(230,57,70,0.2)':'1px solid transparent',
+                    })}>
+                    <span style={{ fontSize:'1rem', flexShrink:0 }}>{item.icon}</span>
+                    {(!collapsed || mobileOpen) && <span style={{ whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{item.label}</span>}
+                  </NavLink>
+                </div>
+              );
+            });
+          })()}
         </nav>
 
         {/* Bottom */}

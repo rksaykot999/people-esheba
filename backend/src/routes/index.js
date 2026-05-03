@@ -66,6 +66,15 @@ router.get( '/volunteers/me', protect, vol.getMyVolunteer);
 router.put( '/volunteers/me', protect, vol.updateVolunteer);
 router.delete('/volunteers/me', protect, vol.deactivate);
 
+// ── Public Content (Doctors, Pharmacies, Notices, Education, Scholarships) ──
+const cnt = require('../controllers/content.controller');
+router.get('/doctors',      cnt.getDoctors);
+router.get('/doctors/:id',  cnt.getDoctorById);
+router.get('/pharmacies',   cnt.getPharmacies);
+router.get('/notices',      cnt.getNotices);
+router.get('/education',    cnt.getEducation);
+router.get('/scholarships', cnt.getScholarships);
+
 // ── Admin ─────────────────────────────────────────────────────
 const adm = require('../controllers/admin.controller');
 const A   = [protect, adminOnly];
@@ -73,28 +82,71 @@ const A   = [protect, adminOnly];
 router.get( '/admin/dashboard', ...A, adm.getDashboard);
 router.get( '/admin/analytics', ...A, adm.getAnalytics);
 
-router.get(   '/admin/users',         ...A, adm.getUsers);
+// Users
+router.get(   '/admin/users',            ...A, adm.getUsers);
 router.put(   '/admin/users/:id/toggle', ...A, adm.toggleUser);
 router.put(   '/admin/users/:id/role',   ...A, adm.changeRole);
-router.delete('/admin/users/:id',     ...A, adm.deleteUser);
+router.delete('/admin/users/:id',        ...A, adm.deleteUser);
 
+// Donations
 router.get(   '/admin/donations',         ...A, adm.getDonations);
 router.put(   '/admin/donations/:id',     ...A, adm.updateDonationStatus);
 router.delete('/admin/donations/:id',     ...A, adm.deleteDonation);
 
+// Jobs
 router.get(   '/admin/jobs',              ...A, adm.getAllJobs);
 router.delete('/admin/jobs/:id',          ...A, adm.deleteJob);
+router.put(   '/admin/jobs/:id/status',   ...A, adm.updateJobStatus);
 
-router.get(   '/admin/blood-donors',      ...A, adm.getBloodDonors);
-router.get(   '/admin/volunteers',        ...A, adm.getVolunteers);
+// Blood donors
+router.get(   '/admin/blood-donors',            ...A, adm.getBloodDonors);
+router.delete('/admin/blood-donors/:id',        ...A, adm.deleteBloodDonor);
+router.put(   '/admin/blood-donors/:id/verify', ...A, adm.verifyBloodDonor);
 
+// Volunteers
+router.get(   '/admin/volunteers',           ...A, adm.getVolunteers);
+router.delete('/admin/volunteers/:id',       ...A, adm.deleteVolunteer);
+router.put(   '/admin/volunteers/:id/verify',...A, adm.verifyVolunteer);
+
+// Emergency
 router.get(   '/admin/emergency',         ...A, adm.getEmergencyServices);
 router.post(  '/admin/emergency',         ...A, adm.createEmergencyService);
 router.put(   '/admin/emergency/:id',     ...A, adm.updateEmergencyService);
 router.delete('/admin/emergency/:id',     ...A, adm.deleteEmergencyService);
 
-router.get(   '/admin/reports',           ...A, adm.getReports);
-router.put(   '/admin/reports/:id/resolve',...A, adm.resolveReport);
-router.post(  '/admin/announcements',     ...A, adm.createAnnouncement);
+// Reports & Announcements
+router.get(   '/admin/reports',             ...A, adm.getReports);
+router.put(   '/admin/reports/:id/resolve', ...A, adm.resolveReport);
+router.post(  '/admin/announcements',       ...A, adm.createAnnouncement);
+
+// Admin CRUD — Doctors
+router.get(   '/admin/doctors',      ...A, cnt.adminGetDoctors);
+router.post(  '/admin/doctors',      ...A, cnt.adminCreateDoctor);
+router.put(   '/admin/doctors/:id',  ...A, cnt.adminUpdateDoctor);
+router.delete('/admin/doctors/:id',  ...A, cnt.adminDeleteDoctor);
+
+// Admin CRUD — Pharmacies
+router.get(   '/admin/pharmacies',     ...A, cnt.adminGetPharmacies);
+router.post(  '/admin/pharmacies',     ...A, cnt.adminCreatePharmacy);
+router.put(   '/admin/pharmacies/:id', ...A, cnt.adminUpdatePharmacy);
+router.delete('/admin/pharmacies/:id', ...A, cnt.adminDeletePharmacy);
+
+// Admin CRUD — Notices
+router.get(   '/admin/notices',     ...A, cnt.adminGetNotices);
+router.post(  '/admin/notices',     ...A, cnt.adminCreateNotice);
+router.put(   '/admin/notices/:id', ...A, cnt.adminUpdateNotice);
+router.delete('/admin/notices/:id', ...A, cnt.adminDeleteNotice);
+
+// Admin CRUD — Education
+router.get(   '/admin/education',     ...A, cnt.adminGetEducation);
+router.post(  '/admin/education',     ...A, cnt.adminCreateEducation);
+router.put(   '/admin/education/:id', ...A, cnt.adminUpdateEducation);
+router.delete('/admin/education/:id', ...A, cnt.adminDeleteEducation);
+
+// Admin CRUD — Scholarships
+router.get(   '/admin/scholarships',     ...A, cnt.adminGetScholarships);
+router.post(  '/admin/scholarships',     ...A, cnt.adminCreateScholarship);
+router.put(   '/admin/scholarships/:id', ...A, cnt.adminUpdateScholarship);
+router.delete('/admin/scholarships/:id', ...A, cnt.adminDeleteScholarship);
 
 module.exports = router;

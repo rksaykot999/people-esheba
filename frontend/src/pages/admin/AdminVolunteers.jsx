@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useLang } from '../../context/LanguageContext';
 import api from '../../services/api';
+import toast from 'react-hot-toast';
+import { FiTrash2, FiShield } from 'react-icons/fi';
 
 export default function AdminVolunteers() {
   const { t, isBn } = useLang();
@@ -17,6 +19,24 @@ export default function AdminVolunteers() {
       .catch(()=>setItems([]))
       .finally(()=>setLoading(false));
   }, [page]);
+
+  const verifyVol = async (id, name) => {
+    try {
+      await api.put(`/admin/volunteers/${id}/verify`);
+      toast.success(`${name} verified`);
+      setItems(i => i.map(x => x.id===id ? {...x, is_verified:1} : x));
+    } catch { toast.error('Failed'); }
+  };
+
+  const deleteItem = async (id, name) => {
+    if (!window.confirm(`Remove ${name} as volunteer?`)) return;
+    try {
+      await api.delete(`/admin/volunteers/${id}`);
+      toast.success('Removed');
+      setItems(i => i.filter(x => x.id!==id));
+      setTotal(t => t-1);
+    } catch { toast.error('Failed'); }
+  };
 
   return (
     <div>
@@ -35,7 +55,7 @@ export default function AdminVolunteers() {
                 <th>{isBn?'এলাকা':'Location'}</th>
                 <th>{isBn?'উপলব্ধতা':'Availability'}</th>
                 <th>{isBn?'স্ট্যাটাস':'Status'}</th>
-                <th>{isBn?'তারিখ':'Date'}</th>
+                <th>{isBn?'কার্যক্রম':'Actions'}</th>
               </tr></thead>
               <tbody>
                 {items.map(v => (
@@ -48,6 +68,7 @@ export default function AdminVolunteers() {
                         <div>
                           <div style={{ fontWeight:600, color:'#fff', fontSize:'0.85rem' }}>{v.name}</div>
                           <div style={{ fontSize:'0.72rem', color:'var(--text-dim)' }}>{v.email}</div>
+                          {v.is_verified ? <span style={{ fontSize:'0.65rem', color:'var(--green)' }}>✓ verified</span> : null}
                         </div>
                       </div>
                     </td>
@@ -56,7 +77,18 @@ export default function AdminVolunteers() {
                     <td style={{ fontSize:'0.8rem', color:'var(--text-muted)' }}>{v.district||'—'}</td>
                     <td style={{ fontSize:'0.78rem', color:'var(--text-muted)' }}>{v.availability||'—'}</td>
                     <td><span className={`badge ${v.is_active?'badge-green':'badge-gray'}`}>{v.is_active?t('common.active'):t('common.inactive')}</span></td>
-                    <td style={{ fontSize:'0.78rem', color:'var(--text-dim)' }}>{new Date(v.created_at).toLocaleDateString()}</td>
+                    <td>
+                      <div style={{ display:'flex', gap:5 }}>
+                        {!v.is_verified && (
+                          <button onClick={() => verifyVol(v.id, v.name)} title="Verify" style={{ width:28, height:28, borderRadius:7, border:'1px solid rgba(16,185,129,0.3)', background:'transparent', color:'var(--green)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                            <FiShield size={12}/>
+                          </button>
+                        )}
+                        <button onClick={() => deleteItem(v.id, v.name)} title="Remove" style={{ width:28, height:28, borderRadius:7, border:'1px solid rgba(230,57,70,0.2)', background:'transparent', color:'var(--red)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                          <FiTrash2 size={12}/>
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
                 {items.length===0 && <tr><td colSpan={7} style={{ textAlign:'center', padding:'2.5rem', color:'var(--text-dim)' }}>{t('common.noResults')}</td></tr>}
