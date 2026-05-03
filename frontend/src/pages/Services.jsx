@@ -1,355 +1,517 @@
-import { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import {
-  FiSearch, FiPhone, FiMapPin, FiStar,
-  FiFilter, FiArrowRight, FiCheckCircle, FiTag
-} from 'react-icons/fi';
+import { useLang } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
+import {
+  FiSearch, FiMapPin, FiFilter, FiExternalLink,
+  FiShield, FiStar, FiActivity, FiPhone, FiArrowRight,
+  FiHome, FiTruck, FiTool, FiHeart, FiBookOpen, FiZap,
+  FiCheckCircle, FiTag
+} from 'react-icons/fi';
 
+/* ── Constants ──────────────────────────────────────────── */
 const CATS = [
-  { key: 'all', label: 'All Services', color: '#8B5CF6' },
-  { key: 'home', label: 'Home Services', color: '#EF4444' },
-  { key: 'transport', label: 'Transport', color: '#06B6D4' },
-  { key: 'repairs', label: 'Repairs', color: '#F59E0B' },
-  { key: 'telemedicine', label: 'Telemedicine', color: '#EC4899' },
-  { key: 'tutor', label: 'Finding Tutor', color: '#A855F7' },
-  { key: 'utility', label: 'Utility Services', color: '#10B981' },
+  { key: 'all', label: 'All Services', color: '#8B5CF6', icon: FiFilter },
+  { key: 'home', label: 'Home Services', color: '#EF4444', icon: FiHome },
+  { key: 'transport', label: 'Transport', color: '#06B6D4', icon: FiTruck },
+  { key: 'repairs', label: 'Repairs', color: '#F59E0B', icon: FiTool },
+  { key: 'telemedicine', label: 'Telemedicine', color: '#EC4899', icon: FiHeart },
+  { key: 'tutor', label: 'Finding Tutor', color: '#A855F7', icon: FiBookOpen },
+  { key: 'utility', label: 'Utility Services', color: '#10B981', icon: FiZap },
 ];
 
-// ✅ FIX 1: সব id এখন আলাদা (1 থেকে 15 পর্যন্ত)
+// Map category to meta for card top gradient etc.
+const CAT_META = Object.fromEntries(
+  CATS.filter(c => c.key !== 'all').map(c => [c.key, { color: c.color, icon: c.icon, bg: `${c.color}15` }])
+);
+
 const SAMPLE = [
-
-  // --- Home Services ---
-  {
-    id: 1, cat: 'home', name: 'Sheba.xyz', area: 'Dhaka & Chittagong', phone: '16516', rating: 4.6, reviews: '20k+', badge: 'Home Service',
-    price: 'Varies by Task', desc: 'One-stop solution for your house painting, plumbing, and electrical works.',
-    features: ['Verified Pros', 'Service Warranty']
-  },
-  {
-    id: 2, cat: 'home', name: 'Hello Task', area: 'Dhaka', phone: '09612345678', rating: 4.3, reviews: '5k+', badge: 'Maid Service',
-    price: 'Starts 300 BDT', desc: 'On-demand professional maid and house cleaning services for urban busy life.',
-    features: ['Background Checked', 'Flexible Timing']
-  },
-  {
-    id: 3, cat: 'home', name: 'Home360', area: 'Dhaka', phone: '09612345679', rating: 4.2, reviews: '3k+', badge: 'Maid Service',
-    price: 'Starts 300 BDT', desc: 'On-demand professional maid and house cleaning services for urban busy life.',
-    features: ['Background Checked', 'Flexible Timing']
-  },
-  {
-    id: 4, cat: 'home', name: 'HomeFix', area: 'Dhaka', phone: '09612345680', rating: 4.1, reviews: '2k+', badge: 'Maid Service',
-    price: 'Starts 300 BDT', desc: 'On-demand professional maid and house cleaning services for urban busy life.',
-    features: ['Background Checked', 'Flexible Timing']
-  },
-
-  // --- Transport Services ---
-  {
-    id: 5, cat: 'transport', name: 'Pathao Rides', area: 'Nationwide', phone: '16775', rating: 4.7, reviews: '50k+', badge: 'Ride Sharing',
-    price: 'Distance Based', desc: 'Reliable and fast bike or car booking to move around the city safely.',
-    features: ['GPS Tracking', 'Safety First']
-  },
-  {
-    id: 6, cat: 'transport', name: 'Uber Bangladesh', area: 'Dhaka & Sylhet', phone: '01700000000', rating: 4.5, reviews: '100k+', badge: 'Car Service',
-    price: 'Standard Rates', desc: 'World-class ride-hailing experience with premium car options and safety.',
-    features: ['24/7 Availability', 'Cashless Pay']
-  },
-  {
-    id: 7, cat: 'transport', name: 'Truck Lagbe', area: 'Nationwide', phone: '09638000245', rating: 4.8, reviews: '10k+', badge: 'Logistics',
-    price: 'Bidding System', desc: 'Hire trucks or pickups for shifting your home or moving commercial goods.',
-    features: ['Verified Drivers', 'Live Tracking']
-  },
-
-  // --- Repairs ---
-  {
-    id: 8, cat: 'repairs', name: 'HandyMama', area: 'Dhaka', phone: '09617008080', rating: 4.4, reviews: '3k+', badge: 'Repairing',
-    price: 'Inspection Fee 200', desc: 'Professional AC repair, fridge fixing, and appliance maintenance services.',
-    features: ['Warranty', 'Prompt Response']
-  },
-  {
-    id: 9, cat: 'repairs', name: 'Jantrik', area: 'Dhaka', phone: '09612341234', rating: 4.5, reviews: '2k+', badge: 'Automobile',
-    price: 'Service Charge', desc: 'Expert car repair, car wash, and emergency breakdown support at your doorstep.',
-    features: ['Spare Parts', 'Emergency']
-  },
-  {
-    id: 10, cat: 'repairs', name: 'AllSheba', area: 'Dhaka', phone: '09612341235', rating: 4.3, reviews: '1k+', badge: 'Automobile',
-    price: 'Service Charge', desc: 'Expert car repair, car wash, and emergency breakdown support at your doorstep.',
-    features: ['Spare Parts', 'Emergency']
-  },
-
-  // --- Telemedicine & Health ---
-  {
-    id: 11, cat: 'telemedicine', name: 'Praava Health', area: 'Dhaka', phone: '10649', rating: 4.9, reviews: '12k+', badge: 'Healthcare',
-    price: 'Consultation Fee', desc: 'Family doctors and diagnostics with international standard lab facilities.',
-    features: ['Online Report', 'Home Sample']
-  },
-  {
-    id: 12, cat: 'telemedicine', name: 'Maya Apa', area: 'Nationwide', phone: '16789', rating: 4.6, reviews: '30k+', badge: 'Mental Health',
-    price: 'Subscription Based', desc: 'Anonymous messaging and video calls for medical and mental health advice.',
-    features: ['Privacy Focused', 'Expert Advice']
-  },
-    {
-    id: 17, cat: 'telemedicine', name: 'medex', area: 'Nationwide', phone: '16789', rating: 4.6, reviews: '30k+', badge: 'Mental Health',
-    price: 'Subscription Based', desc: 'Anonymous messaging and video calls for medical and mental health advice.',
-    features: ['Privacy Focused', 'Expert Advice']
-  },
-
-  // --- Education & Tutor ---
-  {
-    id: 13, cat: 'tutor', name: 'Care Tutors', area: 'Major Cities', phone: '01756441122', rating: 4.7, reviews: '8k+', badge: 'Tutor Provider',
-    price: 'Negotiable', desc: 'Find highly qualified home tutors or online mentors for any subject.',
-    features: ['Academic Help', 'Skill Training']
-  },
-  {
-    id: 14, cat: 'tutor', name: '10 Minute School', area: 'Nationwide', phone: '16106', rating: 4.9, reviews: '1M+', badge: 'Ed-Tech',
-    price: 'Free & Premium', desc: 'Largest online platform for SSC, HSC, and University admission preparation.',
-    features: ['Live Classes', 'Recorded Course']
-  },
-
-  // ✅ FIX 2: utility ক্যাটাগরিতে ডেটা যোগ করা হয়েছে
-  {
-    id: 15, cat: 'utility', name: 'Desco Bill Pay', area: 'Dhaka', phone: '16120', rating: 4.5, reviews: '15k+', badge: 'Electricity',
-    price: 'Bill Amount', desc: 'Pay your electricity bill online or through mobile app quickly and easily.',
-    features: ['Instant Payment', '24/7 Service']
-  },
-  {
-    id: 16, cat: 'utility', name: 'Titas Gas', area: 'Dhaka & Surroundings', phone: '16400', rating: 4.2, reviews: '8k+', badge: 'Gas Service',
-    price: 'Bill Amount', desc: 'Gas bill payment and new connection request service for residential areas.',
-    features: ['Online Payment', 'Easy Process']
-  },
-    {
-    id: 18, cat: 'utility', name: 'palli biddot', area: 'all over the bangladesh', phone: '16400', rating: 4.1, reviews: '8k+', badge: 'electriciy Service',
-    price: 'Bill Amount', desc: 'Gas bill payment and new connection request service for residential areas.',
-    features: ['Online Payment', 'Easy Process']
-  },
+  { id: 1, cat: 'home', name: 'Sheba.xyz', area: 'Dhaka & Chittagong', phone: '16516', rating: 4.6, reviews: '20k+', badge: 'Home Service', price: 'Varies by Task', desc: 'One-stop solution for house painting, plumbing, and electrical works.', features: ['Verified Pros', 'Service Warranty'], is_verified: true },
+  { id: 2, cat: 'home', name: 'Hello Task', area: 'Dhaka', phone: '09612345678', rating: 4.3, reviews: '5k+', badge: 'Maid Service', price: 'Starts 300 BDT', desc: 'On-demand professional maid and house cleaning services.', features: ['Background Checked', 'Flexible Timing'], is_verified: true },
+  { id: 3, cat: 'home', name: 'Home360', area: 'Dhaka', phone: '09612345679', rating: 4.2, reviews: '3k+', badge: 'Maid Service', price: 'Starts 300 BDT', desc: 'On-demand professional maid and house cleaning services.', features: ['Background Checked', 'Flexible Timing'], is_verified: false },
+  { id: 4, cat: 'home', name: 'HomeFix', area: 'Dhaka', phone: '09612345680', rating: 4.1, reviews: '2k+', badge: 'Maid Service', price: 'Starts 300 BDT', desc: 'On-demand professional maid and house cleaning services.', features: ['Background Checked', 'Flexible Timing'], is_verified: false },
+  { id: 5, cat: 'transport', name: 'Pathao Rides', area: 'Nationwide', phone: '16775', rating: 4.7, reviews: '50k+', badge: 'Ride Sharing', price: 'Distance Based', desc: 'Reliable and fast bike or car booking to move around the city safely.', features: ['GPS Tracking', 'Safety First'], is_verified: true },
+  { id: 6, cat: 'transport', name: 'Uber BD', area: 'Dhaka & Sylhet', phone: '01700000000', rating: 4.5, reviews: '100k+', badge: 'Car Service', price: 'Standard Rates', desc: 'World-class ride-hailing experience with premium car options and safety.', features: ['24/7 Availability', 'Cashless Pay'], is_verified: true },
+  { id: 7, cat: 'transport', name: 'Truck Lagbe', area: 'Nationwide', phone: '09638000245', rating: 4.8, reviews: '10k+', badge: 'Logistics', price: 'Bidding System', desc: 'Hire trucks or pickups for shifting your home or moving commercial goods.', features: ['Verified Drivers', 'Live Tracking'], is_verified: true },
+  { id: 8, cat: 'repairs', name: 'HandyMama', area: 'Dhaka', phone: '09617008080', rating: 4.4, reviews: '3k+', badge: 'Repairing', price: 'Inspection Fee 200', desc: 'Professional AC repair, fridge fixing, and appliance maintenance services.', features: ['Warranty', 'Prompt Response'], is_verified: true },
+  { id: 9, cat: 'repairs', name: 'Jantrik', area: 'Dhaka', phone: '09612341234', rating: 4.5, reviews: '2k+', badge: 'Automobile', price: 'Service Charge', desc: 'Expert car repair, car wash, and emergency breakdown support.', features: ['Spare Parts', 'Emergency'], is_verified: false },
+  { id: 10, cat: 'repairs', name: 'AllSheba', area: 'Dhaka', phone: '09612341235', rating: 4.3, reviews: '1k+', badge: 'Automobile', price: 'Service Charge', desc: 'Expert car repair, car wash, and emergency breakdown support.', features: ['Spare Parts', 'Emergency'], is_verified: false },
+  { id: 11, cat: 'telemedicine', name: 'Praava Health', area: 'Dhaka', phone: '10649', rating: 4.9, reviews: '12k+', badge: 'Healthcare', price: 'Consultation Fee', desc: 'Family doctors and diagnostics with international standard lab facilities.', features: ['Online Report', 'Home Sample'], is_verified: true },
+  { id: 12, cat: 'telemedicine', name: 'Maya Apa', area: 'Nationwide', phone: '16789', rating: 4.6, reviews: '30k+', badge: 'Mental Health', price: 'Subscription Based', desc: 'Anonymous messaging and video calls for medical and mental health advice.', features: ['Privacy Focused', 'Expert Advice'], is_verified: true },
+  { id: 13, cat: 'tutor', name: 'Care Tutors', area: 'Major Cities', phone: '01756441122', rating: 4.7, reviews: '8k+', badge: 'Tutor Provider', price: 'Negotiable', desc: 'Find highly qualified home tutors or online mentors for any subject.', features: ['Academic Help', 'Skill Training'], is_verified: true },
+  { id: 14, cat: 'tutor', name: '10 Minute School', area: 'Nationwide', phone: '16106', rating: 4.9, reviews: '1M+', badge: 'Ed-Tech', price: 'Free & Premium', desc: 'Largest online platform for SSC, HSC, and University admission preparation.', features: ['Live Classes', 'Recorded Course'], is_verified: true },
+  { id: 15, cat: 'utility', name: 'Desco Bill Pay', area: 'Dhaka', phone: '16120', rating: 4.5, reviews: '15k+', badge: 'Electricity', price: 'Bill Amount', desc: 'Pay your electricity bill online or through mobile app quickly.', features: ['Instant Payment', '24/7 Service'], is_verified: true },
+  { id: 16, cat: 'utility', name: 'Titas Gas', area: 'Dhaka & Surroundings', phone: '16400', rating: 4.2, reviews: '8k+', badge: 'Gas Service', price: 'Bill Amount', desc: 'Gas bill payment and new connection request service for residential areas.', features: ['Online Payment', 'Easy Process'], is_verified: true },
+  { id: 17, cat: 'utility', name: 'Palli Biddyut', area: 'All over Bangladesh', phone: '16400', rating: 4.1, reviews: '8k+', badge: 'Electricity Service', price: 'Bill Amount', desc: 'Gas bill payment and new connection request service for residential areas.', features: ['Online Payment', 'Easy Process'], is_verified: false },
+  { id: 18, cat: 'telemedicine', name: 'Medex', area: 'Nationwide', phone: '16789', rating: 4.6, reviews: '30k+', badge: 'Mental Health', price: 'Subscription Based', desc: 'Anonymous messaging and video calls for medical and mental health advice.', features: ['Privacy Focused', 'Expert Advice'], is_verified: true },
 ];
 
+/* ── Animated Counter ─────────────────────────────────── */
+function Counter({ end, suffix = '' }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        let start = 0;
+        const step = Math.ceil(end / 50);
+        const t = setInterval(() => {
+          start += step;
+          if (start >= end) { setCount(end); clearInterval(t); }
+          else setCount(start);
+        }, 30);
+        obs.disconnect();
+      }
+    }, { threshold: 0.5 });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [end]);
+
+  return <span ref={ref}>{count.toLocaleString()}{suffix}</span>;
+}
+
+/* ── Main Component ───────────────────────────────────── */
 export default function Services() {
+  const { t } = useLang();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
   const [activeCat, setActiveCat] = useState(searchParams.get('cat') || 'all');
+  const [loading, setLoading] = useState(true);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
+  useEffect(() => {
+    setActiveCat(searchParams.get('cat') || 'all');
+  }, [searchParams]);
+
+  useEffect(() => {
+    setLoading(true);
+    const tmt = setTimeout(() => setLoading(false), 400);
+    return () => clearTimeout(tmt);
+  }, [search, activeCat]);
 
   const handleCatChange = (key) => {
     const newParams = new URLSearchParams(searchParams);
     if (key === 'all') newParams.delete('cat');
     else newParams.set('cat', key);
     setSearchParams(newParams);
-    setActiveCat(key);
   };
 
   const filtered = SAMPLE.filter(item => {
-    const matchCat = activeCat === 'all' || item.cat === activeCat;
-    const matchSearch = !search || item.name.toLowerCase().includes(search.toLowerCase());
-    return matchCat && matchSearch;
+    const matchesSearch = !search ||
+      item.name.toLowerCase().includes(search.toLowerCase()) ||
+      item.area.toLowerCase().includes(search.toLowerCase());
+    const matchesCat = activeCat === 'all' || item.cat === activeCat;
+    return matchesSearch && matchesCat;
   });
 
+  // Category meta for active filter button color
+  const activeCatMeta = CATS.find(c => c.key === activeCat) || CATS[0];
+
   return (
-    <div style={{ background: 'var(--bg)', minHeight: '100vh', color: 'var(--text)', fontFamily: "'Inter', sans-serif", overflowX: 'hidden' }}>
+    <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
 
-      {/* --- HERO SECTION --- */}
+      {/* ════════════════ HERO SECTION ════════════════ */}
       <div style={{
-        position: 'relative',
-        padding: '8rem 1rem 6rem',
-        textAlign: 'center',
-        background: 'var(--bg)',
-        borderBottom: '1px solid var(--border)'
+        position: 'relative', overflow: 'hidden',
+        background: isDark
+          ? 'linear-gradient(135deg, #0d0005 0%, #130008 40%, #080E1A 100%)'
+          : 'linear-gradient(135deg, #fff5f5 0%, #fef2f2 40%, #f1f5f9 100%)',
+        padding: '4rem 0 3rem',
       }}>
-        {/* Background Grid */}
+        {/* Blobs */}
         <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`,
-          backgroundSize: '40px 40px',
-          maskImage: 'radial-gradient(ellipse at center, black, transparent 80%)',
-          pointerEvents: 'none'
+          position: 'absolute', top: '-80px', left: '-80px',
+          width: 400, height: 400, borderRadius: '50%',
+          background: isDark
+            ? 'radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }} />
+        <div style={{
+          position: 'absolute', bottom: '-60px', right: '10%',
+          width: 300, height: 300, borderRadius: '50%',
+          background: isDark
+            ? 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(139,92,246,0.05) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }} />
+        <div style={{
+          position: 'absolute', inset: 0, opacity: isDark ? 0.03 : 0.06,
+          backgroundImage: `linear-gradient(var(--red) 1px, transparent 1px),
+                            linear-gradient(90deg, var(--red) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px',
+          pointerEvents: 'none',
         }} />
 
-        {/* Purple Glow */}
-        <div style={{
-          position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)',
-          width: '500px', height: '300px',
-          background: 'rgba(139, 92, 246, 0.15)',
-          filter: 'blur(100px)', borderRadius: '100%', pointerEvents: 'none'
-        }} />
-
-        <div style={{ position: 'relative', zIndex: 1 }}>
+        <div className="container" style={{ position: 'relative' }}>
           <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: 'rgba(139, 92, 246, 0.1)', padding: '8px 20px',
-            borderRadius: '100px', color: '#a78bfa', fontSize: '0.75rem', fontWeight: 600,
-            marginBottom: '2rem', border: '1px solid rgba(139, 92, 246, 0.2)',
-            boxShadow: '0 0 20px rgba(139, 92, 246, 0.1)'
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'none' : 'translateY(24px)',
+            transition: 'all 0.6s cubic-bezier(0.16,1,0.3,1)',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
           }}>
-            <span style={{ display: 'block', width: 8, height: 8, background: '#a78bfa', borderRadius: '50%', boxShadow: '0 0 10px #a78bfa' }}></span>
-            Live Service Hub
-          </div>
-
-          <h1 style={{ fontSize: '4.5rem', fontWeight: 900, marginBottom: '1.5rem', letterSpacing: '-2px', lineHeight: 1 }}>
-            Service Network
-          </h1>
-          <p style={{ color: '#a1a1aa', fontSize: '1.25rem', maxWidth: '650px', margin: '0 auto', marginBottom: '4rem', fontWeight: 400 }}>
-            Discover trusted professional services and local experts tailored to your daily needs.
-          </p>
-
-          {/* Stats */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', flexWrap: 'wrap', maxWidth: '900px', margin: '0 auto' }}>
-            {[
-              { val: '25+', label: 'Categories', icon: <FiFilter size={20} /> },
-              { val: '500+', label: 'Verified Pros', icon: <FiCheckCircle size={20} /> },
-              { val: '64', label: 'Districts', icon: <FiMapPin size={20} /> }
-            ].map((s, i) => (
-              <div key={i} style={{
-                background: 'var(--surface)', border: '1px solid var(--border)',
-                padding: '30px', borderRadius: '24px', flex: '1', minWidth: '200px',
-                backdropFilter: 'blur(12px)'
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.25)',
+                color: '#a78bfa', padding: '5px 14px', borderRadius: 999,
+                fontSize: '0.72rem', fontWeight: 800, letterSpacing: '1.5px', textTransform: 'uppercase',
               }}>
-                <div style={{ color: '#8b5cf6', marginBottom: '12px', display: 'flex', justifyContent: 'center' }}>{s.icon}</div>
-                <h2 style={{ fontSize: '2.2rem', fontWeight: 800, margin: 0, color: 'var(--text)' }}>{s.val}</h2>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600, marginTop: '5px', textTransform: 'uppercase', letterSpacing: '1px' }}>{s.label}</p>
-              </div>
-            ))}
+                <span style={{
+                  width: 7, height: 7, borderRadius: '50%', background: '#a78bfa',
+                  animation: 'pulse-dot 1.4s ease-in-out infinite',
+                }} />
+                Live Service Hub
+              </span>
+            </div>
+
+            <h1 style={{
+              fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 900,
+              lineHeight: 1.08, letterSpacing: '-1.5px', color: 'var(--text)',
+              marginBottom: '1rem', maxWidth: '700px', marginLeft: 'auto', marginRight: 'auto',
+            }}>
+              Service Network<br />
+              <span style={{
+                background: 'linear-gradient(135deg, #8b5cf6, #a78bfa)',
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}>
+                For Your Daily Needs
+              </span>{' '}Bangladesh
+            </h1>
+            <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: 500, lineHeight: 1.7, margin: '0 auto 2rem' }}>
+              Discover trusted professional services and local experts tailored to your daily needs.
+            </p>
+
+            {/* Stats */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
+              {[
+                { label: 'Categories', value: 25, suffix: '+', icon: <FiFilter size={16} />, color: '#8b5cf6' },
+                { label: 'Verified Pros', value: 500, suffix: '+', icon: <FiShield size={16} />, color: '#06B6D4' },
+                { label: 'Districts', value: 64, suffix: '', icon: <FiMapPin size={16} />, color: '#10B981' },
+              ].map(s => (
+                <div key={s.label} style={{
+                  background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.02)',
+                  backdropFilter: 'blur(12px)',
+                  border: isDark ? '1px solid rgba(255,255,255,0.07)' : '1px solid rgba(0,0,0,0.06)',
+                  borderRadius: 16, padding: '1rem 1.25rem', minWidth: 110, textAlign: 'center',
+                }}>
+                  <div style={{ color: s.color, marginBottom: 4, display: 'flex', justifyContent: 'center' }}>{s.icon}</div>
+                  <div style={{ fontSize: '1.6rem', fontWeight: 900, color: 'var(--text)', lineHeight: 1 }}>
+                    <Counter end={s.value} suffix={s.suffix} />
+                  </div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: 4, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    {s.label}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* --- SEARCH & CONTENT SECTION --- */}
-      <div style={{ padding: '4rem 1.5rem 5rem', maxWidth: '1200px', margin: '0 auto' }}>
+      {/* ════════════════ MAIN CONTENT ════════════════ */}
+      <div className="container" style={{ padding: '2.5rem 1.5rem' }}>
 
-        {/* Filter & Search Bar */}
+        {/* Search + Filter Bar */}
         <div style={{
           background: 'var(--surface)', border: '1px solid var(--border)',
-          padding: '24px', borderRadius: '32px', marginBottom: '4rem'
+          borderRadius: 20, padding: '1.25rem', marginBottom: '2rem',
+          display: 'flex', flexDirection: 'column', gap: '1rem',
         }}>
-          {/* Category Buttons */}
-          <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '16px', marginBottom: '16px' }}>
-            {CATS.map(c => (
-              <button
-                key={c.key}
-                onClick={() => handleCatChange(c.key)}
-                style={{
-                  padding: '12px 24px', borderRadius: '16px', border: 'none', cursor: 'pointer',
-                  whiteSpace: 'nowrap', fontSize: '0.9rem', fontWeight: 600,
-                  background: activeCat === c.key ? '#8b5cf6' : 'var(--surface-2)',
-                  color: activeCat === c.key ? '#fff' : 'var(--text-muted)',
-                  transition: '0.2s all'
-                }}
-              >
-                {c.label}
-              </button>
-            ))}
+          <div style={{ display: 'flex', gap: 10 }}>
+            <div style={{ flex: 1, position: 'relative' }}>
+              <FiSearch style={{
+                position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
+                color: 'var(--text-dim)', pointerEvents: 'none',
+              }} size={16} />
+              <input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search services by name or area..."
+                className="form-input"
+                style={{ paddingLeft: 42, height: 46, borderRadius: 12, fontSize: '0.9rem' }}
+              />
+            </div>
+            <button
+              type="button"
+              className="btn btn-primary"
+              style={{ height: 46, padding: '0 1.5rem', borderRadius: 12, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: 6, background: '#8b5cf6', borderColor: '#8b5cf6' }}
+            >
+              <FiSearch size={14} /> Search
+            </button>
           </div>
 
-          {/* ✅ FIX 3: boxSizing যোগ করা হয়েছে যাতে input overflow না করে */}
-          <div style={{ position: 'relative' }}>
-            <FiSearch style={{ position: 'absolute', left: 24, top: '50%', transform: 'translateY(-50%)', color: '#52525b' }} size={20} />
-            <input
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Search services by name or area..."
-              style={{
-                width: '100%',
-                boxSizing: 'border-box', // ✅ overflow fix
-                height: '64px',
-                padding: '0 160px 0 56px',
-                borderRadius: '20px',
-                background: 'var(--bg)',
-                border: '1px solid var(--border)',
-                color: 'var(--text)',
-                fontSize: '1rem',
-                outline: 'none'
-              }}
-            />
-            <button style={{
-              position: 'absolute', right: '10px', top: '10px', bottom: '10px',
-              padding: '0 28px', borderRadius: '14px', border: 'none',
-              background: '#ef4444', color: '#fff', fontWeight: 700, cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: 8,
-              boxShadow: '0 4px 15px rgba(239, 68, 68, 0.2)'
-            }}>
-              <FiSearch size={18} /> Search
-            </button>
+          {/* Category filters */}
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px', marginRight: 4 }}>
+              <FiFilter size={11} style={{ marginRight: 4 }} />Filter:
+            </span>
+            {CATS.map(cat => {
+              const active = activeCat === cat.key;
+              const color = cat.color;
+              const Icon = cat.icon;
+              return (
+                <button
+                  key={cat.key}
+                  onClick={() => handleCatChange(cat.key)}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    padding: '6px 14px', borderRadius: 999, fontSize: '0.78rem', fontWeight: 700,
+                    cursor: 'pointer', border: '1px solid', transition: 'all 0.18s',
+                    background: active ? color : 'transparent',
+                    borderColor: active ? color : 'var(--border-2)',
+                    color: active ? '#fff' : 'var(--text-muted)',
+                  }}
+                  onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor = color; e.currentTarget.style.color = color; } }}
+                  onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor = 'var(--border-2)'; e.currentTarget.style.color = 'var(--text-muted)'; } }}
+                >
+                  <Icon size={12} /> {cat.label}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* ✅ FIX 4: key হিসেবে item.id ব্যবহার করা হচ্ছে, যেগুলো এখন সব unique */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-          gap: '28px'
-        }}>
-          {filtered.length === 0 ? (
-            <div style={{
-              gridColumn: '1 / -1', textAlign: 'center',
-              padding: '80px 20px', color: '#52525b'
-            }}>
-              <FiSearch size={48} style={{ marginBottom: '16px', opacity: 0.3 }} />
-              <p style={{ fontSize: '1.2rem', fontWeight: 600 }}>কোনো সার্ভিস পাওয়া যায়নি</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '8px' }}>অন্য কিছু দিয়ে সার্চ করুন</p>
-            </div>
-          ) : (
-            filtered.map(item => (
-              <div key={item.id} style={{
-                background: 'var(--surface)', borderRadius: '28px', padding: '28px',
-                border: '1px solid var(--border)', position: 'relative',
-                transition: 'transform 0.3s ease, border-color 0.3s ease'
+        {/* Result meta */}
+        <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
+          <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+            {loading ? "Loading..." : <><strong style={{ color: 'var(--text)' }}>{filtered.length}</strong> services found</>}
+          </span>
+          {(activeCat !== 'all' || search) && (
+            <button
+              onClick={() => { setSearch(''); handleCatChange('all'); }}
+              style={{
+                fontSize: '0.78rem', color: 'var(--text-dim)', background: 'none',
+                border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4,
               }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                  e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.3)';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.borderColor = 'var(--border)';
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-                  <span style={{
-                    background: 'rgba(139, 92, 246, 0.1)', color: '#a78bfa',
-                    padding: '6px 14px', borderRadius: '10px', fontSize: '0.7rem', fontWeight: 800,
-                    textTransform: 'uppercase', letterSpacing: '0.5px'
-                  }}>
-                    {item.badge}
-                  </span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#f59e0b', fontWeight: 700, fontSize: '0.95rem' }}>
-                    <FiStar size={16} fill="#f59e0b" /> {item.rating}
-                  </div>
-                </div>
-
-                <h3 style={{ fontSize: '1.35rem', fontWeight: 700, marginBottom: '12px' }}>{item.name}</h3>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '24px' }}>{item.desc}</p>
-
-                <div style={{
-                  borderTop: '1px solid var(--border)', paddingTop: '20px',
-                  display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '28px'
-                }}>
-                  <div style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <FiTag size={16} /> {item.price}
-                  </div>
-                  <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <FiMapPin size={16} /> {item.area} ({item.reviews} reviews)
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', gap: '12px' }}>
-                  <a href={`tel:${item.phone}`} style={{
-                    flex: 1, height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: '#8b5cf6', color: '#fff', borderRadius: '16px', fontWeight: 700, textDecoration: 'none'
-                  }}>
-                    <FiPhone size={18} style={{ marginRight: 10 }} /> Call Now
-                  </a>
-                  <button style={{
-                    width: '52px', height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: 'var(--surface-2)', border: '1px solid var(--border)',
-                    borderRadius: '16px', color: 'var(--text)', cursor: 'pointer'
-                  }}>
-                    <FiArrowRight size={22} />
-                  </button>
-                </div>
-              </div>
-            ))
+            >
+              Clear all ×
+            </button>
           )}
         </div>
 
+        {/* Cards Grid */}
+        {loading ? (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px,1fr))', gap: '1rem' }}>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} style={{
+                background: 'var(--surface)', border: '1px solid var(--border)',
+                borderRadius: 16, padding: '1.5rem', minHeight: 180,
+              }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {[60, 100, 80, 40].map((w, j) => (
+                    <div key={j} style={{
+                      height: j === 0 ? 40 : 12, width: `${w}%`, borderRadius: 8,
+                      background: 'var(--surface-3)',
+                      animation: 'shimmer 1.6s infinite',
+                    }} />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
+          <div style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            padding: '5rem 2rem', gap: '1rem', textAlign: 'center',
+          }}>
+            <FiFilter size={48} style={{ opacity: 0.4, color: 'var(--text-dim)' }} />
+            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)' }}>No services found</div>
+            <div style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>Try adjusting your search or filter.</div>
+            <button onClick={() => { setSearch(''); handleCatChange('all'); }} className="btn btn-outline btn-sm">
+              Reset Filters
+            </button>
+          </div>
+        ) : (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+            gap: '1rem',
+          }}>
+            {filtered.map((item, i) => {
+              const meta = CAT_META[item.cat] || { color: '#8B5CF6', icon: FiFilter, bg: 'rgba(139,92,246,0.1)' };
+              const Icon = meta.icon;
+              return (
+                <div
+                  key={item.id}
+                  style={{
+                    background: 'var(--surface)', border: '1px solid var(--border)',
+                    borderRadius: 18, padding: '1.5rem', position: 'relative',
+                    overflow: 'hidden', transition: 'all 0.24s cubic-bezier(0.4,0,0.2,1)',
+                    opacity: visible ? 1 : 0,
+                    transform: visible ? 'none' : 'translateY(20px)',
+                    transitionDelay: `${Math.min(i * 50, 300)}ms`,
+                    cursor: 'default',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.borderColor = meta.color + '40';
+                    e.currentTarget.style.boxShadow = `0 12px 40px ${meta.color}18`;
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.transform = 'none';
+                    e.currentTarget.style.borderColor = 'var(--border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
+                  <div style={{
+                    position: 'absolute', top: 0, left: 0, right: 0, height: 3,
+                    background: `linear-gradient(90deg, ${meta.color}, transparent)`,
+                    borderRadius: '18px 18px 0 0',
+                  }} />
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+                    <div style={{
+                      width: 26, height: 26, borderRadius: 10,
+                      background: meta.bg, border: `1px solid ${meta.color}30`,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      color: meta.color,
+                    }}>
+                      <Icon size={16} />
+                    </div>
+                    <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                      {item.is_verified && (
+                        <span style={{
+                          display: 'inline-flex', alignItems: 'center', gap: 3,
+                          background: 'rgba(16,185,129,0.1)', color: 'var(--green)',
+                          border: '1px solid rgba(16,185,129,0.2)',
+                          padding: '3px 9px', borderRadius: 999, fontSize: '0.65rem', fontWeight: 800,
+                        }}>
+                          <FiShield size={9} /> Verified
+                        </span>
+                      )}
+                      <span style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 3,
+                        background: `${meta.color}15`, color: meta.color,
+                        border: `1px solid ${meta.color}30`,
+                        padding: '3px 9px', borderRadius: 999, fontSize: '0.65rem', fontWeight: 800,
+                      }}>
+                        <FiActivity size={9} /> {item.badge}
+                      </span>
+                    </div>
+                  </div>
+
+                  <h3 style={{
+                    fontWeight: 800, color: 'var(--text)',
+                    marginBottom: '0.4rem', fontSize: '0.97rem', lineHeight: 1.35,
+                  }}>
+                    {item.name}
+                  </h3>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: '1rem' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                      <FiMapPin size={11} style={{ flexShrink: 0, color: meta.color, opacity: 0.7 }} />
+                      {item.area}
+                    </span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                      <FiTag size={11} style={{ flexShrink: 0, color: meta.color, opacity: 0.7 }} />
+                      {item.price}
+                    </span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.8rem', color: 'var(--amber)', fontWeight: 600 }}>
+                      <FiStar size={12} style={{ fill: 'var(--amber)', color: 'var(--amber)' }} />
+                      {item.rating} <span style={{ fontWeight: 400, color: 'var(--text-dim)' }}>({item.reviews} reviews)</span>
+                    </span>
+                  </div>
+
+                  {/* Call-to-action footer */}
+                  <a
+                    href={`tel:${item.phone}`}
+                    style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      padding: '10px 14px', borderRadius: 12,
+                      background: `linear-gradient(135deg, ${meta.color}, ${meta.color}cc)`,
+                      color: '#fff', textDecoration: 'none', fontWeight: 700, fontSize: '0.85rem',
+                      boxShadow: `0 4px 14px ${meta.color}30`,
+                      transition: 'transform 0.2s',
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
+                    onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                  >
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                      <FiPhone size={15} /> {item.phone}
+                    </span>
+                    <FiExternalLink size={15} style={{ opacity: 0.8 }} />
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
+
+      {/* ════════════════ SERVICE TIPS SECTION ════════════════ */}
+      <div style={{ background: 'var(--surface)', borderTop: '1px solid var(--border)', padding: '3rem 0' }}>
+        <div className="container">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1.75rem' }}>
+            <div style={{
+              width: 32, height: 32, borderRadius: 8,
+              background: 'rgba(139,92,246,0.12)', color: '#8b5cf6',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <FiCheckCircle size={15} />
+            </div>
+            <div>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text)' }}>
+                Tips for Choosing a Service
+              </h2>
+              <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                What to look for before hiring or subscribing to a service.
+              </p>
+            </div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1rem' }}>
+            {[
+              { Icon: FiShield, color: '#10B981', title: 'Verified Professionals', desc: 'Always choose services with background-checked staff for safety.' },
+              { Icon: FiStar, color: '#F59E0B', title: 'Read Reviews & Ratings', desc: 'Real user reviews help you judge service quality and reliability.' },
+              { Icon: FiTag, color: '#EC4899', title: 'Transparent Pricing', desc: 'Look for clear pricing structures with no hidden charges.' },
+              { Icon: FiActivity, color: '#06B6D4', title: 'Response Time', desc: 'Fast response and emergency support are crucial for home and health services.' },
+            ].map((tip, i) => {
+              const Icon = tip.Icon;
+              return (
+                <div key={i} style={{
+                  background: 'var(--surface-2)', border: '1px solid var(--border)',
+                  borderRadius: 16, padding: '1.25rem',
+                  display: 'flex', gap: '1rem', alignItems: 'flex-start',
+                  transition: 'all 0.22s',
+                }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = tip.color + '40'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'none'; }}
+                >
+                  <div style={{
+                    width: 38, height: 38, borderRadius: 10, flexShrink: 0,
+                    background: `${tip.color}15`, display: 'flex', alignItems: 'center',
+                    justifyContent: 'center', color: tip.color,
+                  }}>
+                    <Icon size={16} />
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 700, color: 'var(--text)', fontSize: '0.9rem', marginBottom: 4 }}>{tip.title}</div>
+                    <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: 1.55 }}>{tip.desc}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes pulse-dot {
+          0%, 100% { opacity:1; transform:scale(1); }
+          50%       { opacity:0.5; transform:scale(1.4); }
+        }
+        @keyframes shimmer {
+          0%   { opacity:0.5; }
+          50%  { opacity:1; }
+          100% { opacity:0.5; }
+        }
+      `}</style>
     </div>
   );
 }
