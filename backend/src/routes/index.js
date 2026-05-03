@@ -119,6 +119,9 @@ router.get(   '/admin/reports',             ...A, adm.getReports);
 router.put(   '/admin/reports/:id/resolve', ...A, adm.resolveReport);
 router.post(  '/admin/announcements',       ...A, adm.createAnnouncement);
 
+// Bulk Import
+router.post(  '/admin/bulk-import',         ...A, adm.bulkImport);
+
 // Admin CRUD — Doctors
 router.get(   '/admin/doctors',      ...A, cnt.adminGetDoctors);
 router.post(  '/admin/doctors',      ...A, cnt.adminCreateDoctor);

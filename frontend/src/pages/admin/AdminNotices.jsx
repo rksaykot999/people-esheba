@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useLang } from '../../context/LanguageContext';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
-import { FiPlus, FiTrash2, FiEdit2, FiX, FiSave, FiSearch, FiExternalLink } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit2, FiX, FiSave, FiSearch, FiExternalLink, FiUploadCloud } from 'react-icons/fi';
+import BulkImportModal from '../../components/admin/BulkImportModal';
 
 const CATS = ['govt','education','job','health','general'];
 const BLANK = { title:'', category:'general', source:'', link:'', description:'', is_active:true };
@@ -17,6 +18,7 @@ export default function AdminNotices() {
   const [search, setSearch] = useState('');
   const [catFilter, setCatFilter] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [showImport, setShowImport] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(BLANK);
   const [saving, setSaving] = useState(false);
@@ -83,6 +85,7 @@ export default function AdminNotices() {
             </div>
             <button type="submit" className="btn btn-ghost btn-sm">Go</button>
           </form>
+          <button onClick={() => setShowImport(true)} className="btn btn-ghost btn-sm" style={{ border:'1px solid var(--border)' }}><FiUploadCloud size={13}/>{isBn ? 'ইমপোর্ট' : 'Import'}</button>
           <button onClick={openAdd} className="btn btn-primary btn-sm"><FiPlus size={13}/>{isBn?'যোগ করুন':'Add Notice'}</button>
         </div>
       </div>
@@ -165,6 +168,13 @@ export default function AdminNotices() {
           </div>
         </div>
       )}
+
+      <BulkImportModal 
+        isOpen={showImport} 
+        onClose={() => setShowImport(false)} 
+        table="notices" 
+        onImportSuccess={() => { setPage(1); fetchData(); }} 
+      />
     </div>
   );
 }

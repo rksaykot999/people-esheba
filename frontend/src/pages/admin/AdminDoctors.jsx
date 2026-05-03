@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useLang } from '../../context/LanguageContext';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
-import { FiPlus, FiTrash2, FiEdit2, FiX, FiSave, FiPhone, FiSearch, FiShield } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit2, FiX, FiSave, FiSearch, FiUploadCloud } from 'react-icons/fi';
+import BulkImportModal from '../../components/admin/BulkImportModal';
 
 const SPECIALTIES = ['Cardiologist','Pediatrician','Neurologist','Gynecologist','Medicine','Orthopedic','Ophthalmologist','ENT','Dermatologist','Psychiatrist','Dentist','Dermatology','General'];
 const DIVS = ['Dhaka','Chittagong','Rajshahi','Khulna','Barisal','Sylhet','Rangpur','Mymensingh'];
@@ -17,6 +18,7 @@ export default function AdminDoctors() {
   const [pages, setPages] = useState(1);
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [showImport, setShowImport] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(BLANK);
   const [saving, setSaving] = useState(false);
@@ -76,7 +78,7 @@ export default function AdminDoctors() {
           </h1>
           <p style={{ color:'var(--text-muted)', fontSize:'0.85rem' }}>{total} {isBn ? 'মোট ডাক্তার' : 'total doctors'}</p>
         </div>
-        <div style={{ display:'flex', gap:8 }}>
+        <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
           <form onSubmit={e => { e.preventDefault(); setPage(1); fetchData(); }} style={{ display:'flex', gap:6 }}>
             <div style={{ position:'relative' }}>
               <FiSearch style={{ position:'absolute', left:10, top:'50%', transform:'translateY(-50%)', color:'var(--text-dim)' }} size={13} />
@@ -84,6 +86,7 @@ export default function AdminDoctors() {
             </div>
             <button type="submit" className="btn btn-ghost btn-sm">Go</button>
           </form>
+          <button onClick={() => setShowImport(true)} className="btn btn-ghost btn-sm" style={{ border:'1px solid var(--border)' }}><FiUploadCloud size={13}/>{isBn ? 'ইমপোর্ট' : 'Import'}</button>
           <button onClick={openAdd} className="btn btn-primary btn-sm"><FiPlus size={13}/>{isBn ? 'যোগ করুন' : 'Add Doctor'}</button>
         </div>
       </div>
@@ -211,6 +214,13 @@ export default function AdminDoctors() {
           </div>
         </div>
       )}
+
+      <BulkImportModal 
+        isOpen={showImport} 
+        onClose={() => setShowImport(false)} 
+        table="doctors" 
+        onImportSuccess={() => { setPage(1); fetchData(); }} 
+      />
     </div>
   );
 }

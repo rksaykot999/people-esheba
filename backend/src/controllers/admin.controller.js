@@ -298,3 +298,46 @@ exports.updateJobStatus = async (req, res) => {
   ok(res, null, `Job ${status}`);
 };
 
+/* ── Bulk Import ──────────────────────────────────────────── */
+exports.bulkImport = async (req, res) => {
+  try {
+    const { table, rows } = req.body;
+    if (!table || !Array.isArray(rows) || rows.length === 0) return err(res, 'Invalid data', 400);
+
+    const allowedTables = ['doctors', 'pharmacies', 'notices', 'education_institutions', 'scholarships'];
+    if (!allowedTables.includes(table)) return err(res, 'Invalid table', 400);
+
+    const columns = Object.keys(rows[0]).filter(k => k !== 'id');
+    
+    // Most content tables expect a created_by column
+    if (!columns.includes('created_by')) {
+      columns.push('created_by');
+      rows.forEach(r => r.created_by = req.user.id);
+    }
+
+    const placeholders = columns.map(() => '?').join(',');
+    const query = `INSERT INTO ${table} (${columns.join(',')}) VALUES (${placeholders})`;
+
+    let successCount = 0;
+    for (const row of rows) {
+      const values = columns.map(col => {
+        let val = row[col];
+        if (val === undefined || val === '') return null;
+        if (typeof val === 'boolean') return val ? 1 : 0;
+        return val;
+      });
+      try {
+        await db.execute(query, values);
+        successCount++;
+      } catch (e) {
+        console.error(`Failed to insert row:`, e.message);
+      }
+    }
+
+    ok(res, { successCount, total: rows.length }, `Imported ${successCount}/${rows.length} records`);
+  } catch (e) {
+    console.error(e);
+    err(res, 'Import failed', 500);
+  }
+};
+
