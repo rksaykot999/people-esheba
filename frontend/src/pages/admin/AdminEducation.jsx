@@ -103,7 +103,7 @@ export default function AdminEducation() {
               {items.map(it=>(
                 <tr key={it.id}>
                   <td>
-                    <div style={{fontWeight:600,color:'#fff',fontSize:'0.85rem'}}>{it.name}</div>
+                    <div style={{fontWeight:600,color:'var(--text-strong)',fontSize:'0.85rem'}}>{it.name}</div>
                     {it.is_verified&&<span style={{fontSize:'0.68rem',color:'var(--green)'}}>✓ verified</span>}
                     {it.website&&<div style={{fontSize:'0.68rem',color:'var(--cyan)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',maxWidth:140}}>{it.website}</div>}
                   </td>

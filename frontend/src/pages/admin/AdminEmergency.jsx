@@ -2,10 +2,18 @@ import { useState, useEffect } from 'react';
 import { useLang } from '../../context/LanguageContext';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
-import { FiPlus, FiTrash2, FiEdit2, FiX, FiSave, FiPhone } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit2, FiX, FiSave, FiPhone, FiAlertTriangle, FiSearch, FiActivity } from 'react-icons/fi';
+import { MdOutlineLocalHospital, MdOutlineLocalPolice, MdOutlineFireTruck, MdOutlineMedicalServices } from 'react-icons/md';
 
 const TYPES = ['hospital','police','fire','ambulance','mental','other'];
-const ICONS  = { hospital:'🏥', police:'👮', fire:'🚒', ambulance:'🚑', mental:'🧠', other:'📞' };
+const ICONS = { 
+  hospital: <MdOutlineLocalHospital/>, 
+  police: <MdOutlineLocalPolice/>, 
+  fire: <MdOutlineFireTruck/>, 
+  ambulance: <MdOutlineMedicalServices/>, 
+  mental: <FiActivity/>, 
+  other: <FiPhone/> 
+};
 const DIVS   = ['Dhaka','Chittagong','Rajshahi','Khulna','Barisal','Sylhet','Rangpur','Mymensingh'];
 const BLANK  = { name:'', type:'hospital', address:'', division:'', district:'', phone:'', latitude:'', longitude:'', is_24h:false };
 
@@ -63,26 +71,30 @@ export default function AdminEmergency() {
 
   return (
     <div>
-      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'1.5rem' }}>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'2rem', flexWrap:'wrap', gap:'1rem' }}>
         <div>
-          <h1 style={{ fontWeight:800, fontSize:'1.4rem', color:'#fff', marginBottom:3 }}>{t('admin.emergency')}</h1>
-          <p style={{ color:'var(--text-muted)', fontSize:'0.85rem' }}>{items.length} {isBn?'সেবা':'services'}</p>
+          <h1 style={{ display:'flex', alignItems:'center', gap:10, fontWeight:800, fontSize:'1.6rem', color:'var(--text-strong)', marginBottom:4 }}>
+            <FiAlertTriangle style={{ color:'#EF4444' }}/> {t('admin.emergency')}
+          </h1>
+          <p style={{ color:'var(--text-muted)', fontSize:'0.88rem' }}>{items.length} {isBn?'জরুরি সেবা নিবন্ধিত আছে':'emergency services registered'}</p>
         </div>
-        <button onClick={openAdd} className="btn btn-primary"><FiPlus size={14}/>{isBn?'নতুন যোগ করুন':'Add Service'}</button>
+        <button onClick={openAdd} className="btn btn-primary" style={{ height:42, borderRadius:10 }}>
+          <FiPlus size={16}/> {isBn?'নতুন সেবা যোগ করুন':'Add Service'}
+        </button>
       </div>
 
       <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))', gap:'1rem' }}>
         {loading ? <div style={{ gridColumn:'1/-1', display:'flex', justifyContent:'center', padding:'3rem' }}><div className="spinner"/></div>
         : items.map(item => (
           <div key={item.id} className="card card-pad" style={{ borderLeft:`3px solid ${item.is_verified?'var(--green)':'var(--border)'}` }}>
-            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'0.75rem' }}>
-              <span style={{ fontSize:'1.4rem' }}>{ICONS[item.type]||'📞'}</span>
+            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'1rem' }}>
+              <div style={{ width:44, height:44, borderRadius:12, background:'var(--surface-2)', border:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.25rem', color:'var(--primary)' }}>{ICONS[item.type]||<FiPhone/>}</div>
               <div style={{ display:'flex', gap:5 }}>
                 {item.is_verified && <span className="badge badge-green" style={{ fontSize:'0.65rem' }}>✓</span>}
                 {item.is_24h     && <span className="badge badge-cyan"  style={{ fontSize:'0.65rem' }}>24h</span>}
               </div>
             </div>
-            <div style={{ fontWeight:700, color:'#fff', fontSize:'0.9rem', marginBottom:4 }}>{item.name}</div>
+            <div style={{ fontWeight:700, color:'var(--text-strong)', fontSize:'0.9rem', marginBottom:4 }}>{item.name}</div>
             <div style={{ fontSize:'0.75rem', color:'var(--text-muted)', marginBottom:4 }}>{item.type} · {item.district||'—'}</div>
             {item.phone && <div style={{ fontSize:'0.8rem', color:'var(--cyan)', display:'flex', alignItems:'center', gap:4, marginBottom:'0.9rem' }}><FiPhone size={11}/>{item.phone}</div>}
             <div style={{ display:'flex', gap:6, marginTop:'auto' }}>
@@ -92,7 +104,10 @@ export default function AdminEmergency() {
           </div>
         ))}
         {!loading && items.length===0 && (
-          <div className="empty" style={{ gridColumn:'1/-1' }}><div className="empty-icon">🏥</div><div>{t('common.noResults')}</div></div>
+          <div className="empty" style={{ gridColumn:'1/-1', padding:'4rem', background:'var(--surface)', borderRadius:20, border:'1px solid var(--border)', textAlign:'center' }}>
+            <FiAlertTriangle size={40} style={{ color:'var(--text-dim)', marginBottom:15, opacity:0.3 }}/>
+            <div style={{ color:'var(--text-muted)' }}>{t('common.noResults')}</div>
+          </div>
         )}
       </div>
 

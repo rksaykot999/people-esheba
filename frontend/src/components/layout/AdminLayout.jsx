@@ -7,7 +7,9 @@ import {
   FiGrid, FiUsers, FiHeart, FiBriefcase, FiDroplet, FiUsers as FiVol,
   FiAlertTriangle, FiFlag, FiBarChart2, FiBell, FiActivity,
   FiLogOut, FiMenu, FiX, FiExternalLink, FiBook, FiFileText, FiAward,
+  FiMoon, FiSun, FiSettings, FiPlusCircle, FiPieChart, FiBox,
 } from 'react-icons/fi';
+import { MdOutlineHealthAndSafety, MdOutlineMedicalServices, MdOutlineSchool, MdOutlineAgriculture, MdOutlineLocalPharmacy } from 'react-icons/md';
 
 const NAV_ITEMS = (t) => [
   { icon:<FiGrid/>,         label:t('admin.dashboard'),     to:'/admin',              group:'core' },
@@ -18,21 +20,23 @@ const NAV_ITEMS = (t) => [
   { icon:<FiVol/>,          label:t('admin.volunteers'),    to:'/admin/volunteers',   group:'core' },
   { icon:<FiAlertTriangle/>,label:t('admin.emergency'),     to:'/admin/emergency',    group:'core' },
   // Content management
-  { icon:<FiActivity/>,     label: t('nav.doctors') || 'Doctors',       to:'/admin/doctors',      group:'content' },
-  { icon:<span>💊</span>,   label: 'Pharmacy',                           to:'/admin/pharmacy',     group:'content' },
-  { icon:<FiFileText/>,     label: t('nav.notices') || 'Notices',        to:'/admin/notices',      group:'content' },
-  { icon:<FiBook/>,         label: t('nav.education') || 'Education',    to:'/admin/education',    group:'content' },
-  { icon:<FiAward/>,        label: 'Scholarships',                        to:'/admin/scholarships', group:'content' },
+  { icon:<MdOutlineMedicalServices/>, label: t('nav.doctors') || 'Doctors',       to:'/admin/doctors',      group:'content' },
+  { icon:<MdOutlineLocalPharmacy/>,   label: 'Pharmacy',                           to:'/admin/pharmacy',     group:'content' },
+  { icon:<FiFileText/>,               label: t('nav.notices') || 'Notices',        to:'/admin/notices',      group:'content' },
+  { icon:<MdOutlineSchool/>,          label: t('nav.education') || 'Education',    to:'/admin/education',    group:'content' },
+  { icon:<FiAward/>,                  label: 'Scholarships',                        to:'/admin/scholarships', group:'content' },
   // System
   { icon:<FiFlag/>,         label:t('admin.reports'),       to:'/admin/reports',      group:'system' },
   { icon:<FiBarChart2/>,    label:t('admin.analytics'),     to:'/admin/analytics',    group:'system' },
+  { icon:<FiPieChart/>,     label: 'System Logs',            to:'/admin/logs',         group:'system' },
+  { icon:<FiSettings/>,     label: t('admin.settings'),     to:'/admin/settings',     group:'system' },
   { icon:<FiBell/>,         label:t('admin.notifications'), to:'/admin/notifications', group:'system' },
 ];
 
 export default function AdminLayout() {
   const { user, logout }   = useAuth();
   const { t, lang, toggleLang } = useLang();
-  const { theme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   const navigate           = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -103,11 +107,11 @@ export default function AdminLayout() {
         <div style={{ padding:'0.75rem 0.5rem', borderTop:'1px solid var(--border)', flexShrink:0 }}>
           {(!collapsed || mobileOpen) && (
             <div style={{ padding:'10px 12px', borderRadius:9, background:'var(--surface-2)', marginBottom:8, display:'flex', alignItems:'center', gap:9 }}>
-              <div style={{ width:30, height:30, borderRadius:'50%', background:'var(--grad-cyan)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'0.75rem', fontWeight:800, color:'#fff', flexShrink:0 }}>
+              <div style={{ width:30, height:30, borderRadius:'50%', background:'var(--grad-cyan)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'0.75rem', fontWeight:800, color:'var(--text-strong)', flexShrink:0 }}>
                 {user?.name?.[0]?.toUpperCase()||'A'}
               </div>
               <div style={{ overflow:'hidden' }}>
-                <div style={{ fontWeight:700, fontSize:'0.8rem', color:'#fff', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{user?.name}</div>
+                <div style={{ fontWeight:700, fontSize:'0.8rem', color:'var(--text-strong)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{user?.name}</div>
                 <span className="badge badge-red" style={{ fontSize:'0.6rem', padding:'1px 6px' }}>ADMIN</span>
               </div>
             </div>
@@ -129,19 +133,26 @@ export default function AdminLayout() {
       <div style={{ flex:1, display:'flex', flexDirection:'column', minWidth:0 }}>
         {/* Topbar */}
         <header className="admin-topbar" style={{ height:60, background:'var(--surface)', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', padding:'0 1.5rem', gap:'1rem', flexShrink:0, position:'sticky', top:0, zIndex:100 }}>
-          <button className="mobile-header-btn" onClick={()=>setMobileOpen(true)} style={{ background:'transparent', border:'none', color:'#fff', cursor:'pointer', alignItems:'center', justifyContent:'center', padding:0 }}>
+          <button className="mobile-header-btn" onClick={()=>setMobileOpen(true)} style={{ background:'transparent', border:'none', color:'var(--text-strong)', cursor:'pointer', alignItems:'center', justifyContent:'center', padding:0 }}>
             <FiMenu size={20} />
           </button>
           <div style={{ flex:1, fontSize:'0.9rem', color:'var(--text-muted)' }}>
-            <span style={{ color:'#fff', fontWeight:600 }}>Admin</span> Panel
+            <span style={{ color:'var(--text-strong)', fontWeight:600 }}>Admin</span> Panel
           </div>
-          <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-            <button onClick={toggleLang} style={{ padding:'5px 10px', borderRadius:7, border:'1px solid var(--border)', background:'transparent', color:'var(--text-muted)', fontSize:'0.75rem', fontWeight:700, cursor:'pointer' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+            <button onClick={toggleTheme} style={{ width:36, height:36, borderRadius:10, border:'1px solid var(--border)', background:'var(--surface-2)', color:'var(--text)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', transition:'all 0.2s' }}
+              onMouseEnter={e=>e.currentTarget.style.borderColor='var(--primary)'}
+              onMouseLeave={e=>e.currentTarget.style.borderColor='var(--border)'}>
+              {theme === 'dark' ? <FiSun size={16}/> : <FiMoon size={16}/>}
+            </button>
+            <button onClick={toggleLang} style={{ height:36, padding:'0 12px', borderRadius:10, border:'1px solid var(--border)', background:'var(--surface-2)', color:'var(--text-muted)', fontSize:'0.75rem', fontWeight:800, cursor:'pointer', transition:'all 0.2s' }}
+              onMouseEnter={e=>e.currentTarget.style.borderColor='var(--primary)'}
+              onMouseLeave={e=>e.currentTarget.style.borderColor='var(--border)'}>
               {lang==='en'?'বাং':'EN'}
             </button>
-            <div className="system-status-btn" style={{ display:'flex', alignItems:'center', gap:6, padding:'5px 10px', borderRadius:8, background:'var(--green-light)', border:'1px solid rgba(16,185,129,0.2)' }}>
-              <div style={{ width:7, height:7, borderRadius:'50%', background:'var(--green)', animation:'pulse-glow 2s infinite' }}/>
-              <span style={{ fontSize:'0.75rem', fontWeight:600, color:'var(--green)' }}>{t('admin.allSystems')}</span>
+            <div className="system-status-btn" style={{ display:'flex', alignItems:'center', gap:8, padding:'0 14px', height:36, borderRadius:10, background:'rgba(16,185,129,0.1)', border:'1px solid rgba(16,185,129,0.2)' }}>
+              <div style={{ width:8, height:8, borderRadius:'50%', background:'var(--green)', boxShadow:'0 0 10px var(--green)', animation:'pulse-glow 2s infinite' }}/>
+              <span style={{ fontSize:'0.75rem', fontWeight:700, color:'var(--green)', letterSpacing:'0.02em' }}>{t('admin.allSystems')}</span>
             </div>
           </div>
         </header>

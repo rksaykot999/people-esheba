@@ -95,7 +95,7 @@ export default function AdminScholarships() {
               {items.map(s=>(
                 <tr key={s.id}>
                   <td style={{maxWidth:220}}>
-                    <div style={{fontWeight:600,color:'#fff',fontSize:'0.85rem',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{s.title}</div>
+                    <div style={{fontWeight:600,color:'var(--text-strong)',fontSize:'0.85rem',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{s.title}</div>
                     {s.link&&<a href={s.link} target="_blank" rel="noreferrer" style={{fontSize:'0.68rem',color:'var(--cyan)',display:'flex',alignItems:'center',gap:3}}><FiExternalLink size={9}/>Link</a>}
                   </td>
                   <td style={{fontSize:'0.8rem',color:'var(--text-muted)'}}>{s.provider||'—'}</td>

@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useLang } from '../../context/LanguageContext';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
-import { FiCheck, FiX, FiTrash2, FiEye } from 'react-icons/fi';
+import { FiCheck, FiX, FiTrash2, FiEye, FiFilter, FiTrendingUp, FiHeart, FiClock, FiSearch } from 'react-icons/fi';
+import { MdOutlineMedicalServices, MdOutlineSchool, MdOutlineAgriculture } from 'react-icons/md';
 
 export default function AdminDonations() {
   const { t, isBn } = useLang();
@@ -46,14 +47,24 @@ export default function AdminDonations() {
 
   return (
     <div>
-      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'1.5rem', flexWrap:'wrap', gap:'0.75rem' }}>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'2rem', flexWrap:'wrap', gap:'1rem' }}>
         <div>
-          <h1 style={{ fontWeight:800, fontSize:'1.4rem', color:'#fff', marginBottom:3 }}>{t('admin.donations')}</h1>
-          <p style={{ color:'var(--text-muted)', fontSize:'0.85rem' }}>{total} {isBn?'মোট অনুরোধ':'total requests'}</p>
+          <h1 style={{ display:'flex', alignItems:'center', gap:10, fontWeight:800, fontSize:'1.6rem', color:'var(--text-strong)', marginBottom:4 }}>
+            <FiHeart style={{ color:'#EF4444' }}/> {t('admin.donations')}
+          </h1>
+          <p style={{ color:'var(--text-muted)', fontSize:'0.88rem' }}>{total} {isBn?'মোট সাহায্যের অনুরোধ':'total help requests'}</p>
         </div>
-        <div style={{ display:'flex', gap:7 }}>
+        <div style={{ display:'flex', gap:6, background:'var(--surface)', padding:4, borderRadius:12, border:'1px solid var(--border)' }}>
           {['all','pending','approved','rejected','completed'].map(s => (
-            <button key={s} onClick={()=>{setStatusF(s);setPage(1);}} className={`btn btn-sm ${statusF===s?'btn-primary':'btn-ghost'}`}>{s}</button>
+            <button key={s} onClick={()=>{setStatusF(s);setPage(1);}} 
+              style={{ 
+                padding:'6px 12px', borderRadius:8, border:'none', fontSize:'0.75rem', fontWeight:700,
+                cursor:'pointer', transition:'all 0.2s',
+                background: statusF===s ? 'var(--primary)' : 'transparent',
+                color: statusF===s ? '#fff' : 'var(--text-muted)'
+              }}>
+              {s.toUpperCase()}
+            </button>
           ))}
         </div>
       </div>
@@ -78,7 +89,7 @@ export default function AdminDonations() {
                 {items.map(d => (
                   <tr key={d.id}>
                     <td style={{ maxWidth:180 }}>
-                      <div style={{ fontWeight:600, color:'#fff', fontSize:'0.85rem', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{d.title}</div>
+                      <div style={{ fontWeight:600, color:'var(--text-strong)', fontSize:'0.85rem', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{d.title}</div>
                       {d.is_urgent && <span className="badge badge-red" style={{ fontSize:'0.65rem', marginTop:3 }}>⚡ URGENT</span>}
                     </td>
                     <td style={{ fontSize:'0.8rem', color:'var(--text-muted)' }}>
@@ -91,15 +102,55 @@ export default function AdminDonations() {
                     <td><span className={`badge ${S_COLOR[d.status]||'badge-gray'}`}>{d.status}</span></td>
                     <td style={{ fontSize:'0.78rem', color:'var(--text-dim)' }}>{new Date(d.created_at).toLocaleDateString()}</td>
                     <td>
-                      <div style={{ display:'flex', gap:5 }}>
+                      <div style={{ display:'flex', gap:6 }}>
                         {d.status === 'pending' && <>
-                          <button onClick={()=>updateStatus(d.id,'approved')} title="Approve" style={{ width:28, height:28, borderRadius:7, border:'1px solid rgba(16,185,129,0.3)', background:'transparent', color:'var(--green)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}><FiCheck size={13}/></button>
-                          <button onClick={()=>updateStatus(d.id,'rejected')} title="Reject"  style={{ width:28, height:28, borderRadius:7, border:'1px solid rgba(230,57,70,0.3)', background:'transparent', color:'var(--red)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}><FiX size={13}/></button>
+                          <button onClick={()=>updateStatus(d.id,'approved')} title="Approve Request" 
+                            style={{ 
+                              width:34, height:34, borderRadius:10, border:'1px solid var(--border)', 
+                              background:'var(--surface-2)', color:'#10B981', 
+                              cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center',
+                              transition:'all 0.2s'
+                            }}
+                            onMouseEnter={e=>e.currentTarget.style.borderColor='#10B981'}
+                            onMouseLeave={e=>e.currentTarget.style.borderColor='var(--border)'}>
+                            <FiCheck size={15}/>
+                          </button>
+                          <button onClick={()=>updateStatus(d.id,'rejected')} title="Reject Request" 
+                            style={{ 
+                              width:34, height:34, borderRadius:10, border:'1px solid var(--border)', 
+                              background:'var(--surface-2)', color:'#EF4444', 
+                              cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center',
+                              transition:'all 0.2s'
+                            }}
+                            onMouseEnter={e=>e.currentTarget.style.borderColor='#EF4444'}
+                            onMouseLeave={e=>e.currentTarget.style.borderColor='var(--border)'}>
+                            <FiX size={15}/>
+                          </button>
                         </>}
                         {d.status === 'approved' && (
-                          <button onClick={()=>updateStatus(d.id,'completed')} title="Mark Complete" style={{ width:28, height:28, borderRadius:7, border:'1px solid rgba(6,182,212,0.3)', background:'transparent', color:'var(--cyan)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'0.65rem', fontWeight:700 }}>✓</button>
+                          <button onClick={()=>updateStatus(d.id,'completed')} title="Mark as Completed" 
+                            style={{ 
+                              padding:'0 12px', height:34, borderRadius:10, border:'1px solid var(--border)', 
+                              background:'var(--surface-2)', color:'var(--cyan)', 
+                              cursor:'pointer', display:'flex', alignItems:'center', gap:6,
+                              fontSize:'0.72rem', fontWeight:800, transition:'all 0.2s'
+                            }}
+                            onMouseEnter={e=>e.currentTarget.style.borderColor='var(--cyan)'}
+                            onMouseLeave={e=>e.currentTarget.style.borderColor='var(--border)'}>
+                            <FiCheck size={14}/> DONE
+                          </button>
                         )}
-                        <button onClick={()=>deleteItem(d.id)} title="Delete" style={{ width:28, height:28, borderRadius:7, border:'1px solid rgba(230,57,70,0.2)', background:'transparent', color:'var(--red)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}><FiTrash2 size={12}/></button>
+                        <button onClick={()=>deleteItem(d.id)} title="Delete Permanently" 
+                          style={{ 
+                            width:34, height:34, borderRadius:10, border:'1px solid var(--border)', 
+                            background:'var(--surface-2)', color:'var(--text-dim)', 
+                            cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center',
+                            transition:'all 0.2s'
+                          }}
+                          onMouseEnter={e=>e.currentTarget.style.borderColor='#EF4444'}
+                          onMouseLeave={e=>e.currentTarget.style.borderColor='var(--border)'}>
+                          <FiTrash2 size={14}/>
+                        </button>
                       </div>
                     </td>
                   </tr>

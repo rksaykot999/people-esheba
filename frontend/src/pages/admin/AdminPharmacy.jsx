@@ -92,7 +92,7 @@ export default function AdminPharmacy() {
             <tbody>
               {items.map(p=>(
                 <tr key={p.id}>
-                  <td><div style={{fontWeight:600,color:'#fff',fontSize:'0.85rem'}}>{p.name}</div>{p.is_verified&&<span style={{fontSize:'0.68rem',color:'var(--green)'}}>✓ verified</span>}</td>
+                  <td><div style={{fontWeight:600,color:'var(--text-strong)',fontSize:'0.85rem'}}>{p.name}</div>{p.is_verified&&<span style={{fontSize:'0.68rem',color:'var(--green)'}}>✓ verified</span>}</td>
                   <td style={{fontSize:'0.8rem',color:'var(--text-muted)'}}>{p.area||'—'}</td>
                   <td style={{fontSize:'0.8rem',color:'var(--text-muted)'}}>{p.district||'—'}</td>
                   <td style={{fontSize:'0.8rem',color:'var(--text-muted)'}}>{p.phone||'—'}</td>

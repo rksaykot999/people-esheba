@@ -4,6 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useLang } from "../../context/LanguageContext";
 import { useTheme } from "../../context/ThemeContext";
 import SOSModal from "../ui/SOSModal";
+import { MdAgriculture } from "react-icons/md";
 import {
   FiMenu,
   FiX,
@@ -401,27 +402,27 @@ export default function Navbar() {
       items: [
         {
           icon: <FiList size={15} />,
-          label: t("donation.myRequests"),
+          label: t("donate.view_all"),
           to: "/donation",
         },
         {
           icon: <FiPlusCircle size={15} />,
-          label: t("donation.new"),
-          to: "/donation/new",
+          label: t("donate.post_request"),
+          to: "/donation",
         },
         {
           icon: <FiActivity size={15} />,
-          label: t("donation.medical"),
+          label: t("donate.medical"),
           to: "/donation?category=medical",
         },
         {
           icon: <FiBook size={15} />,
-          label: t("donation.education"),
+          label: t("donate.education"),
           to: "/donation?category=education",
         },
         {
-          icon: <FiHome size={15} />,
-          label: t("donation.agriculture"),
+          icon: <MdAgriculture size={15} />,
+          label: t("donate.agriculture"),
           to: "/donation?category=agriculture",
         },
       ],
@@ -441,8 +442,8 @@ export default function Navbar() {
     { icon: <FiEdit size={16} />, label: t("jobs.post"), to: "/jobs/new" },
     {
       icon: <FiHeart size={16} />,
-      label: t("donation.new"),
-      to: "/donation/new",
+      label: t("donate.post_request"),
+      to: "/donation",
     },
     {
       icon: <FiUsers size={16} />,
@@ -902,7 +903,7 @@ export default function Navbar() {
                 borderRadius: 12,
                 background: "var(--red)",
                 border: "none",
-                color: "#fff",
+                color:'var(--text-strong)',
                 fontSize: "0.75rem",
                 fontWeight: 900,
                 cursor: "pointer",
@@ -983,7 +984,7 @@ export default function Navbar() {
                         justifyContent: "center",
                         fontSize: "0.7rem",
                         fontWeight: 800,
-                        color: "#fff",
+                        color:'var(--text-strong)',
                       }}
                     >
                       {user?.name?.[0]?.toUpperCase() || "U"}
@@ -1312,7 +1313,7 @@ export default function Navbar() {
                   borderRadius: 12,
                   background: "var(--grad-red)",
                   border: "none",
-                  color: "#fff",
+                  color:'var(--text-strong)',
                   fontWeight: 800,
                   fontSize: "0.95rem",
                   cursor: "pointer",
@@ -1364,7 +1365,7 @@ export default function Navbar() {
                     borderRadius: 20,
                     background: "var(--grad-red)",
                     border: "none",
-                    color: "#fff",
+                    color:'var(--text-strong)',
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -1756,7 +1757,7 @@ export default function Navbar() {
                       borderRadius: 12,
                       background: "var(--grad-red)",
                       border: "none",
-                      color: "#fff",
+                      color:'var(--text-strong)',
                       fontWeight: 700,
                       fontSize: "0.9rem",
                       cursor: "pointer",

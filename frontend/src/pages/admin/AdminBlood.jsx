@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLang } from '../../context/LanguageContext';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
-import { FiTrash2, FiShield } from 'react-icons/fi';
+import { FiTrash2, FiShield, FiDroplet, FiSearch, FiFilter } from 'react-icons/fi';
 
 export default function AdminBlood() {
   const { t, isBn } = useLang();
@@ -43,9 +43,13 @@ export default function AdminBlood() {
 
   return (
     <div>
-      <div style={{ marginBottom:'1.5rem' }}>
-        <h1 style={{ fontWeight:800, fontSize:'1.4rem', color:'#fff', marginBottom:3 }}>🩸 {t('admin.blood')}</h1>
-        <p style={{ color:'var(--text-muted)', fontSize:'0.85rem' }}>{total} {isBn?'নিবন্ধিত দাতা':'registered donors'}</p>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'2rem', flexWrap:'wrap', gap:'1rem' }}>
+        <div>
+          <h1 style={{ display:'flex', alignItems:'center', gap:10, fontWeight:800, fontSize:'1.6rem', color:'var(--text-strong)', marginBottom:4 }}>
+            <FiDroplet style={{ color:'#EF4444' }}/> {t('admin.blood')}
+          </h1>
+          <p style={{ color:'var(--text-muted)', fontSize:'0.88rem' }}>{total} {isBn?'নিবন্ধিত রক্তদাতার তালিকা':'total registered blood donors'}</p>
+        </div>
       </div>
       <div style={{ background:'var(--surface)', border:'1px solid var(--border)', borderRadius:16, overflow:'hidden' }}>
         {loading ? <div style={{ display:'flex', justifyContent:'center', padding:'3rem' }}><div className="spinner"/></div> : (
@@ -64,12 +68,12 @@ export default function AdminBlood() {
                 {items.map(d => (
                   <tr key={d.id}>
                     <td>
-                      <div style={{ fontWeight:600, color:'#fff', fontSize:'0.85rem' }}>{d.name}</div>
+                      <div style={{ fontWeight:600, color:'var(--text-strong)', fontSize:'0.85rem' }}>{d.name}</div>
                       <div style={{ fontSize:'0.72rem', color:'var(--text-dim)' }}>{d.email}</div>
                       {d.is_verified ? <span style={{ fontSize:'0.68rem', color:'var(--green)' }}>✓ verified</span> : null}
                     </td>
                     <td>
-                      <span style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', width:40, height:40, borderRadius:'50%', background:BG_COLOR[d.blood_group]||'var(--red)', color:'#fff', fontWeight:900, fontSize:'0.82rem', boxShadow:`0 0 12px ${BG_COLOR[d.blood_group]||'var(--red)'}44` }}>
+                      <span style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', width:40, height:40, borderRadius:'50%', background:BG_COLOR[d.blood_group]||'var(--red)', color:'var(--text-strong)', fontWeight:900, fontSize:'0.82rem', boxShadow:`0 0 12px ${BG_COLOR[d.blood_group]||'var(--red)'}44` }}>
                         {d.blood_group}
                       </span>
                     </td>

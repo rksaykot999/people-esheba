@@ -101,7 +101,7 @@ export default function AdminNotices() {
               {items.map(n=>(
                 <tr key={n.id}>
                   <td style={{maxWidth:220}}>
-                    <div style={{fontWeight:600,color:'#fff',fontSize:'0.85rem',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{n.title}</div>
+                    <div style={{fontWeight:600,color:'var(--text-strong)',fontSize:'0.85rem',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{n.title}</div>
                     {n.link&&<a href={n.link} target="_blank" rel="noreferrer" style={{fontSize:'0.68rem',color:'var(--cyan)',display:'flex',alignItems:'center',gap:3}}><FiExternalLink size={9}/>View link</a>}
                   </td>
                   <td><span className={`badge ${CAT_COLOR[n.category]||'badge-gray'}`}>{n.category}</span></td>

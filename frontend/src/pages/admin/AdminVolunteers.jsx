@@ -41,7 +41,7 @@ export default function AdminVolunteers() {
   return (
     <div>
       <div style={{ marginBottom:'1.5rem' }}>
-        <h1 style={{ fontWeight:800, fontSize:'1.4rem', color:'#fff', marginBottom:3 }}>{t('admin.volunteers')}</h1>
+        <h1 style={{ fontWeight:800, fontSize:'1.4rem', color:'var(--text-strong)', marginBottom:3 }}>{t('admin.volunteers')}</h1>
         <p style={{ color:'var(--text-muted)', fontSize:'0.85rem' }}>{total} {isBn?'নিবন্ধিত স্বেচ্ছাসেবক':'registered volunteers'}</p>
       </div>
       <div style={{ background:'var(--surface)', border:'1px solid var(--border)', borderRadius:16, overflow:'hidden' }}>
@@ -62,11 +62,11 @@ export default function AdminVolunteers() {
                   <tr key={v.id}>
                     <td>
                       <div style={{ display:'flex', alignItems:'center', gap:9 }}>
-                        <div style={{ width:32, height:32, borderRadius:'50%', background:'var(--grad-cyan)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'0.75rem', fontWeight:800, color:'#fff' }}>
+                        <div style={{ width:32, height:32, borderRadius:'50%', background:'var(--grad-cyan)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'0.75rem', fontWeight:800, color:'var(--text-strong)' }}>
                           {v.name?.[0]?.toUpperCase()}
                         </div>
                         <div>
-                          <div style={{ fontWeight:600, color:'#fff', fontSize:'0.85rem' }}>{v.name}</div>
+                          <div style={{ fontWeight:600, color:'var(--text-strong)', fontSize:'0.85rem' }}>{v.name}</div>
                           <div style={{ fontSize:'0.72rem', color:'var(--text-dim)' }}>{v.email}</div>
                           {v.is_verified ? <span style={{ fontSize:'0.65rem', color:'var(--green)' }}>✓ verified</span> : null}
                         </div>

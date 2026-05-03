@@ -3,7 +3,7 @@ import { useLang } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
-import { FiSearch, FiShield, FiTrash2, FiLock, FiUnlock, FiUser } from 'react-icons/fi';
+import { FiSearch, FiShield, FiTrash2, FiLock, FiUnlock, FiUser, FiUsers, FiMoreVertical, FiEdit2, FiCheckCircle, FiXCircle } from 'react-icons/fi';
 
 export default function AdminUsers() {
   const { t, isBn } = useLang();
@@ -56,32 +56,35 @@ export default function AdminUsers() {
 
   return (
     <div>
-      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'1.5rem', flexWrap:'wrap', gap:'0.75rem' }}>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'2rem', flexWrap:'wrap', gap:'1rem' }}>
         <div>
-          <h1 style={{ fontWeight:800, fontSize:'1.4rem', color:'#fff', marginBottom:3 }}>{t('admin.users')}</h1>
-          <p style={{ color:'var(--text-muted)', fontSize:'0.85rem' }}>{total} {isBn?'মোট ব্যবহারকারী':'total users'}</p>
+          <h1 style={{ display:'flex', alignItems:'center', gap:10, fontWeight:800, fontSize:'1.6rem', color:'var(--text-strong)', marginBottom:4 }}>
+            <FiUsers style={{ color:'var(--primary)' }}/> {t('admin.users')}
+          </h1>
+          <p style={{ color:'var(--text-muted)', fontSize:'0.88rem' }}>{total} {isBn?'মোট নিবন্ধিত ব্যবহারকারী':'total registered users'}</p>
         </div>
       </div>
 
-      {/* Filters */}
-      <div style={{ display:'flex', gap:10, marginBottom:'1.25rem', flexWrap:'wrap' }}>
-        <form onSubmit={e=>{e.preventDefault();setPage(1);fetchUsers();}} style={{ display:'flex', gap:8, flex:1, minWidth:200 }}>
+      <div style={{ display:'flex', gap:12, marginBottom:'1.5rem', flexWrap:'wrap', background:'var(--surface)', padding:'1rem', borderRadius:16, border:'1px solid var(--border)' }}>
+        <form onSubmit={e=>{e.preventDefault();setPage(1);fetchUsers();}} style={{ display:'flex', gap:10, flex:1, minWidth:280 }}>
           <div style={{ flex:1, position:'relative' }}>
-            <FiSearch style={{ position:'absolute', left:11, top:'50%', transform:'translateY(-50%)', color:'var(--text-dim)', pointerEvents:'none' }} size={14}/>
-            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={isBn?'নাম বা ইমেইল...':'Search name or email...'} className="form-input" style={{ paddingLeft:34 }}/>
+            <FiSearch style={{ position:'absolute', left:14, top:'50%', transform:'translateY(-50%)', color:'var(--text-dim)', pointerEvents:'none' }} size={16}/>
+            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={isBn?'নাম বা ইমেইল দিয়ে খুঁজুন...':'Search by name or email...'} className="form-input" style={{ paddingLeft:42, height:44, borderRadius:12 }}/>
           </div>
-          <button type="submit" className="btn btn-primary btn-sm">{t('common.search')}</button>
+          <button type="submit" className="btn btn-primary" style={{ height:44, padding:'0 20px' }}>{t('common.search')}</button>
         </form>
-        <select value={roleF} onChange={e=>{setRoleF(e.target.value);setPage(1);}} className="form-select" style={{ width:'auto', minWidth:120 }}>
-          <option value="">{isBn?'সব ভূমিকা':'All Roles'}</option>
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
-        </select>
-        <select value={statusF} onChange={e=>{setStatusF(e.target.value);setPage(1);}} className="form-select" style={{ width:'auto', minWidth:130 }}>
-          <option value="">{isBn?'সব স্ট্যাটাস':'All Status'}</option>
-          <option value="active">Active</option>
-          <option value="blocked">Blocked</option>
-        </select>
+        <div style={{ display:'flex', gap:10 }}>
+          <select value={roleF} onChange={e=>{setRoleF(e.target.value);setPage(1);}} className="form-select" style={{ width:'auto', minWidth:140, height:44, borderRadius:12 }}>
+            <option value="">{isBn?'সব ভূমিকা':'All Roles'}</option>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+          <select value={statusF} onChange={e=>{setStatusF(e.target.value);setPage(1);}} className="form-select" style={{ width:'auto', minWidth:140, height:44, borderRadius:12 }}>
+            <option value="">{isBn?'সব স্ট্যাটাস':'All Status'}</option>
+            <option value="active">Active</option>
+            <option value="blocked">Blocked</option>
+          </select>
+        </div>
       </div>
 
       <div style={{ background:'var(--surface)', border:'1px solid var(--border)', borderRadius:16, overflow:'hidden' }}>
@@ -106,11 +109,11 @@ export default function AdminUsers() {
                   <tr key={u.id}>
                     <td>
                       <div style={{ display:'flex', alignItems:'center', gap:9 }}>
-                        <div style={{ width:34, height:34, borderRadius:'50%', background:'var(--grad-cyan)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'0.8rem', fontWeight:800, color:'#fff', flexShrink:0 }}>
+                        <div style={{ width:34, height:34, borderRadius:'50%', background:'var(--grad-cyan)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'0.8rem', fontWeight:800, color:'var(--text-strong)', flexShrink:0 }}>
                           {u.name?.[0]?.toUpperCase()}
                         </div>
                         <div>
-                          <div style={{ fontWeight:600, color:'#fff', fontSize:'0.85rem' }}>{u.name}</div>
+                          <div style={{ fontWeight:600, color:'var(--text-strong)', fontSize:'0.85rem' }}>{u.name}</div>
                           {u.is_verified && <span style={{ fontSize:'0.68rem', color:'var(--cyan)' }}>✓ verified</span>}
                         </div>
                       </div>
@@ -132,18 +135,38 @@ export default function AdminUsers() {
                     </td>
                     <td style={{ fontSize:'0.78rem', color:'var(--text-dim)' }}>{new Date(u.created_at).toLocaleDateString()}</td>
                     <td>
-                      <div style={{ display:'flex', gap:5 }}>
+                      <div style={{ display:'flex', gap:6 }}>
                         {u.id !== me?.id && (
                           <>
-                            <button onClick={()=>toggleUser(u.id)} title={u.is_active?'Block':'Unblock'} style={{ width:30, height:30, borderRadius:7, border:`1px solid ${u.is_active?'rgba(230,57,70,0.3)':'rgba(16,185,129,0.3)'}`, background:'transparent', color:u.is_active?'var(--red)':'var(--green)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                              {u.is_active?<FiLock size={13}/>:<FiUnlock size={13}/>}
+                            <button onClick={()=>toggleUser(u.id)} title={u.is_active?'Block User':'Unblock User'} 
+                              style={{ 
+                                width:34, height:34, borderRadius:10, border:'1px solid var(--border)', 
+                                background:'var(--surface-2)', color:u.is_active?'#F59E0B':'#10B981', 
+                                cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center',
+                                transition:'all 0.2s'
+                              }}
+                              onMouseEnter={e=>e.currentTarget.style.borderColor=u.is_active?'#F59E0B':'#10B981'}
+                              onMouseLeave={e=>e.currentTarget.style.borderColor='var(--border)'}>
+                              {u.is_active ? <FiLock size={15}/> : <FiUnlock size={15}/>}
                             </button>
-                            <button onClick={()=>deleteUser(u.id, u.name)} title="Delete" style={{ width:30, height:30, borderRadius:7, border:'1px solid rgba(230,57,70,0.2)', background:'transparent', color:'var(--red)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                              <FiTrash2 size={13}/>
+                            <button onClick={()=>deleteUser(u.id, u.name)} title="Delete User" 
+                              style={{ 
+                                width:34, height:34, borderRadius:10, border:'1px solid var(--border)', 
+                                background:'var(--surface-2)', color:'#EF4444', 
+                                cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center',
+                                transition:'all 0.2s'
+                              }}
+                              onMouseEnter={e=>e.currentTarget.style.borderColor='#EF4444'}
+                              onMouseLeave={e=>e.currentTarget.style.borderColor='var(--border)'}>
+                              <FiTrash2 size={15}/>
                             </button>
                           </>
                         )}
-                        {u.id === me?.id && <span style={{ fontSize:'0.72rem', color:'var(--text-dim)' }}>You</span>}
+                        {u.id === me?.id && (
+                          <div style={{ display:'flex', alignItems:'center', gap:6, padding:'4px 10px', borderRadius:8, background:'rgba(6,182,212,0.1)', color:'var(--cyan)', fontSize:'0.75rem', fontWeight:700 }}>
+                            <FiUser size={12}/> {isBn ? 'আপনি' : 'You'}
+                          </div>
+                        )}
                       </div>
                     </td>
                   </tr>

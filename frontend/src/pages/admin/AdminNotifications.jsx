@@ -27,7 +27,7 @@ export default function AdminNotifications() {
   return (
     <div>
       <div style={{ marginBottom:'1.75rem' }}>
-        <h1 style={{ fontWeight:800, fontSize:'1.4rem', color:'#fff', marginBottom:3 }}>{t('admin.notifications')}</h1>
+        <h1 style={{ fontWeight:800, fontSize:'1.4rem', color:'var(--text-strong)', marginBottom:3 }}>{t('admin.notifications')}</h1>
         <p style={{ color:'var(--text-muted)', fontSize:'0.85rem' }}>{isBn?'সব ব্যবহারকারীকে ঘোষণা পাঠান':'Send announcements to all users'}</p>
       </div>
 
@@ -69,13 +69,13 @@ export default function AdminNotifications() {
                 <span style={{ fontSize:'1.1rem' }}>✅</span>
                 <span style={{ fontWeight:700, color:'var(--green)', fontSize:'0.9rem' }}>{isBn?'সফলভাবে পাঠানো হয়েছে':'Successfully Sent'}</span>
               </div>
-              <div style={{ fontWeight:700, color:'#fff', fontSize:'0.88rem', marginBottom:5 }}>{sent.title}</div>
+              <div style={{ fontWeight:700, color:'var(--text-strong)', fontSize:'0.88rem', marginBottom:5 }}>{sent.title}</div>
               <div style={{ fontSize:'0.8rem', color:'var(--text-muted)', lineHeight:1.5, marginBottom:8 }}>{sent.body}</div>
               <div style={{ fontSize:'0.72rem', color:'var(--text-dim)' }}>📅 {sent.sentAt}</div>
             </div>
           )}
           <div style={{ background:'var(--surface)', border:'1px solid var(--border)', borderRadius:16, padding:'1.5rem' }}>
-            <h3 style={{ fontWeight:700, color:'#fff', marginBottom:'1rem', fontSize:'0.9rem' }}>{isBn?'টিপস':'Tips'}</h3>
+            <h3 style={{ fontWeight:700, color:'var(--text-strong)', marginBottom:'1rem', fontSize:'0.9rem' }}>{isBn?'টিপস':'Tips'}</h3>
             <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
               {[
                 isBn?'সংক্ষিপ্ত ও স্পষ্ট শিরোনাম দিন':'Use short, clear titles',

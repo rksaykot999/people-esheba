@@ -73,7 +73,7 @@ export default function AdminDoctors() {
     <div>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'1.5rem', flexWrap:'wrap', gap:'0.75rem' }}>
         <div>
-          <h1 style={{ fontWeight:800, fontSize:'1.4rem', color:'#fff', marginBottom:3 }}>
+          <h1 style={{ fontWeight:800, fontSize:'1.4rem', color:'var(--text-strong)', marginBottom:3 }}>
             🩺 {isBn ? 'ডাক্তার ব্যবস্থাপনা' : 'Doctors Management'}
           </h1>
           <p style={{ color:'var(--text-muted)', fontSize:'0.85rem' }}>{total} {isBn ? 'মোট ডাক্তার' : 'total doctors'}</p>
@@ -109,7 +109,7 @@ export default function AdminDoctors() {
                 {items.map(d => (
                   <tr key={d.id}>
                     <td>
-                      <div style={{ fontWeight:600, color:'#fff', fontSize:'0.85rem' }}>{d.name}</div>
+                      <div style={{ fontWeight:600, color:'var(--text-strong)', fontSize:'0.85rem' }}>{d.name}</div>
                       {d.is_verified ? <span style={{ fontSize:'0.68rem', color:'var(--green)' }}>✓ verified</span> : null}
                     </td>
                     <td><span className="badge badge-cyan" style={{ fontSize:'0.7rem' }}>{d.specialty}</span></td>

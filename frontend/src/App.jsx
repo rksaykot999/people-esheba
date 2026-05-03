@@ -58,6 +58,8 @@ import AdminPharmacy     from './pages/admin/AdminPharmacy';
 import AdminNotices      from './pages/admin/AdminNotices';
 import AdminEducation    from './pages/admin/AdminEducation';
 import AdminScholarships from './pages/admin/AdminScholarships';
+import AdminSettings     from './pages/admin/AdminSettings';
+import AdminLogs         from './pages/admin/AdminLogs';
 
 // AI Chatbot (floating)
 import AIChatbot from './components/ui/AIChatbot';
@@ -145,6 +147,8 @@ function AppRoutes() {
           <Route path="notices"        element={<AdminNotices />} />
           <Route path="education"      element={<AdminEducation />} />
           <Route path="scholarships"   element={<AdminScholarships />} />
+          <Route path="settings"       element={<AdminSettings />} />
+          <Route path="logs"           element={<AdminLogs />} />
         </Route>
       </Routes>
 

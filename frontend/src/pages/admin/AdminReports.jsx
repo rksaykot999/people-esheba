@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLang } from '../../context/LanguageContext';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
-import { FiCheck } from 'react-icons/fi';
+import { FiCheck, FiFlag, FiSearch, FiClock, FiAlertCircle } from 'react-icons/fi';
 
 export default function AdminReports() {
   const { t, isBn } = useLang();
@@ -25,9 +25,13 @@ export default function AdminReports() {
 
   return (
     <div>
-      <div style={{ marginBottom:'1.5rem' }}>
-        <h1 style={{ fontWeight:800, fontSize:'1.4rem', color:'#fff', marginBottom:3 }}>{t('admin.reports')}</h1>
-        <p style={{ color:'var(--text-muted)', fontSize:'0.85rem' }}>{items.filter(r=>r.status==='pending').length} {isBn?'অপেক্ষমান':'pending'}</p>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'2rem', flexWrap:'wrap', gap:'1rem' }}>
+        <div>
+          <h1 style={{ display:'flex', alignItems:'center', gap:10, fontWeight:800, fontSize:'1.6rem', color:'var(--text-strong)', marginBottom:4 }}>
+            <FiFlag style={{ color:'var(--amber)' }}/> {t('admin.reports')}
+          </h1>
+          <p style={{ color:'var(--text-muted)', fontSize:'0.88rem' }}>{items.filter(r=>r.status==='pending').length} {isBn?'অপেক্ষমান রিপোর্ট':'pending reports to review'}</p>
+        </div>
       </div>
       <div style={{ background:'var(--surface)', border:'1px solid var(--border)', borderRadius:16, overflow:'hidden' }}>
         {loading ? <div style={{ display:'flex', justifyContent:'center', padding:'3rem' }}><div className="spinner"/></div> : (
@@ -44,7 +48,7 @@ export default function AdminReports() {
               <tbody>
                 {items.map(r => (
                   <tr key={r.id}>
-                    <td style={{ fontWeight:600, color:'#fff', fontSize:'0.85rem' }}>{r.reporter_name}</td>
+                    <td style={{ fontWeight:600, color:'var(--text-strong)', fontSize:'0.85rem' }}>{r.reporter_name}</td>
                     <td><span className="badge badge-gray">{r.entity_type} #{r.entity_id}</span></td>
                     <td style={{ fontSize:'0.82rem', color:'var(--text-muted)', maxWidth:220 }}>{r.reason}</td>
                     <td><span className={`badge ${S_COLOR[r.status]||'badge-gray'}`}>{r.status}</span></td>
@@ -58,7 +62,14 @@ export default function AdminReports() {
                     </td>
                   </tr>
                 ))}
-                {items.length===0 && <tr><td colSpan={6} style={{ textAlign:'center', padding:'2.5rem', color:'var(--text-dim)' }}>✅ {isBn?'কোনো রিপোর্ট নেই':'No reports'}</td></tr>}
+                 {items.length===0 && (
+                   <tr>
+                     <td colSpan={6} style={{ textAlign:'center', padding:'3rem', color:'var(--text-dim)' }}>
+                       <FiCheck size={32} style={{ color:'var(--green)', opacity:0.3, marginBottom:10 }}/>
+                       <div>{isBn?'কোনো নতুন রিপোর্ট নেই':'No reports to review'}</div>
+                     </td>
+                   </tr>
+                 )}
               </tbody>
             </table>
           </div>

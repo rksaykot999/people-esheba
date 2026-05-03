@@ -2,12 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLang } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { useSearchParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import {
   FiHeart, FiPlus, FiPlusCircle, FiActivity, FiBook, FiCloudLightning,
   FiCoffee, FiBox, FiArrowRight, FiFilter, FiMapPin, FiClock,
   FiShield, FiAward, FiUsers, FiTrendingUp, FiDollarSign
 } from 'react-icons/fi';
 import { MdHealthAndSafety, MdSchool, MdSevereCold, MdLocalFireDepartment, MdAgriculture, MdWheelchairPickup } from 'react-icons/md';
+import HelpRequestModal from '../components/donation/HelpRequestModal';
 
 /* ── Constants ──────────────────────────────────────────── */
 const DONATE_CATS = [
@@ -16,6 +18,7 @@ const DONATE_CATS = [
   { key: 'education', label: 'Education Fund', color: '#06B6D4', icon: MdSchool },
   { key: 'disaster', label: 'Disaster', color: '#F59E0B', icon: MdSevereCold },
   { key: 'food', label: 'Food', color: '#10B981', icon: FiCoffee },
+  { key: 'agriculture', label: 'Agriculture Fund', color: '#10B981', icon: MdAgriculture },
   { key: 'other', label: 'Other', color: '#EC4899', icon: FiBox },
 ];
 
@@ -74,7 +77,7 @@ const HELP_REQUESTS = [
   },
   // --- Agriculture & Other ---
   {
-    id: 9, cat: 'other', title: 'Seeds & Fertilizer for Poor Farmer',
+    id: 9, cat: 'agriculture', title: 'Seeds & Fertilizer for Poor Farmer',
     name: 'Moklesur Rahman', location: 'Rangpur', amount: '8,000 BDT Needed',
     desc: 'Support a farmer to start his seasonal cultivation after a heavy crop loss last year.',
     urgency: 'Medium', date: '2026-04-27'
@@ -121,6 +124,7 @@ export default function Donate() {
   const activeCat = searchParams.get('category') || 'all';
   const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
+  const [showRequestModal, setShowRequestModal] = useState(false);
 
   useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
   useEffect(() => {
@@ -260,12 +264,14 @@ export default function Donate() {
           display: 'flex', flexDirection: 'column', gap: '1rem',
         }}>
           <div style={{ display: 'flex', gap: 10, justifyContent: 'space-between', flexWrap: 'wrap' }}>
-            <button style={{
-              background: 'linear-gradient(135deg, #ef4444, #dc2626)', color: '#fff', border: 'none',
-              padding: '0 1.5rem', height: 46, borderRadius: 12, fontSize: '0.85rem', fontWeight: 700,
-              display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer',
-              boxShadow: '0 4px 14px rgba(239,68,68,0.3)',
-            }}>
+            <button 
+              onClick={() => setShowRequestModal(true)}
+              style={{
+                background: 'linear-gradient(135deg, #ef4444, #dc2626)', color: '#fff', border: 'none',
+                padding: '0 1.5rem', height: 46, borderRadius: 12, fontSize: '0.85rem', fontWeight: 700,
+                display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer',
+                boxShadow: '0 4px 14px rgba(239,68,68,0.3)',
+              }}>
               <FiPlusCircle size={16} /> {t("donate.post_request") || "Post Help Request"}
             </button>
           </div>
@@ -293,7 +299,7 @@ export default function Donate() {
                   onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor = cat.color; e.currentTarget.style.color = cat.color; } }}
                   onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor = 'var(--border-2)'; e.currentTarget.style.color = 'var(--text-muted)'; } }}
                 >
-                  <Icon size={12} /> {cat.label}
+                  <Icon size={12} /> {t(`donate.${cat.key}`) || cat.label}
                 </button>
               );
             })}
@@ -527,6 +533,11 @@ export default function Donate() {
           100% { opacity:0.5; }
         }
       `}</style>
+      <HelpRequestModal 
+        isOpen={showRequestModal} 
+        onClose={() => setShowRequestModal(false)} 
+        onSuccess={() => {}} 
+      />
     </div>
   );
 }
