@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import {
   FiSearch, FiPhone, FiMapPin, FiStar,
-  FiFilter, FiArrowRight, FiCheckCircle, FiShield, FiExternalLink
+  FiFilter, FiArrowRight, FiCheckCircle, FiBook, FiExternalLink, FiAward, FiUsers
 } from 'react-icons/fi';
 import { useTheme } from '../context/ThemeContext';
 import { useLang } from '../context/LanguageContext';
@@ -12,51 +12,29 @@ export default function Education() {
   const { t } = useLang();
 
   const CATS = [
-    { key: 'all', label: t('government.cat_all'), color: '#8B5CF6' },
-    { key: 'nid', label: t('government.cat_nid'), color: '#3B82F6' },
-    { key: 'schemes', label: t('government.cat_schemes'), color: '#10B981' },
-    { key: 'passport', label: t('government.cat_passport'), color: '#F59E0B' },
-    { key: 'land', label: t('government.cat_land'), color: '#EF4444' },
-    { key: 'utility', label: t('government.cat_utility'), color: '#06B6D4' },
+    { key: 'all', label: t('government.cat_all') || 'All', color: '#F59E0B' },
+    { key: 'school', label: t('education.govt_school') || 'Schools', color: '#3B82F6' },
+    { key: 'college', label: t('education.govt_college') || 'Colleges', color: '#10B981' },
+    { key: 'university', label: t('education.public_uni') || 'Universities', color: '#8B5CF6' },
+    { key: 'scholarship', label: t('education.scholarships') || 'Scholarships', color: '#F59E0B' },
   ];
 
-  const SAMPLE_GOV = [
-    // --- NID & Identity ---
+  const SAMPLE_EDU = [
     {
-      id: 101, cat: 'nid', name: 'NID Bangladesh', area: 'Election Commission', phone: '105', rating: 4.5, reviews: '1M+', badgeKey: 'badge_identity',
-      price: 'Free / Reissue Fee', descKey: 'desc_nid', features: ['biometric', 'digital_copy']
+      id: 201, cat: 'school', name: 'Dhaka Residential Model College', area: 'Mohammadpur, Dhaka', phone: '02-911456', rating: 4.8, reviews: '10k+', badge: 'School',
+      price: 'Govt Fee', desc: 'A reputed government-funded public school providing quality education.', features: ['Morning Shift', 'Day Shift']
     },
     {
-      id: 102, cat: 'nid', name: 'Birth Registration', area: 'Local Ward/Union', phone: '16122', rating: 4.1, reviews: '500k+', badgeKey: 'badge_official',
-      price: 'Govt Fee', descKey: 'desc_birth', features: ['online_verification', 'global_validity']
-    },
-
-    // --- Passport ---
-    {
-      id: 103, cat: 'passport', name: 'E-Passport Portal', area: 'DIP Bangladesh', phone: '16445', rating: 4.8, reviews: '2M+', badgeKey: 'badge_travel',
-      price: 'Fee starts 4025 BDT', descKey: 'desc_passport', features: ['appointment_system', 'sms_alerts']
-    },
-
-    // --- Gov Schemes ---
-    {
-      id: 104, cat: 'schemes', name: 'Protibondhi Allowance', area: 'Social Services', phone: '1098', rating: 4.7, reviews: '100k+', badgeKey: 'badge_social_safety',
-      price: 'Monthly Support', descKey: 'desc_protibondhi', features: ['mobile_banking', 'verified_list']
+      id: 202, cat: 'college', name: 'Dhaka College', area: 'New Market, Dhaka', phone: '02-9661555', rating: 4.7, reviews: '15k+', badge: 'College',
+      price: 'Govt Fee', desc: 'One of the oldest and most prestigious colleges in Bangladesh.', features: ['HSC', 'Honors']
     },
     {
-      id: 105, cat: 'schemes', name: 'Old Age Allowance', area: 'Ministry of Social Welfare', phone: '16224', rating: 4.6, reviews: '80k+', badgeKey: 'badge_social_safety',
-      price: 'Direct Transfer', descKey: 'desc_old_age', features: ['easy_registration', 'transparent']
+      id: 203, cat: 'university', name: 'University of Dhaka', area: 'Shahbagh, Dhaka', phone: '02-9661900', rating: 4.9, reviews: '50k+', badge: 'University',
+      price: 'Public', desc: 'The oldest university in Bangladesh, known as the Oxford of the East.', features: ['Undergraduate', 'Postgraduate']
     },
-
-    // --- Land Services ---
     {
-      id: 106, cat: 'land', name: 'E-Mutation (Land)', area: 'Land Office', phone: '16122', rating: 4.3, reviews: '300k+', badgeKey: 'badge_property',
-      price: 'Fixed Govt Fee', descKey: 'desc_mutation', features: ['digital_records', 'track_progress']
-    },
-
-    // --- Utility ---
-    {
-      id: 107, cat: 'utility', name: 'EkPay', area: 'a2i Platform', phone: '333', rating: 4.9, reviews: '400k+', badgeKey: 'badge_payments',
-      price: 'Zero Charge', descKey: 'desc_ekpay', features: ['secure_gateway', 'instant_receipt']
+      id: 204, cat: 'scholarship', name: 'Prime Minister Education Trust', area: 'All Bangladesh', phone: '16224', rating: 4.9, reviews: '200k+', badge: 'Grant',
+      price: 'Stipend', desc: 'Financial assistance for underprivileged students to continue their studies.', features: ['Degree', 'Honors']
     }
   ];
 
@@ -72,11 +50,10 @@ export default function Education() {
     setActiveCat(key);
   };
 
-  const filtered = SAMPLE_GOV.filter(item => {
+  const filtered = SAMPLE_EDU.filter(item => {
     const matchCat = activeCat === 'all' || item.cat === activeCat;
     const matchSearch = !search || 
-      item.name.toLowerCase().includes(search.toLowerCase()) ||
-      t(`government.${item.descKey}`).toLowerCase().includes(search.toLowerCase());
+      item.name.toLowerCase().includes(search.toLowerCase());
     return matchCat && matchSearch;
   });
 
@@ -103,18 +80,18 @@ export default function Education() {
         <div style={{ position: 'relative', zIndex: 1 }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: 'rgba(16, 185, 129, 0.1)', padding: '8px 20px',
-            borderRadius: '100px', color: '#10b981', fontSize: '0.75rem', fontWeight: 600,
-            marginBottom: '2rem', border: '1px solid rgba(16, 185, 129, 0.2)'
+            background: 'rgba(245, 158, 11, 0.1)', padding: '8px 20px',
+            borderRadius: '100px', color: '#F59E0B', fontSize: '0.75rem', fontWeight: 600,
+            marginBottom: '2rem', border: '1px solid rgba(245, 158, 11, 0.2)'
           }}>
-            <FiShield size={14} /> {t('government.hero_badge')}
+            <FiBook size={14} /> {t('education.title') || 'Education Services'}
           </div>
 
           <h1 style={{ fontSize: '4.5rem', fontWeight: 900, marginBottom: '1.5rem', letterSpacing: '-2px', lineHeight: 1 }}>
-            {t('government.hero_title')} <span style={{ color: '#10b981' }}>{t('government.hero_highlight')}</span>
+            {t('education.title')} <span style={{ color: '#F59E0B' }}>Hub</span>
           </h1>
           <p style={{ color: '#a1a1aa', fontSize: '1.25rem', maxWidth: '650px', margin: '0 auto', marginBottom: '4rem' }}>
-            {t('government.hero_sub')}
+            {t('education.sub') || 'Find schools, universities, scholarships and tutors across Bangladesh.'}
           </p>
         </div>
       </div>
@@ -135,7 +112,7 @@ export default function Education() {
                 style={{
                   padding: '12px 24px', borderRadius: '16px', border: 'none', cursor: 'pointer',
                   whiteSpace: 'nowrap', fontSize: '0.9rem', fontWeight: 600,
-                  background: activeCat === c.key ? '#10b981' : 'var(--surface-2)',
+                  background: activeCat === c.key ? '#F59E0B' : 'var(--surface-2)',
                   color: activeCat === c.key ? '#fff' : 'var(--text-muted)',
                   transition: '0.2s all'
                 }}
@@ -151,7 +128,7 @@ export default function Education() {
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder={t('government.search_placeholder')}
+              placeholder={t('common.search_placeholder') || 'Search...'}
               style={{
                 width: '100%', boxSizing: 'border-box', height: '64px',
                 padding: '0 160px 0 56px', borderRadius: '20px',
@@ -162,9 +139,9 @@ export default function Education() {
             <button style={{
               position: 'absolute', right: '10px', top: '10px', bottom: '10px',
               padding: '0 28px', borderRadius: '14px', border: 'none',
-              background: '#10b981', color: '#fff', fontWeight: 700, cursor: 'pointer'
+              background: '#F59E0B', color: '#fff', fontWeight: 700, cursor: 'pointer'
             }}>
-              {t('government.search_button')}
+              {t('common.search') || 'Search'}
             </button>
           </div>
         </div>
@@ -182,11 +159,11 @@ export default function Education() {
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
                 <span style={{
-                  background: 'rgba(16, 185, 129, 0.1)', color: '#10b981',
+                  background: 'rgba(245, 158, 11, 0.1)', color: '#F59E0B',
                   padding: '6px 14px', borderRadius: '10px', fontSize: '0.7rem', fontWeight: 800,
                   textTransform: 'uppercase'
                 }}>
-                  {t(`government.${item.badgeKey}`)}
+                  {item.badge}
                 </span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#f59e0b', fontWeight: 700 }}>
                   <FiStar size={16} fill="#f59e0b" /> {item.rating}
@@ -195,12 +172,12 @@ export default function Education() {
 
               <h3 style={{ fontSize: '1.35rem', fontWeight: 700, marginBottom: '12px' }}>{item.name}</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '24px', height: '3.2rem', overflow: 'hidden' }}>
-                {t(`government.${item.descKey}`)}
+                {item.desc}
               </p>
 
               <div style={{ borderTop: '1px solid var(--border)', paddingTop: '20px', display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '28px' }}>
                 <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <FiCheckCircle size={16} color="#10b981" /> {item.area}
+                  <FiCheckCircle size={16} color="#F59E0B" /> {item.area}
                 </div>
                 <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 8 }}>
                   <FiMapPin size={16} /> Contact: {item.phone}
@@ -212,19 +189,18 @@ export default function Education() {
                   flex: 1, height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: 'var(--surface-2)', color: 'var(--text)', borderRadius: '16px', fontWeight: 700, textDecoration: 'none', border: '1px solid var(--border)'
                 }}>
-                  <FiPhone size={18} style={{ marginRight: 10 }} /> {t('government.helpline')}
+                  <FiPhone size={18} style={{ marginRight: 10 }} /> {t('common.contact') || 'Contact'}
                 </a>
-                <button style={{
+                <button onClick={(e) => { e.preventDefault(); import('react-hot-toast').then(m => m.default.success('Details page coming soon!')); }} style={{
                   flex: 1.5, height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: '#10b981', color: '#fff', borderRadius: '16px', fontWeight: 700, border: 'none', cursor: 'pointer', gap: 8
+                  background: '#F59E0B', color: '#fff', borderRadius: '16px', fontWeight: 700, border: 'none', cursor: 'pointer', gap: 8
                 }}>
-                  {t('government.apply_online')} <FiExternalLink size={18} />
+                  {t('common.viewAll') || 'View Details'} <FiExternalLink size={18} />
                 </button>
               </div>
             </div>
           ))}
         </div>
-
       </div>
     </div>
   );

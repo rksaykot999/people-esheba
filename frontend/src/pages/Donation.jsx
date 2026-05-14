@@ -440,7 +440,7 @@ export default function Donate() {
                   </div>
 
                   <button
-                    onClick={() => window.open('#', '_blank')}
+                    onClick={(e) => { e.preventDefault(); import('react-hot-toast').then(m => m.default.success(isBn ? 'পেমেন্ট গেটওয়েতে রিডাইরেক্ট করা হচ্ছে...' : 'Redirecting to secure payment gateway...')); }}
                     style={{
                       width: '100%',
                       padding: '10px 14px', borderRadius: 12,

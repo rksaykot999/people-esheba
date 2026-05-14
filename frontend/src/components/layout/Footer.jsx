@@ -50,7 +50,7 @@ export default function Footer() {
       links: [
         { label: 'info@esheba.bd',       to: 'mailto:info@esheba.bd',   icon: <FiMail size={13}/> },
         { label: '+880 1700-000000',      to: 'tel:+8801700000000',      icon: <FiPhone size={13}/> },
-        { label: isBn ? 'ঢাকা, বাংলাদেশ' : 'Dhaka, Bangladesh', to: '#', icon: <FiMapPin size={13}/> },
+        { label: isBn ? 'ঢাকা, বাংলাদেশ' : 'Dhaka, Bangladesh', to: '/map', icon: <FiMapPin size={13}/> },
       ],
     },
   ];
@@ -97,11 +97,11 @@ export default function Footer() {
           </p>
           <div style={{ display: 'flex', gap: '1rem' }}>
             {[isBn ? 'গোপনীয়তা নীতি' : 'Privacy Policy', isBn ? 'শর্তাবলী' : 'Terms', isBn ? 'সাহায্য' : 'Help'].map(l => (
-              <Link key={l} to="#"
+              <a key={l} href="#" onClick={(e) => e.preventDefault()}
                 style={{ fontSize: '0.8rem', color: 'var(--text-dim)', transition: 'color 0.2s', textDecoration: 'none' }}
                 onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'}
                 onMouseLeave={e => e.currentTarget.style.color = 'var(--text-dim)'}
-              >{l}</Link>
+              >{l}</a>
             ))}
           </div>
         </div>

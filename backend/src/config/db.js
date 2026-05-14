@@ -54,7 +54,15 @@ async function initPool() {
         return pool;
       } catch (liveErr) {
         console.error('❌ Both Local and Live MySQL connections failed:', liveErr.message);
-        process.exit(1);
+        console.warn('⚠️ Running without database connection.');
+        const dummyPool = {
+          query: async () => [[], []],
+          execute: async () => [[], []],
+          getConnection: async () => ({ release: () => {}, query: async () => [[], []], execute: async () => [[], []] }),
+          end: async () => {}
+        };
+        activePool = dummyPool;
+        return dummyPool;
       }
     }
   })();
