@@ -5,8 +5,13 @@
 -- All tables use IF NOT EXISTS so it's safe to re-run.
 -- ============================================================
 
-CREATE DATABASE IF NOT EXISTS people_esheba CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE people_esheba;
+DROP DATABASE IF EXISTS people_e_sheba;
+CREATE DATABASE people_e_sheba
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
+USE people_e_sheba;
+
 
 -- ── Users ─────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS users (
