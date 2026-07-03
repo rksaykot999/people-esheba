@@ -16,7 +16,8 @@ app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
 app.use(cors({
   origin: [
-    process.env.FRONTEND_URL || 'http://localhost:5174'
+    process.env.FRONTEND_URL || 'http://localhost:5174',
+    'https://people-esheba.vercel.app'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
