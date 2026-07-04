@@ -9,6 +9,11 @@ router.post('/auth/register', auth.register);
 router.post('/auth/login',    auth.login);
 router.get( '/auth/me',       protect, auth.getMe);
 
+// ── Site Settings / CMS (public read) ─────────────────────────
+const settings = require('../controllers/settings.controller');
+router.get('/settings', settings.getSettings);
+
+
 // ── Users ─────────────────────────────────────────────────────
 const user = require('../controllers/user.controller');
 router.get( '/users/profile',              protect, user.getProfile);
@@ -121,6 +126,10 @@ router.post(  '/admin/announcements',       ...A, adm.createAnnouncement);
 
 // Bulk Import
 router.post(  '/admin/bulk-import',         ...A, adm.bulkImport);
+
+// Settings (CMS)
+router.put(   '/admin/settings',            ...A, settings.updateSettings);
+
 
 // Admin CRUD — Doctors
 router.get(   '/admin/doctors',      ...A, cnt.adminGetDoctors);

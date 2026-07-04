@@ -31,16 +31,20 @@ export default function Home() {
   const [search, setSearch] = useState('');
   const [recentDonations, setRecentDonations] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [cms, setCms] = useState({});
 
   const isDark = theme === 'dark';
 
   useEffect(() => {
     setIsLoaded(true);
-    api
-      .get('/donations?limit=3')
+    api.get('/donations?limit=3')
       .then((r) => setRecentDonations(r.data.data.rows || []))
       .catch(() => {});
+    api.get('/settings')
+      .then(r => setCms(r.data.data || {}))
+      .catch(() => {});
   }, []);
+
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -188,10 +192,11 @@ export default function Home() {
   ];
 
   const trustStats = [
-    { value: '500+', label: t('home.statServices'), icon: <FiLayers /> },
-    { value: '10K+', label: t('home.statDonors'), icon: <FiDroplet /> },
-    { value: '50K+', label: t('home.statHelped'), icon: <FiThumbsUp /> },
+    { value: cms.stat_services || '500+', label: t('home.statServices'), icon: <FiLayers /> },
+    { value: cms.stat_donors   || '10K+', label: t('home.statDonors'),   icon: <FiDroplet /> },
+    { value: cms.stat_helped   || '50K+', label: t('home.statHelped'),   icon: <FiThumbsUp /> },
   ];
+
 
   const heroPanelStyle = {
     background: isDark
@@ -231,22 +236,23 @@ export default function Home() {
               >
                 <span className="flex h-2 w-2 rounded-full bg-red-500 animate-ping" />
                 <span style={{ color: 'var(--text-muted)' }} className="text-xs font-bold uppercase">
-                  {t('home.badge')}
+                  {cms.hero_badge || t('home.badge')}
                 </span>
               </div>
 
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black leading-[0.95] tracking-tight mb-6 md:mb-8">
-                {t('home.title')}
+                {cms.hero_title || t('home.title')}
                 <br />
-                <span className="text-red-500">{t('home.highlight')}</span>
+                <span className="text-red-500">{cms.hero_highlight || t('home.highlight')}</span>
               </h1>
 
               <p
                 className="max-w-2xl text-base md:text-lg lg:text-xl mb-8 md:mb-10 leading-relaxed"
                 style={{ color: 'var(--text-muted)' }}
               >
-                {t('home.subtitle')}
+                {cms.hero_subtitle || t('home.subtitle')}
               </p>
+
 
               {/* Search bar */}
               <div className="max-w-2xl mb-8 md:mb-10">
@@ -516,12 +522,12 @@ export default function Home() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-6 mb-8 md:mb-12">
             <div className="max-w-2xl">
               <h2 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight mb-3 md:mb-4">
-                {isBn ? 'কীভাবে কাজ করে' : 'How the platform works'}
+                {cms.how_title || (isBn ? 'কীভাবে কাজ করে' : 'How the platform works')}
               </h2>
               <p className="text-sm md:text-base" style={{ color: 'var(--text-muted)' }}>
-                {isBn
+                {cms.how_sub || (isBn
                   ? 'দ্রুত তথ্য খুঁজে অ্যাকশন নেওয়ার জন্য ফ্লোটা সহজ রাখা হয়েছে।'
-                  : 'The experience is kept simple so people can move from search to action quickly.'}
+                  : 'The experience is kept simple so people can move from search to action quickly.')}
               </p>
             </div>
           </div>
@@ -639,11 +645,12 @@ export default function Home() {
                 <FiMessageCircle size={20} />
               </div>
               <h2 className="text-2xl sm:text-3xl md:text-5xl font-black leading-tight tracking-tight mb-4 md:mb-5">
-                {t('home.ctaTitle')}
+                {cms.cta_title || t('home.ctaTitle')}
               </h2>
               <p className="text-sm md:text-lg leading-relaxed mb-6 md:mb-10" style={{ color: 'var(--text-muted)' }}>
-                {t('home.ctaSub')}
+                {cms.cta_sub || t('home.ctaSub')}
               </p>
+
 
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4">
                 <Link

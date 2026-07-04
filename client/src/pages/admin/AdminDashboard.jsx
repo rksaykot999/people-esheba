@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { useLang } from '../../context/LanguageContext';
 import api from '../../services/api';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { FiUsers, FiBriefcase, FiHeart, FiUsers as FiVol, FiTrendingUp, FiEye, FiCheck, FiClock, FiDroplet, FiDollarSign, FiAlertTriangle, FiPlusCircle, FiActivity, FiPieChart } from 'react-icons/fi';
+import { FiUsers, FiBriefcase, FiHeart, FiUsers as FiVol, FiTrendingUp, FiEye, FiCheck, FiClock, FiDroplet, FiDollarSign, FiAlertTriangle, FiPlusCircle, FiActivity, FiPieChart, FiEdit3, FiUploadCloud, FiSettings } from 'react-icons/fi';
 import { MdOutlineMedicalServices, MdOutlineLocalPharmacy, MdOutlineSchool, MdOutlineAgriculture } from 'react-icons/md';
+
 
 const PIE_COLORS = ['#E63946','#06B6D4','#10B981','#F59E0B','#8B5CF6','#EC4899'];
 
@@ -70,7 +71,45 @@ export default function AdminDashboard() {
         <StatCard icon={<FiClock/>} label="Pending Reports" value={s.pending_reports?.toLocaleString()} color="#F59E0B" to="/admin/reports"/>
       </div>
 
-      {/* Charts row */}
+      {/* CMS / Content Management Quick Access */}
+      <div style={{ marginBottom: '2rem', padding: '1.25rem', background: 'linear-gradient(135deg, rgba(139,92,246,0.08), rgba(6,182,212,0.05))', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 16 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <FiEdit3 style={{ color: '#a78bfa' }} size={16} />
+            <h3 style={{ fontWeight: 800, color: 'var(--text-strong)', fontSize: '0.95rem' }}>
+              {isBn ? 'কন্টেন্ট ম্যানেজমেন্ট (CMS)' : 'Content Management (CMS)'}
+            </h3>
+          </div>
+          <Link to="/admin/settings" style={{ fontSize: '0.78rem', color: '#a78bfa', fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
+            <FiSettings size={12} /> {isBn ? 'সব সেটিংস' : 'All Settings'}
+          </Link>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '0.75rem' }}>
+          {[
+            { label: isBn ? 'হোমপেজ সম্পাদনা' : 'Edit Homepage', desc: isBn ? 'হিরো, ট্যাগলাইন, CTA' : 'Hero, tagline, CTA text', to: '/admin/settings', color: '#8B5CF6', icon: <FiEdit3 /> },
+            { label: isBn ? 'ডাক্তার যোগ করুন' : 'Import Doctors', desc: isBn ? 'CSV/Excel আপলোড' : 'Upload CSV/Excel', to: '/admin/doctors', color: '#06B6D4', icon: <FiUploadCloud /> },
+            { label: isBn ? 'নোটিশ যোগ করুন' : 'Add Notices', desc: isBn ? 'সরকারি নোটিশ' : 'Govt & edu notices', to: '/admin/notices', color: '#10B981', icon: <MdOutlineSchool /> },
+            { label: isBn ? 'শিক্ষা প্রতিষ্ঠান' : 'Education Inst.', desc: isBn ? 'স্কুল, কলেজ, বিশ্ববিদ্যালয়' : 'Schools, colleges, universities', to: '/admin/education', color: '#F59E0B', icon: <MdOutlineSchool /> },
+            { label: isBn ? 'ফার্মেসি' : 'Pharmacies', desc: isBn ? 'ঔষধের দোকান' : 'Manage pharmacies', to: '/admin/pharmacy', color: '#E63946', icon: <MdOutlineLocalPharmacy /> },
+            { label: isBn ? 'বৃত্তি যোগ করুন' : 'Scholarships', desc: isBn ? 'স্কলারশিপ তথ্য' : 'Add scholarship data', to: '/admin/scholarships', color: '#EC4899', icon: <FiPlusCircle /> },
+          ].map(item => (
+            <Link key={item.to + item.label} to={item.to} style={{ textDecoration: 'none', padding: '0.75rem 1rem', background: 'var(--surface)', border: `1px solid ${item.color}20`, borderRadius: 12, display: 'flex', alignItems: 'center', gap: 10, transition: 'all 0.2s', cursor: 'pointer' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = item.color; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = `${item.color}20`; e.currentTarget.style.transform = 'none'; }}
+            >
+              <div style={{ width: 32, height: 32, borderRadius: 9, background: `${item.color}15`, color: item.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                {item.icon}
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontWeight: 700, fontSize: '0.8rem', color: 'var(--text-strong)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.label}</div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.desc}</div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+
       <div style={{ display:'grid', gridTemplateColumns:'1fr 320px', gap:'1.25rem', marginBottom:'1.75rem' }}>
         {/* Line chart */}
         <div style={{ background:'var(--surface)', border:'1px solid var(--border)', borderRadius:16, padding:'1.5rem' }}>

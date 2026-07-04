@@ -248,6 +248,14 @@ CREATE TABLE IF NOT EXISTS announcements (
   FOREIGN KEY (admin_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+-- ── Site Settings (CMS / Config) ──────────────────────────────
+CREATE TABLE IF NOT EXISTS site_settings (
+  setting_key   VARCHAR(100) PRIMARY KEY,
+  setting_value TEXT,
+  updated_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+
 -- ── Doctors ───────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS doctors (
   id          INT          PRIMARY KEY AUTO_INCREMENT,
@@ -365,3 +373,13 @@ INSERT IGNORE INTO users (name, email, phone, password_hash, role, is_verified) 
   ('Super Admin', 'admin@esheba.bd', '01700000000',
    '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBpj2pHKPAlMy2',
    'admin', 1);
+
+-- ── Default Site Settings ──────────────────────────────────────
+INSERT IGNORE INTO site_settings (setting_key, setting_value) VALUES
+  ('site_name', 'People E-Sheba'),
+  ('contact_email', 'admin@peopleesheba.com'),
+  ('site_description', 'A community platform for service and donation.'),
+  ('hero_title', 'Empowering Citizens, Connecting Communities'),
+  ('hero_subtitle', 'Join the largest digital service platform in Bangladesh.'),
+  ('about_text', 'People E-Sheba is a comprehensive platform designed to bridge the gap between citizens and essential services.');
+
