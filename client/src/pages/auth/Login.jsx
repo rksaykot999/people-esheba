@@ -88,9 +88,13 @@ export default function Login() {
             {isBn?'অ্যাকাউন্ট নেই?':'Don\'t have an account?'}{' '}
             <Link to="/register" style={{ color:'var(--red)', fontWeight:700, textDecoration:'none' }}>{isBn?'নিবন্ধন করুন':'Register Free'}</Link>
           </p>
-          <p style={{ color:'var(--text-dim)', fontSize:'0.78rem', marginTop:'0.75rem' }}>
-            Admin: admin@esheba.bd / Admin@1234
-          </p>
+          <button
+            type="button"
+            onClick={() => setForm({ email:'admin@esheba.bd', password:'Admin@1234' })}
+            style={{ background:'rgba(6,182,212,0.08)', border:'1px solid rgba(6,182,212,0.2)', borderRadius:8, padding:'6px 12px', color:'var(--cyan)', fontSize:'0.75rem', cursor:'pointer', marginTop:'0.75rem', fontWeight:600 }}
+          >
+            🔐 Admin: admin@esheba.bd / Admin@1234 (click to fill)
+          </button>
         </div>
       </div>
     </div>

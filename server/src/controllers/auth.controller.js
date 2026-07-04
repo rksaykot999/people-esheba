@@ -69,9 +69,11 @@ exports.login = async (req, res) => {
     const token = signToken({ id: user.id, role: user.role });
     return ok(res, { token, user: safeUser }, 'Login successful');
   } catch (e) {
+    console.error('[LOGIN ERROR]', e.message, e.stack);
     return err(res, 'Login failed', 500);
   }
 };
+
 
 /* ── GET /auth/me ──────────────────────────────────────────── */
 exports.getMe = async (req, res) => {
