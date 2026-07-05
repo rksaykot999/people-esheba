@@ -26,15 +26,7 @@ const SPECIALTY_META = {
   'Dermatologist': { color: '#A855F7', bg: 'rgba(168,85,247,0.1)', icon: MdHealthAndSafety, labelKey: 'health.derm' },
 };
 
-const SAMPLE_DOCTORS = [
-  { id: 1, name: 'Dr. Md. Aminul Islam', specialty: 'Cardiologist', area: 'Dhaka', phone: '017XXXXXXXX', hours: 'Sat–Thu 9-5', is_verified: true, rating: 4.8 },
-  { id: 2, name: 'Dr. Farzana Hossain', specialty: 'Pediatrician', area: 'Chittagong', phone: '018XXXXXXXX', hours: 'Sun–Thu 10-4', is_verified: true, rating: 4.9 },
-  { id: 3, name: 'Dr. Rafiqul Islam', specialty: 'Neurologist', area: 'Sylhet', phone: '019XXXXXXXX', hours: 'Sat–Wed 4-8', is_verified: false, rating: 4.7 },
-  { id: 4, name: 'Dr. Salma Begum', specialty: 'Gynecologist', area: 'Rajshahi', phone: '015XXXXXXXX', hours: 'Mon–Fri 9-5', is_verified: true, rating: 4.6 },
-  { id: 5, name: 'Dr. Kamal Hossain', specialty: 'Medicine', area: 'Khulna', phone: '016XXXXXXXX', hours: 'Sat–Thu 8-2', is_verified: true, rating: 4.5 },
-  { id: 6, name: 'Dr. Nusrat Jahan', specialty: 'Dermatologist', area: 'Dhaka', phone: '013XXXXXXXX', hours: 'Sun–Thu 3-7', is_verified: false, rating: 4.8 },
-  { id: 7, name: 'Dr. Tariqul Islam', specialty: 'Orthopedic', area: 'Comilla', phone: '017XXXXXXXX', hours: 'Sat–Wed 10-5', is_verified: true, rating: 4.7 },
-];
+import { useApi } from '../hooks/useApi';
 
 /* ── Animated Counter ─────────────────────────────────── */
 function Counter({ end, suffix = '' }) {
@@ -69,17 +61,15 @@ export default function Doctors() {
 
   const [search, setSearch] = useState('');
   const [specialtyFilter, setSpecialtyFilter] = useState('');
-  const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
-  useEffect(() => {
-    setLoading(true);
-    const tmt = setTimeout(() => setLoading(false), 400);
-    return () => clearTimeout(tmt);
-  }, [search, specialtyFilter]);
 
-  const filtered = SAMPLE_DOCTORS.filter(item => {
+  /* Real data — managed from Admin → Doctors */
+  const { data, loading } = useApi('/doctors', { params: { specialty: specialtyFilter || undefined, search: search || undefined } });
+  const doctors = data?.rows || data || [];
+
+  const filtered = doctors.filter(item => {
     const matchesSearch = !search ||
       item.name.toLowerCase().includes(search.toLowerCase()) ||
       item.area.toLowerCase().includes(search.toLowerCase()) ||

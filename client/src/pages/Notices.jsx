@@ -8,6 +8,8 @@ import {
   FiSearch, FiFilter, FiShield, FiStar, FiCheckCircle, FiTag
 } from 'react-icons/fi';
 
+import { useApi } from '../hooks/useApi';
+
 /* ── Constants ──────────────────────────────────────────── */
 const NOTICE_CATS = [
   { key: 'all', label: 'All Updates', color: '#8B5CF6', icon: FiBell },
@@ -23,53 +25,19 @@ const CAT_META = Object.fromEntries(
   NOTICE_CATS.filter(c => c.key !== 'all').map(c => [c.key, { color: c.color, icon: c.icon, bg: `${c.color}15` }])
 );
 
-const NOTICES_DATA = [
-  {
-    id: 1, cat: 'academic', title: 'HSC Examination Schedule 2026 Released',
-    date: 'May 02, 2026', org: 'Education Board', urgent: true,
-    desc: 'The official routine for HSC candidates of all boards has been published. Exams start from June 15.'
-  },
-  {
-    id: 2, cat: 'academic', title: 'University Admission Test: Unit A Results',
-    date: 'May 01, 2026', org: 'Dhaka University', urgent: false,
-    desc: 'The results for the Science unit admission test are now available on the official portal.'
-  },
-  {
-    id: 3, cat: 'career', title: 'Senior Software Engineer - National Data Center',
-    date: 'Apr 30, 2026', org: 'ICT Division', urgent: true,
-    desc: 'New job circular for the Bangladesh Government digitization project. Minimum 5 years experience required.'
-  },
-  {
-    id: 4, cat: 'career', title: 'Bank Asia Trainee Officer Recruitment',
-    date: 'Apr 28, 2026', org: 'Bank Asia Ltd', urgent: false,
-    desc: 'Fresh graduates are encouraged to apply for the Management Trainee program. Deadline: May 20.'
-  },
-  {
-    id: 5, cat: 'scholarship', title: 'Prime Minister Achievement Award 2026',
-    date: 'May 01, 2026', org: 'PMO Office', urgent: true,
-    desc: 'Applications are open for merit-based scholarships for university students across the country.'
-  },
-  {
-    id: 6, cat: 'scholarship', title: 'Full-Free Studentship for Undergraduates',
-    date: 'Apr 25, 2026', org: 'Education Ministry', urgent: false,
-    desc: 'Special grants for students from low-income families to continue their higher education.'
-  },
-  {
-    id: 7, cat: 'government', title: 'New Labor Law Amendments 2026',
-    date: 'Apr 20, 2026', org: 'Ministry of Law', urgent: false,
-    desc: 'The official gazette for the updated labor regulations has been published for public review.'
-  },
-  {
-    id: 8, cat: 'donate', title: 'Emergency Medical Aid for Flood Victims',
-    date: 'May 02, 2026', org: 'Red Crescent', urgent: true,
-    desc: 'Urgent collection of medicine and dry food for the affected people in Sylhet region.'
-  },
-  {
-    id: 9, cat: 'donate', title: 'Education Fund for Orphans - 2026',
-    date: 'May 01, 2026', org: 'People E-Sheba', urgent: false,
-    desc: 'Help us provide school supplies and tuition fees for 500 underprivileged children.'
-  }
-];
+/* Maps a notices table row into this page's shape */
+function mapNotice(row) {
+  return {
+    id: row.id,
+    cat: row.category,
+    title: row.title,
+    date: new Date(row.created_at).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+    org: row.source || 'People E-Sheba',
+    urgent: !!row.is_urgent,
+    desc: row.description || '',
+    link: row.link,
+  };
+}
 
 /* ── Animated Counter ─────────────────────────────────── */
 function Counter({ end, suffix = '' }) {
@@ -105,19 +73,12 @@ export default function Notices() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
   const [activeCat, setActiveCat] = useState(searchParams.get('cat') || 'all');
-  const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
   useEffect(() => {
     setActiveCat(searchParams.get('cat') || 'all');
   }, [searchParams]);
-
-  useEffect(() => {
-    setLoading(true);
-    const tmt = setTimeout(() => setLoading(false), 400);
-    return () => clearTimeout(tmt);
-  }, [search, activeCat]);
 
   const handleCatChange = (key) => {
     const newParams = new URLSearchParams(searchParams);
@@ -126,7 +87,11 @@ export default function Notices() {
     setSearchParams(newParams);
   };
 
-  const filtered = NOTICES_DATA.filter(item => {
+  /* Real data — managed from Admin → Notices */
+  const { data, loading } = useApi('/notices', { params: { category: activeCat !== 'all' ? activeCat : undefined, search: search || undefined } });
+  const allNotices = (data?.rows || []).map(mapNotice);
+
+  const filtered = allNotices.filter(item => {
     const matchesSearch = !search ||
       item.title.toLowerCase().includes(search.toLowerCase()) ||
       item.org.toLowerCase().includes(search.toLowerCase()) ||
@@ -137,9 +102,9 @@ export default function Notices() {
 
   // Stats for hero section
   const stats = [
-    { label: 'Live Updates', value: NOTICES_DATA.length, suffix: '', icon: <FiBell size={16} />, color: '#8b5cf6' },
+    { label: 'Live Updates', value: allNotices.length, suffix: '', icon: <FiBell size={16} />, color: '#8b5cf6' },
     { label: 'Categories', value: NOTICE_CATS.filter(c => c.key !== 'all').length, suffix: '', icon: <FiFilter size={16} />, color: '#06B6D4' },
-    { label: 'Urgent Alerts', value: NOTICES_DATA.filter(n => n.urgent).length, suffix: '', icon: <FiActivity size={16} />, color: '#EF4444' },
+    { label: 'Urgent Alerts', value: allNotices.filter(n => n.urgent).length, suffix: '', icon: <FiActivity size={16} />, color: '#EF4444' },
   ];
 
   const activeCatMeta = NOTICE_CATS.find(c => c.key === activeCat) || NOTICE_CATS[0];

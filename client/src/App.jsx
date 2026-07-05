@@ -50,6 +50,7 @@ import AdminJobs         from './pages/admin/AdminJobs';
 import AdminBlood        from './pages/admin/AdminBlood';
 import AdminVolunteers   from './pages/admin/AdminVolunteers';
 import AdminEmergency    from './pages/admin/AdminEmergency';
+import AdminDirectory    from './pages/admin/AdminDirectory';
 import AdminReports      from './pages/admin/AdminReports';
 import AdminAnalytics    from './pages/admin/AdminAnalytics';
 import AdminNotifications from './pages/admin/AdminNotifications';
@@ -138,6 +139,7 @@ function AppRoutes() {
           <Route path="blood"          element={<AdminBlood />} />
           <Route path="volunteers"     element={<AdminVolunteers />} />
           <Route path="emergency"      element={<AdminEmergency />} />
+          <Route path="directory"      element={<AdminDirectory />} />
           <Route path="reports"        element={<AdminReports />} />
           <Route path="analytics"      element={<AdminAnalytics />} />
           <Route path="notifications"  element={<AdminNotifications />} />

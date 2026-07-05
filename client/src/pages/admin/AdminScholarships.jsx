@@ -5,7 +5,8 @@ import toast from 'react-hot-toast';
 import { FiPlus, FiTrash2, FiEdit2, FiX, FiSave, FiSearch, FiExternalLink, FiUploadCloud } from 'react-icons/fi';
 import BulkImportModal from '../../components/admin/BulkImportModal';
 
-const BLANK = { title:'', provider:'', category:'general', amount:'', deadline:'', link:'', description:'', is_active:true };
+const SCHOLARSHIP_TYPES = ['govt', 'ngo', 'international', 'corporate', 'other'];
+const BLANK = { title:'', provider:'', category:'govt', amount:'', deadline:'', link:'', description:'', is_active:true };
 
 export default function AdminScholarships() {
   const { isBn } = useLang();
@@ -143,7 +144,9 @@ export default function AdminScholarships() {
                   <input value={form.provider} onChange={e=>F('provider',e.target.value)} className="form-input" placeholder="Organization/Govt"/>
                 </div>
                 <div className="form-group"><label className="form-label">{isBn?'বিভাগ':'Category'}</label>
-                  <input value={form.category} onChange={e=>F('category',e.target.value)} className="form-input" placeholder="general, science, etc."/>
+                  <select value={form.category} onChange={e=>F('category',e.target.value)} className="form-select">
+                    {SCHOLARSHIP_TYPES.map(tp=><option key={tp} value={tp}>{tp}</option>)}
+                  </select>
                 </div>
                 <div className="form-group"><label className="form-label">{isBn?'পরিমাণ':'Amount'}</label>
                   <input value={form.amount} onChange={e=>F('amount',e.target.value)} className="form-input" placeholder="10,000 BDT/yr"/>

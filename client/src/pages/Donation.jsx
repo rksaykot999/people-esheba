@@ -10,6 +10,7 @@ import {
 } from 'react-icons/fi';
 import { MdHealthAndSafety, MdSchool, MdSevereCold, MdLocalFireDepartment, MdAgriculture, MdWheelchairPickup } from 'react-icons/md';
 import HelpRequestModal from '../components/donation/HelpRequestModal';
+import { useApi } from '../hooks/useApi';
 
 /* ── Constants ──────────────────────────────────────────── */
 const DONATE_CATS = [
@@ -22,73 +23,25 @@ const DONATE_CATS = [
   { key: 'other', label: 'Other', color: '#EC4899', icon: FiBox },
 ];
 
-const HELP_REQUESTS = [
-  // --- Medical Aid ---
-  {
-    id: 1, cat: 'medical', title: 'Emergency Kidney Transplant Support',
-    name: 'Rahim Uddin', location: 'Barishal', amount: '50,000 BDT Needed',
-    desc: 'Critical medical emergency. Patient needs immediate surgery support at Barishal Medical College.',
-    urgency: 'High', date: '2026-05-02'
-  },
-  {
-    id: 5, cat: 'medical', title: 'Thalassemia Treatment for 8yr Child',
-    name: 'Mitu Akter', location: 'Dhaka', amount: '25,000 BDT Needed',
-    desc: 'Monthly blood transfusion and medication costs for a young child from a low-income family.',
-    urgency: 'High', date: '2026-05-01'
-  },
-  // --- Education Fund ---
-  {
-    id: 2, cat: 'education', title: 'Tuition Fees for Orphan Student',
-    name: 'Sumi Akter', location: 'Dhaka', amount: '12,000 BDT Needed',
-    desc: 'Support a brilliant student to continue her HSC studies after losing her father. Needs help with exam fees.',
-    urgency: 'Medium', date: '2026-05-01'
-  },
-  {
-    id: 6, cat: 'education', title: 'Medical Admission Coaching Fee',
-    name: 'Tanvir Hossain', location: 'Rajshahi', amount: '15,000 BDT Needed',
-    desc: 'A meritorious student from a rural background needs support for his medical admission preparation.',
-    urgency: 'Medium', date: '2026-04-28'
-  },
-  // --- Disaster Relief ---
-  {
-    id: 3, cat: 'disaster', title: 'Flood Relief Materials for Sylhet',
-    name: 'Local Community', location: 'Sylhet', amount: 'Any Amount',
-    desc: 'Providing dry food and clean water to families affected by sudden flash floods in Sunamganj.',
-    urgency: 'High', date: '2026-05-02'
-  },
-  {
-    id: 7, cat: 'disaster', title: 'Rebuilding Home After Fire',
-    name: 'Anwar Ali', location: 'Gazipur', amount: '30,000 BDT Needed',
-    desc: 'A short circuit caused a fire that destroyed a small family home. Need funds for tin and wood.',
-    urgency: 'High', date: '2026-04-25'
-  },
-  // --- Food Support ---
-  {
-    id: 4, cat: 'food', title: 'Iftar Program for Street Children',
-    name: 'Volunteer Group', location: 'Chittagong', amount: '5,000 BDT Needed',
-    desc: 'Help us provide nutritious Iftar meals to 100 street children daily throughout Ramadan.',
-    urgency: 'Normal', date: '2026-04-30'
-  },
-  {
-    id: 8, cat: 'food', title: 'Monthly Grocery for Elderly Couple',
-    name: 'Ayesha Begum', location: 'Khulna', amount: '3,500 BDT Needed',
-    desc: 'An elderly couple with no income source needs help with basic food supplies for the month.',
-    urgency: 'Normal', date: '2026-05-02'
-  },
-  // --- Agriculture & Other ---
-  {
-    id: 9, cat: 'agriculture', title: 'Seeds & Fertilizer for Poor Farmer',
-    name: 'Moklesur Rahman', location: 'Rangpur', amount: '8,000 BDT Needed',
-    desc: 'Support a farmer to start his seasonal cultivation after a heavy crop loss last year.',
-    urgency: 'Medium', date: '2026-04-27'
-  },
-  {
-    id: 10, cat: 'other', title: 'Wheelchair for Disabled Youth',
-    name: 'Jamil Ahmed', location: 'Comilla', amount: '10,000 BDT Needed',
-    desc: 'A 19-year-old boy needs a wheelchair to regain his mobility and start a small tea stall.',
-    urgency: 'High', date: '2026-05-01'
-  }
-];
+/* Maps a donations table row (joined with poster) into this page's shape.
+ * Real requests come in via HelpRequestModal → POST /donations, get
+ * moderated in Admin → Donations, and only 'approved' ones show here. */
+function mapHelpRequest(row) {
+  return {
+    id: row.id,
+    cat: row.category,
+    title: row.title,
+    name: row.poster_name || 'Anonymous',
+    location: row.district || row.division || 'Bangladesh',
+    amount: Number(row.amount_needed) > 0
+      ? `${Number(row.amount_needed).toLocaleString()} BDT Needed`
+      : 'Any Amount',
+    amountRaised: Number(row.amount_raised) || 0,
+    desc: row.description,
+    urgency: row.is_urgent ? 'High' : 'Normal',
+    date: row.created_at,
+  };
+}
 
 /* ── Animated Counter ─────────────────────────────────── */
 function Counter({ end, suffix = '' }) {
@@ -122,16 +75,10 @@ export default function Donate() {
   const isDark = theme === 'dark';
   const [searchParams, setSearchParams] = useSearchParams();
   const activeCat = searchParams.get('category') || 'all';
-  const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
   const [showRequestModal, setShowRequestModal] = useState(false);
 
   useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
-  useEffect(() => {
-    setLoading(true);
-    const tmt = setTimeout(() => setLoading(false), 400);
-    return () => clearTimeout(tmt);
-  }, [activeCat]);
 
   const handleCatChange = (key) => {
     const newParams = new URLSearchParams(searchParams);
@@ -140,9 +87,9 @@ export default function Donate() {
     setSearchParams(newParams);
   };
 
-  const filteredRequests = HELP_REQUESTS.filter(req =>
-    activeCat === 'all' || req.cat === activeCat
-  );
+  /* Real data — approved requests submitted via "Request Help", moderated in Admin → Donations */
+  const { data, loading, refetch } = useApi('/donations', { params: { category: activeCat !== 'all' ? activeCat : undefined, status: 'approved' } });
+  const filteredRequests = (data?.rows || []).map(mapHelpRequest);
 
   // Stats for hero section
   const stats = [
@@ -536,7 +483,7 @@ export default function Donate() {
       <HelpRequestModal 
         isOpen={showRequestModal} 
         onClose={() => setShowRequestModal(false)} 
-        onSuccess={() => {}} 
+        onSuccess={() => { setShowRequestModal(false); refetch(); }} 
       />
     </div>
   );

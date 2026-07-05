@@ -9,6 +9,7 @@ import {
 import {
   MdSchool, MdBusiness, MdHealthAndSafety, MdScience, MdEngineering, MdAccountBalance
 } from 'react-icons/md';
+import { useApi } from '../hooks/useApi';
 
 /* ── Constants ──────────────────────────────────────────── */
 const COLLEGE_TYPES = ['govt-college', 'private-college', 'madrasah', 'technical', 'other'];
@@ -21,19 +22,17 @@ const TYPE_META = {
   'other': { color: '#E63946', bg: 'rgba(230,57,70,0.1)', icon: MdScience, labelKey: 'education.other_college' },
 };
 
-/* Sample college data (extended) */
-const SAMPLE_COLLEGES = [
-  { id: 1, type: 'govt-college', name: 'Notre Dame College', area: 'Dhaka', district: 'Dhaka', estd: 1949, is_verified: true, is_old: true },
-  { id: 2, type: 'govt-college', name: 'Dhaka College', area: 'Dhaka', district: 'Dhaka', estd: 1841, is_verified: true, is_old: true },
-  { id: 3, type: 'govt-college', name: 'Rajshahi College', area: 'Rajshahi', district: 'Rajshahi', estd: 1873, is_verified: true, is_old: true },
-  { id: 4, type: 'govt-college', name: 'Chittagong College', area: 'Chittagong', district: 'Chittagong', estd: 1869, is_verified: true, is_old: true },
-  { id: 5, type: 'govt-college', name: 'Eden Mohila College', area: 'Dhaka', district: 'Dhaka', estd: 1878, is_verified: true, is_old: true },
-  { id: 6, type: 'private-college', name: 'Holy Cross College', area: 'Dhaka', district: 'Dhaka', estd: 1950, is_verified: true },
-  { id: 7, type: 'private-college', name: 'Viqarunnisa Noon College', area: 'Dhaka', district: 'Dhaka', estd: 1951, is_verified: true, is_old: true },
-  { id: 8, type: 'technical', name: 'Dhaka Polytechnic Institute', area: 'Dhaka', district: 'Dhaka', estd: 1955, is_verified: true },
-  { id: 9, type: 'madrasah', name: 'Tamirul Millat Kamil Madrasah', area: 'Dhaka', district: 'Dhaka', estd: 1963, is_verified: false },
-  { id: 10, type: 'govt-college', name: 'Comilla Victoria College', area: 'Comilla', district: 'Comilla', estd: 1899, is_verified: true, is_old: true },
-];
+/* Maps an education_institutions row (type=college) into this page's shape */
+function mapCollege(row) {
+  return {
+    id: row.id,
+    type: COLLEGE_TYPES.includes(row.subtype) ? row.subtype : 'other',
+    name: row.name,
+    area: row.address || row.district || '',
+    district: row.district,
+    is_verified: !!row.is_verified,
+  };
+}
 
 /* ── Animated Counter (replicated) ─────────────────────── */
 function Counter({ end, suffix = '' }) {
@@ -64,18 +63,16 @@ export default function College() {
   const { theme } = useTheme();
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
-  const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
   const isDark = theme === 'dark';
 
   useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
-  useEffect(() => {
-    setLoading(true);
-    const tmt = setTimeout(() => setLoading(false), 400);
-    return () => clearTimeout(tmt);
-  }, [search, typeFilter]);
 
-  const filtered = SAMPLE_COLLEGES.filter(item => {
+  /* Real data — managed from Admin → Education (type=college) */
+  const { data, loading } = useApi('/education', { params: { type: 'college', subtype: typeFilter || undefined, search: search || undefined } });
+  const colleges = (data?.rows || []).map(mapCollege);
+
+  const filtered = colleges.filter(item => {
     const matchesSearch = !search || item.name.toLowerCase().includes(search.toLowerCase()) || item.area.toLowerCase().includes(search.toLowerCase());
     const matchesType = !typeFilter || item.type === typeFilter;
     return matchesSearch && matchesType;

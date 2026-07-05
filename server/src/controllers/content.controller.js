@@ -33,13 +33,14 @@ exports.getDoctorById = async (req, res) => {
 
 exports.getPharmacies = async (req, res) => {
   try {
-    const { search, district, is_24h, page = 1, limit = 20 } = req.query;
+    const { search, district, is_24h, type, page = 1, limit = 20 } = req.query;
     const offset = (parseInt(page) - 1) * parseInt(limit);
     const where = ['is_active = 1'];
     const params = [];
     if (search)  { where.push('(name LIKE ? OR area LIKE ?)'); params.push(`%${search}%`, `%${search}%`); }
     if (district){ where.push('district = ?'); params.push(district); }
     if (is_24h)  { where.push('is_24h = 1'); }
+    if (type)    { where.push('type = ?'); params.push(type); }
     const [rows] = await db.execute(
       `SELECT * FROM pharmacies WHERE ${where.join(' AND ')} ORDER BY is_verified DESC, is_24h DESC, created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`,
       params
@@ -72,12 +73,13 @@ exports.getNotices = async (req, res) => {
 
 exports.getEducation = async (req, res) => {
   try {
-    const { search, type, district, page = 1, limit = 20 } = req.query;
+    const { search, type, subtype, district, page = 1, limit = 20 } = req.query;
     const offset = (parseInt(page) - 1) * parseInt(limit);
     const where = ['is_active = 1'];
     const params = [];
     if (search)   { where.push('(name LIKE ? OR address LIKE ?)'); params.push(`%${search}%`, `%${search}%`); }
     if (type)     { where.push('type = ?');     params.push(type); }
+    if (subtype)  { where.push('subtype = ?');  params.push(subtype); }
     if (district) { where.push('district = ?'); params.push(district); }
     const [rows] = await db.execute(
       `SELECT * FROM education_institutions WHERE ${where.join(' AND ')} ORDER BY is_verified DESC, created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`,
@@ -159,19 +161,19 @@ exports.adminGetPharmacies = async (req, res) => {
 };
 exports.adminCreatePharmacy = async (req, res) => {
   try {
-    const { name, area, district, division, phone, hours, is_24h, is_verified } = req.body;
+    const { name, area, district, division, phone, hours, type, is_24h, is_verified } = req.body;
     if (!name) return err(res, 'Name required', 400);
-    const [r] = await db.execute('INSERT INTO pharmacies (name,area,district,division,phone,hours,is_24h,is_verified,created_by) VALUES (?,?,?,?,?,?,?,?,?)',
-      [name, area||null, district||null, division||null, phone||null, hours||null, is_24h?1:0, is_verified?1:0, req.user.id]);
+    const [r] = await db.execute('INSERT INTO pharmacies (name,area,district,division,phone,hours,type,is_24h,is_verified,created_by) VALUES (?,?,?,?,?,?,?,?,?,?)',
+      [name, area||null, district||null, division||null, phone||null, hours||null, type||'retail', is_24h?1:0, is_verified?1:0, req.user.id]);
     const [[row]] = await db.execute('SELECT * FROM pharmacies WHERE id=?', [r.insertId]);
     ok(res, row, 'Created', 201);
   } catch { err(res, 'Failed', 500); }
 };
 exports.adminUpdatePharmacy = async (req, res) => {
   try {
-    const { name, area, district, division, phone, hours, is_24h, is_verified, is_active } = req.body;
-    await db.execute('UPDATE pharmacies SET name=?,area=?,district=?,division=?,phone=?,hours=?,is_24h=?,is_verified=?,is_active=? WHERE id=?',
-      [name, area||null, district||null, division||null, phone||null, hours||null, is_24h?1:0, is_verified?1:0, is_active!==false?1:0, req.params.id]);
+    const { name, area, district, division, phone, hours, type, is_24h, is_verified, is_active } = req.body;
+    await db.execute('UPDATE pharmacies SET name=?,area=?,district=?,division=?,phone=?,hours=?,type=?,is_24h=?,is_verified=?,is_active=? WHERE id=?',
+      [name, area||null, district||null, division||null, phone||null, hours||null, type||'retail', is_24h?1:0, is_verified?1:0, is_active!==false?1:0, req.params.id]);
     ok(res, null, 'Updated');
   } catch { err(res, 'Failed', 500); }
 };
@@ -196,19 +198,19 @@ exports.adminGetNotices = async (req, res) => {
 };
 exports.adminCreateNotice = async (req, res) => {
   try {
-    const { title, category, source, link, description, is_active } = req.body;
+    const { title, category, source, link, description, is_urgent, is_active } = req.body;
     if (!title) return err(res, 'Title required', 400);
-    const [r] = await db.execute('INSERT INTO notices (title,category,source,link,description,is_active,created_by) VALUES (?,?,?,?,?,?,?)',
-      [title, category||'general', source||null, link||null, description||null, is_active!==false?1:0, req.user.id]);
+    const [r] = await db.execute('INSERT INTO notices (title,category,source,link,description,is_urgent,is_active,created_by) VALUES (?,?,?,?,?,?,?,?)',
+      [title, category||'general', source||null, link||null, description||null, is_urgent?1:0, is_active!==false?1:0, req.user.id]);
     const [[row]] = await db.execute('SELECT * FROM notices WHERE id=?', [r.insertId]);
     ok(res, row, 'Created', 201);
   } catch { err(res, 'Failed', 500); }
 };
 exports.adminUpdateNotice = async (req, res) => {
   try {
-    const { title, category, source, link, description, is_active } = req.body;
-    await db.execute('UPDATE notices SET title=?,category=?,source=?,link=?,description=?,is_active=? WHERE id=?',
-      [title, category||'general', source||null, link||null, description||null, is_active?1:0, req.params.id]);
+    const { title, category, source, link, description, is_urgent, is_active } = req.body;
+    await db.execute('UPDATE notices SET title=?,category=?,source=?,link=?,description=?,is_urgent=?,is_active=? WHERE id=?',
+      [title, category||'general', source||null, link||null, description||null, is_urgent?1:0, is_active?1:0, req.params.id]);
     ok(res, null, 'Updated');
   } catch { err(res, 'Failed', 500); }
 };
@@ -232,19 +234,19 @@ exports.adminGetEducation = async (req, res) => {
 };
 exports.adminCreateEducation = async (req, res) => {
   try {
-    const { name, type, district, division, address, phone, website, description, is_verified } = req.body;
+    const { name, type, subtype, district, division, address, phone, website, description, is_verified } = req.body;
     if (!name) return err(res, 'Name required', 400);
-    const [r] = await db.execute('INSERT INTO education_institutions (name,type,district,division,address,phone,website,description,is_verified,created_by) VALUES (?,?,?,?,?,?,?,?,?,?)',
-      [name, type||'school', district||null, division||null, address||null, phone||null, website||null, description||null, is_verified?1:0, req.user.id]);
+    const [r] = await db.execute('INSERT INTO education_institutions (name,type,subtype,district,division,address,phone,website,description,is_verified,created_by) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
+      [name, type||'school', subtype||'other', district||null, division||null, address||null, phone||null, website||null, description||null, is_verified?1:0, req.user.id]);
     const [[row]] = await db.execute('SELECT * FROM education_institutions WHERE id=?', [r.insertId]);
     ok(res, row, 'Created', 201);
   } catch { err(res, 'Failed', 500); }
 };
 exports.adminUpdateEducation = async (req, res) => {
   try {
-    const { name, type, district, division, address, phone, website, description, is_verified, is_active } = req.body;
-    await db.execute('UPDATE education_institutions SET name=?,type=?,district=?,division=?,address=?,phone=?,website=?,description=?,is_verified=?,is_active=? WHERE id=?',
-      [name, type||'school', district||null, division||null, address||null, phone||null, website||null, description||null, is_verified?1:0, is_active!==false?1:0, req.params.id]);
+    const { name, type, subtype, district, division, address, phone, website, description, is_verified, is_active } = req.body;
+    await db.execute('UPDATE education_institutions SET name=?,type=?,subtype=?,district=?,division=?,address=?,phone=?,website=?,description=?,is_verified=?,is_active=? WHERE id=?',
+      [name, type||'school', subtype||'other', district||null, division||null, address||null, phone||null, website||null, description||null, is_verified?1:0, is_active!==false?1:0, req.params.id]);
     ok(res, null, 'Updated');
   } catch { err(res, 'Failed', 500); }
 };

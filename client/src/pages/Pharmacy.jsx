@@ -8,6 +8,7 @@ import {
   FiAward, FiCheckCircle
 } from 'react-icons/fi';
 import { MdLocalPharmacy } from 'react-icons/md';
+import { useApi } from '../hooks/useApi';
 
 /* ── Constants ──────────────────────────────────────────── */
 const PHARMACY_TYPES = ['retail', 'hospital-pharmacy', '24-7'];
@@ -17,17 +18,6 @@ const TYPE_META = {
   'hospital-pharmacy': { color: '#06B6D4', bg: 'rgba(6,182,212,0.1)', icon: MdLocalPharmacy, label: 'Hospital Pharmacy' },
   '24-7': { color: '#F59E0B', bg: 'rgba(245,158,11,0.1)', icon: MdLocalPharmacy, label: '24/7 Open' },
 };
-
-/* Sample data – replace with API call as needed */
-const SAMPLE_PHARMACIES = [
-  { id: 5, name: 'Nipa Medical', area: 'Mirpur', phone: '01XXXXXXXXX', hours: '8am-10pm', type: 'retail', rating: 4.3, is_verified: true },
-  { id: 6, name: 'ACI Pharmacy', area: 'Gulshan', phone: '01XXXXXXXXX', hours: '8am-11pm', type: 'retail', rating: 4.7, is_verified: true },
-  { id: 11, name: 'Lazz Pharma', area: 'Dhanmondi', phone: '01XXXXXXXXX', hours: '24/7', type: '24-7', rating: 4.5, is_verified: true },
-  { id: 12, name: 'Tamanna Pharmacy', area: 'Uttara', phone: '01XXXXXXXXX', hours: '9am-10pm', type: 'retail', rating: 3.9, is_verified: false },
-  { id: 20, name: 'Square Hospital Pharmacy', area: 'Dhaka', phone: '02-8159457', hours: '24/7', type: 'hospital-pharmacy', rating: 4.8, is_verified: true },
-  { id: 21, name: 'Apollo Pharmacy', area: 'Dhaka', phone: '02-8836000', hours: '8am-12am', type: 'hospital-pharmacy', rating: 4.6, is_verified: true },
-  { id: 22, name: 'MediPlus Pharmacy', area: 'Chittagong', phone: '01XXXXXXXXX', hours: '7am-11pm', type: 'retail', rating: 4.0, is_verified: false },
-];
 
 /* ── Animated Counter (reused from Health) ────────────── */
 function Counter({ end, suffix = '' }) {
@@ -63,19 +53,12 @@ export default function Pharmacy() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState(searchParams.get('type') || '');
-  const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
   useEffect(() => {
     setTypeFilter(searchParams.get('type') || '');
   }, [searchParams]);
-
-  useEffect(() => {
-    setLoading(true);
-    const tmt = setTimeout(() => setLoading(false), 400);
-    return () => clearTimeout(tmt);
-  }, [search, typeFilter]);
 
   const handleTypeChange = (key) => {
     const newParams = new URLSearchParams(searchParams);
@@ -84,10 +67,14 @@ export default function Pharmacy() {
     setSearchParams(newParams);
   };
 
-  const filtered = SAMPLE_PHARMACIES.filter(item => {
+  /* Real data — managed from Admin → Directory → Pharmacies */
+  const { data, loading } = useApi('/pharmacies', { params: { type: typeFilter || undefined, search: search || undefined } });
+  const pharmacies = data?.rows || [];
+
+  const filtered = pharmacies.filter(item => {
     const matchesSearch = !search ||
       item.name.toLowerCase().includes(search.toLowerCase()) ||
-      item.area.toLowerCase().includes(search.toLowerCase());
+      (item.area || '').toLowerCase().includes(search.toLowerCase());
     const matchesType = !typeFilter || item.type === typeFilter;
     return matchesSearch && matchesType;
   });
@@ -242,7 +229,7 @@ export default function Pharmacy() {
                 color: !typeFilter ? '#fff' : 'var(--text-muted)',
               }}
             >
-              {t("pharmacy.all") || "All"}
+              {t("All") || "All"}
             </button>
             {PHARMACY_TYPES.map(tp => {
               const m = TYPE_META[tp];

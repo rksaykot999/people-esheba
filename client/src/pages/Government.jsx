@@ -5,6 +5,7 @@ import {
   FiFilter, FiArrowRight, FiCheckCircle, FiShield, FiExternalLink
 } from 'react-icons/fi';
 import { useTheme } from '../context/ThemeContext';
+import { useApi } from '../hooks/useApi';
 
 const CATS = [
   { key: 'all', label: 'All Services', color: '#8B5CF6' },
@@ -15,52 +16,22 @@ const CATS = [
   { key: 'utility', label: 'Utility Bills', color: '#06B6D4' },
 ];
 
-const SAMPLE_GOV = [
-  // --- NID & Identity ---
-  {
-    id: 101, cat: 'nid', name: 'NID Bangladesh', area: 'Election Commission', phone: '105', rating: 4.5, reviews: '1M+', badge: 'Identity',
-    price: 'Free / Reissue Fee', desc: 'Download your smart NID card, correct information, or track your application status online.',
-    features: ['Biometric Verification', 'Digital Copy']
-  },
-  {
-    id: 102, cat: 'nid', name: 'Birth Registration', area: 'Local Ward/Union', phone: '16122', rating: 4.1, reviews: '500k+', badge: 'Official',
-    price: 'Govt Fee', desc: 'Apply for new birth certificates or verify existing ones through the BDRIS portal.',
-    features: ['Online Verification', 'Global Validity']
-  },
-
-  // --- Passport ---
-  {
-    id: 103, cat: 'passport', name: 'E-Passport Portal', area: 'DIP Bangladesh', phone: '16445', rating: 4.8, reviews: '2M+', badge: 'Travel',
-    price: 'Fee starts 4025 BDT', desc: 'Official portal for E-Passport applications, appointment scheduling, and status tracking.',
-    features: ['Appointment System', 'SMS Alerts']
-  },
-
-  // --- Gov Schemes ---
-  {
-    id: 104, cat: 'schemes', name: 'Protibondhi Allowance', area: 'Social Services', phone: '1098', rating: 4.7, reviews: '100k+', badge: 'Social Safety',
-    price: 'Monthly Support', desc: 'Monthly financial assistance program for persons with disabilities across Bangladesh.',
-    features: ['Mobile Banking Pay', 'Verified List']
-  },
-  {
-    id: 105, cat: 'schemes', name: 'Old Age Allowance', area: 'Ministry of Social Welfare', phone: '16224', rating: 4.6, reviews: '80k+', badge: 'Social Safety',
-    price: 'Direct Transfer', desc: 'Financial security program providing monthly stipends to senior citizens in rural and urban areas.',
-    features: ['Easy Registration', 'Transparent']
-  },
-
-  // --- Land Services ---
-  {
-    id: 106, cat: 'land', name: 'E-Mutation (Land)', area: 'Land Office', phone: '16122', rating: 4.3, reviews: '300k+', badge: 'Property',
-    price: 'Fixed Govt Fee', desc: 'Apply for land mutation (Namari) online without visiting physical offices for initial steps.',
-    features: ['Digital Records', 'Track Progress']
-  },
-
-  // --- Utility ---
-  {
-    id: 107, cat: 'utility', name: 'EkPay', area: 'a2i Platform', phone: '333', rating: 4.9, reviews: '400k+', badge: 'Payments',
-    price: 'Zero Charge', desc: 'Integrated payment gateway to pay all government utility bills (Water, Gas, Electricity) in one place.',
-    features: ['Secure Gateway', 'Instant Receipt']
-  }
-];
+/* Maps a directory_listings row (category=government) into this page's shape */
+function mapGovService(row) {
+  return {
+    id: row.id,
+    cat: row.subtype,
+    name: row.name,
+    area: row.area || row.district || 'Nationwide',
+    phone: row.phone,
+    rating: Number(row.rating) || 0,
+    reviews: null,
+    badge: row.badge_key || CATS.find(c => c.key === row.subtype)?.label,
+    price: row.price_info || 'Contact for details',
+    desc: row.description,
+    features: row.features ? row.features.split(',').map(f => f.trim()) : [],
+  };
+}
 
 export default function Government() {
   const { theme } = useTheme();
@@ -76,11 +47,15 @@ export default function Government() {
     setActiveCat(key);
   };
 
-  const filtered = SAMPLE_GOV.filter(item => {
+  /* Real data — managed from Admin → Directory → Government */
+  const { data, loading } = useApi('/directory', { params: { category: 'government', subtype: activeCat !== 'all' ? activeCat : undefined, search: search || undefined } });
+  const govServices = (data?.rows || []).map(mapGovService);
+
+  const filtered = govServices.filter(item => {
     const matchCat = activeCat === 'all' || item.cat === activeCat;
-    const matchSearch = !search || 
+    const matchSearch = !search ||
       item.name.toLowerCase().includes(search.toLowerCase()) ||
-      item.desc.toLowerCase().includes(search.toLowerCase());
+      (item.desc || '').toLowerCase().includes(search.toLowerCase());
     return matchCat && matchSearch;
   });
 
@@ -174,6 +149,11 @@ export default function Government() {
         </div>
 
         {/* Grid Results */}
+        {loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '4rem' }}><div className="spinner"/></div>
+        ) : filtered.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-muted)' }}>No government services listed yet for this category.</div>
+        ) : (
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
@@ -228,6 +208,7 @@ export default function Government() {
             </div>
           ))}
         </div>
+        )}
 
       </div>
     </div>

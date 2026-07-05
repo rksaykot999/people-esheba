@@ -8,6 +8,7 @@ import {
 import {
   MdSchool, MdAccountBalance, MdBusinessCenter, MdPublic, MdVolunteerActivism
 } from 'react-icons/md';
+import { useApi } from '../hooks/useApi';
 
 /* ── Constants ──────────────────────────────────────────── */
 const SCHOLARSHIP_TYPES = ['govt', 'ngo', 'international', 'corporate', 'other'];
@@ -20,19 +21,19 @@ const TYPE_META = {
   'other':         { color: '#E63946', bg: 'rgba(230,57,70,0.1)', icon: MdSchool, labelKey: 'scholarship.type.other' },
 };
 
-/* Extended sample data */
-const SAMPLE_SCHOLARSHIPS = [
-  { id: 1, type: 'govt', name: 'Prime Minister Education Stipend', area: 'Nationwide', amount: 'Tk 2,000 - 10,000 / year', is_verified: true, is_old: true, badge: 'Merit + Need' },
-  { id: 2, type: 'govt', name: 'Board Scholarship (SSC/HSC)', area: 'All Districts', amount: 'Tk 3,000 - 5,000 / month', is_verified: true, is_old: true, badge: 'Merit Based' },
-  { id: 3, type: 'govt', name: 'District Council Scholarship', area: 'District Level', amount: 'One‑time Tk 5,000 - 15,000', is_verified: true, badge: 'Underprivileged' },
-  { id: 4, type: 'ngo', name: 'BRAC Education Grant', area: 'Nationwide (rural)', amount: 'Tuition + Materials', is_verified: true, badge: 'Need Based' },
-  { id: 5, type: 'ngo', name: 'Grameen Bank Higher Education Stipend', area: 'Selected Upazilas', amount: 'Tk 500 - 2,000 / month', is_verified: false, badge: 'Female Preference' },
-  { id: 6, type: 'international', name: 'Commonwealth Scholarship', area: 'UK / Bangladesh', amount: 'Full Tuition + Living', is_verified: true, badge: 'Global' },
-  { id: 7, type: 'international', name: 'Erasmus Mundus Joint Master', area: 'Europe (Multiple)', amount: '€1,000 / month + Travel', is_verified: true, badge: 'Merit' },
-  { id: 8, type: 'corporate', name: 'Dutch‑Bangla Bank Scholarship', area: 'Nationwide', amount: 'Tk 10,000 - 25,000 / year', is_verified: true, badge: 'Merit + Need' },
-  { id: 9, type: 'corporate', name: 'IFIC Bank Education Support', area: 'Nationwide', amount: 'Tuition Fee Coverage', is_verified: false, badge: 'Merit Based' },
-  { id: 10, type: 'other', name: 'UGC Special Grant', area: 'University Level', amount: 'Tk 5,000 - 30,000 / year', is_verified: true, badge: 'Research' },
-];
+/* Maps a scholarships table row into what this page renders */
+function mapScholarship(row) {
+  return {
+    id: row.id,
+    type: SCHOLARSHIP_TYPES.includes(row.category) ? row.category : 'other',
+    name: row.title,
+    area: row.provider || 'Nationwide',
+    amount: row.amount || 'Contact provider',
+    is_verified: true, // admin-published listings are treated as verified
+    badge: row.deadline ? `Deadline: ${new Date(row.deadline).toLocaleDateString()}` : undefined,
+    link: row.link,
+  };
+}
 
 /* ── Animated Counter (reused) ──────────────────────────── */
 function Counter({ end, suffix = '' }) {
@@ -63,18 +64,16 @@ export default function Scholarships() {
   const { theme } = useTheme();
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
-  const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
   const isDark = theme === 'dark';
 
   useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
-  useEffect(() => {
-    setLoading(true);
-    const tmt = setTimeout(() => setLoading(false), 400);
-    return () => clearTimeout(tmt);
-  }, [search, typeFilter]);
 
-  const filtered = SAMPLE_SCHOLARSHIPS.filter(item => {
+  /* Real data — managed from Admin → Scholarships */
+  const { data, loading } = useApi('/scholarships', { params: { category: typeFilter || undefined, search: search || undefined } });
+  const scholarships = (data?.rows || []).map(mapScholarship);
+
+  const filtered = scholarships.filter(item => {
     const matchesSearch = !search || item.name.toLowerCase().includes(search.toLowerCase()) || item.area.toLowerCase().includes(search.toLowerCase());
     const matchesType = !typeFilter || item.type === typeFilter;
     return matchesSearch && matchesType;

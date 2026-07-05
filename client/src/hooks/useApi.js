@@ -9,6 +9,11 @@ export const useApi = (url, options = {}) => {
   const [loading, setLoading] = useState(true);
   const [error,   setError]   = useState(null);
 
+  // Stable string key so the effect actually reacts to filter/param changes,
+  // not just to the URL. Without this, changing a filter (e.g. category)
+  // silently never refetches because `options` is a new object every render.
+  const paramsKey = JSON.stringify(options.params || {});
+
   const fetch = useCallback(async (overrideOptions = {}) => {
     try {
       setLoading(true); setError(null);
@@ -19,9 +24,9 @@ export const useApi = (url, options = {}) => {
     } finally {
       setLoading(false);
     }
-  }, [url]); // eslint-disable-line
+  }, [url, paramsKey]); // eslint-disable-line
 
-  useEffect(() => { if (url) fetch(); }, [url]); // eslint-disable-line
+  useEffect(() => { if (url) fetch(); }, [url, paramsKey]); // eslint-disable-line
 
   return { data, loading, error, refetch: fetch };
 };

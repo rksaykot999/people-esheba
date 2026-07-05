@@ -153,6 +153,47 @@ exports.deleteJob = async (req, res) => {
   ok(res, null, 'Deleted');
 };
 
+exports.createJob = async (req, res) => {
+  try {
+    const { title, company, description, type, location, division, district, salary, salary_min, salary_max, deadline, is_active } = req.body;
+    if (!title || !company) return err(res, 'Title and company required', 400);
+    // Support both salary (string) and salary_min/salary_max (numbers) from different form layouts
+    const sMin = salary_min || null;
+    const sMax = salary_max || null;
+    const desc = description || (salary ? `Salary: ${salary}` : '') || '';
+    const dist = district || location || null;
+    const status = (is_active === false || is_active === 0) ? 'draft' : 'active';
+    const [r] = await db.execute(
+      `INSERT INTO jobs (user_id,title,company,description,type,salary_min,salary_max,division,district,deadline,status)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+      [req.user.id, title, company, desc, type||'full-time', sMin, sMax, division||null, dist, deadline||null, status]
+    );
+    const [[job]] = await db.execute(
+      `SELECT j.*, u.name AS poster_name FROM jobs j JOIN users u ON j.user_id=u.id WHERE j.id=?`,
+      [r.insertId]
+    );
+    ok(res, job, 'Job posted', 201);
+  } catch (e) { console.error(e); err(res, 'Failed to post job', 500); }
+};
+
+exports.updateJob = async (req, res) => {
+  try {
+    const { title, company, description, type, location, division, district, salary, salary_min, salary_max, deadline, is_active, status } = req.body;
+    const [[job]] = await db.execute('SELECT id FROM jobs WHERE id=?', [req.params.id]);
+    if (!job) return err(res, 'Not found', 404);
+    const sMin = salary_min || null;
+    const sMax = salary_max || null;
+    const desc = description || '';
+    const dist = district || location || null;
+    const jobStatus = status || ((is_active === false || is_active === 0) ? 'draft' : 'active');
+    await db.execute(
+      `UPDATE jobs SET title=?,company=?,description=?,type=?,salary_min=?,salary_max=?,division=?,district=?,deadline=?,status=? WHERE id=?`,
+      [title, company, desc, type||'full-time', sMin, sMax, division||null, dist, deadline||null, jobStatus, req.params.id]
+    );
+    ok(res, null, 'Job updated');
+  } catch (e) { console.error(e); err(res, 'Failed to update job', 500); }
+};
+
 /* ── Reports ──────────────────────────────────────────────── */
 exports.getReports = async (req, res) => {
   const [rows] = await db.execute(
@@ -304,7 +345,7 @@ exports.bulkImport = async (req, res) => {
     const { table, rows } = req.body;
     if (!table || !Array.isArray(rows) || rows.length === 0) return err(res, 'Invalid data', 400);
 
-    const allowedTables = ['doctors', 'pharmacies', 'notices', 'education_institutions', 'scholarships'];
+    const allowedTables = ['doctors', 'pharmacies', 'notices', 'education_institutions', 'scholarships', 'jobs'];
     if (!allowedTables.includes(table)) return err(res, 'Invalid table', 400);
 
     const columns = Object.keys(rows[0]).filter(k => k !== 'id');

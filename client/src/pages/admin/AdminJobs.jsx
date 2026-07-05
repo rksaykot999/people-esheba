@@ -42,13 +42,25 @@ export default function AdminJobs() {
     e.preventDefault();
     if (!form.title || !form.company) return toast.error('Title and company required');
     setSaving(true);
+    // Map form fields to API schema
+    const payload = {
+      title:       form.title,
+      company:     form.company,
+      type:        form.type,
+      description: form.description,
+      district:    form.location || form.district || '',
+      division:    form.division,
+      salary:      form.salary,
+      deadline:    form.deadline || null,
+      is_active:   form.is_active,
+    };
     try {
       if (editing) {
-        await api.put(`/admin/jobs/${editing}`, form);
+        await api.put(`/admin/jobs/${editing}`, payload);
         toast.success('Job updated');
-        setItems(i => i.map(x => x.id === editing ? { ...x, ...form } : x));
+        setItems(i => i.map(x => x.id === editing ? { ...x, ...form, district: payload.district } : x));
       } else {
-        const { data } = await api.post('/admin/jobs', form);
+        const { data } = await api.post('/admin/jobs', payload);
         toast.success('Job posted');
         setItems(i => [data.data, ...i]);
         setTotal(t => t + 1);

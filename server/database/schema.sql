@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS donations (
   user_id       INT          NOT NULL,
   title         VARCHAR(200) NOT NULL,
   description   TEXT         NOT NULL,
-  category      ENUM('medical','education','disaster','food','other') NOT NULL DEFAULT 'other',
+  category      ENUM('medical','education','disaster','food','agriculture','other') NOT NULL DEFAULT 'other',
   amount_needed DECIMAL(12,2) NOT NULL DEFAULT 0,
   amount_raised DECIMAL(12,2) NOT NULL DEFAULT 0,
   image         VARCHAR(255),
@@ -282,6 +282,7 @@ CREATE TABLE IF NOT EXISTS pharmacies (
   id          INT          PRIMARY KEY AUTO_INCREMENT,
   name        VARCHAR(200) NOT NULL,
   area        VARCHAR(100),
+  type        ENUM('retail','hospital-pharmacy','24-7') NOT NULL DEFAULT 'retail',
   district    VARCHAR(60),
   division    VARCHAR(60),
   phone       VARCHAR(30),
@@ -296,14 +297,45 @@ CREATE TABLE IF NOT EXISTS pharmacies (
   INDEX idx_district (district)
 ) ENGINE=InnoDB;
 
--- ── Notices ───────────────────────────────────────────────────
+-- ── Directory Listings (Hospitals / Services / Government / Finance) ──
+-- Generic reusable listing table so new public categories don't need
+-- a bespoke table + controller each time. `category` picks the page,
+-- `subtype` picks the filter chip shown on that page.
+CREATE TABLE IF NOT EXISTS directory_listings (
+  id          INT          PRIMARY KEY AUTO_INCREMENT,
+  category    ENUM('hospital','service','government','finance') NOT NULL,
+  subtype     VARCHAR(60)  NOT NULL DEFAULT 'other',
+  name        VARCHAR(200) NOT NULL,
+  description TEXT,
+  area        VARCHAR(100),
+  district    VARCHAR(60),
+  division    VARCHAR(60),
+  address     VARCHAR(255),
+  phone       VARCHAR(50),
+  website     VARCHAR(300),
+  rating      DECIMAL(2,1) NOT NULL DEFAULT 0,
+  badge_key   VARCHAR(60),
+  price_info  VARCHAR(120),
+  features    VARCHAR(400),
+  is_verified TINYINT(1)   NOT NULL DEFAULT 0,
+  is_active   TINYINT(1)   NOT NULL DEFAULT 1,
+  created_by  INT,
+  created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+  INDEX idx_category (category),
+  INDEX idx_subtype  (subtype),
+  INDEX idx_district (district)
+) ENGINE=InnoDB;
+
 CREATE TABLE IF NOT EXISTS notices (
   id          INT          PRIMARY KEY AUTO_INCREMENT,
   title       VARCHAR(300) NOT NULL,
-  category    ENUM('govt','education','job','health','general') NOT NULL DEFAULT 'general',
+  category    ENUM('academic','career','scholarship','government','donate','general') NOT NULL DEFAULT 'general',
   source      VARCHAR(200),
   link        VARCHAR(500),
   description TEXT,
+  is_urgent   TINYINT(1)   NOT NULL DEFAULT 0,
   is_active   TINYINT(1)   NOT NULL DEFAULT 1,
   created_by  INT,
   created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -318,6 +350,7 @@ CREATE TABLE IF NOT EXISTS education_institutions (
   id          INT          PRIMARY KEY AUTO_INCREMENT,
   name        VARCHAR(200) NOT NULL,
   type        ENUM('school','college','university') NOT NULL DEFAULT 'school',
+  subtype     VARCHAR(60)  NOT NULL DEFAULT 'other',
   district    VARCHAR(60),
   division    VARCHAR(60),
   address     VARCHAR(255),

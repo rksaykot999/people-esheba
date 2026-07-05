@@ -100,6 +100,27 @@ const TEMPLATES = {
       { title: 'BUET Merit Scholarship', provider: 'BUET', deadline: '2025-03-15', amount: 'BDT 6,000/month', link: 'https://buet.ac.bd/scholarship', description: 'Merit-based scholarship for undergraduate students.', category: 'merit', is_active: 1 },
     ],
   },
+  jobs: {
+    label: '💼 Jobs',
+    columns: ['title', 'company', 'type', 'description', 'district', 'division', 'salary_min', 'salary_max', 'deadline', 'is_remote', 'status'],
+    notes: [
+      'title — Job title (required)',
+      'company — Company name (required)',
+      'type — e.g. full-time, part-time, freelance, internship, remote, govt',
+      'description — Job description (required)',
+      'district — e.g. Dhaka',
+      'division — e.g. Dhaka',
+      'salary_min — Minimum salary (number)',
+      'salary_max — Maximum salary (number)',
+      'deadline — Date in YYYY-MM-DD format e.g. 2024-12-31',
+      'is_remote — 1 = remote, 0 = on-site',
+      'status — active, draft, closed',
+    ],
+    sample: [
+      { title: 'Software Engineer', company: 'Tech Solutions', type: 'full-time', description: 'React/Node Developer', district: 'Dhaka', division: 'Dhaka', salary_min: 40000, salary_max: 60000, deadline: '2024-12-31', is_remote: 1, status: 'active' },
+      { title: 'Data Entry Operator', company: 'ABC Corp', type: 'part-time', description: 'Basic Excel required', district: 'Chittagong', division: 'Chittagong', salary_min: 15000, salary_max: 20000, deadline: '2024-10-31', is_remote: 0, status: 'active' },
+    ],
+  },
 };
 
 export default function BulkImportModal({ isOpen, onClose, table, onImportSuccess }) {

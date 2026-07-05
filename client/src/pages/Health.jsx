@@ -9,6 +9,7 @@ import {
   FiActivity, FiPhone, FiUser, FiDroplet
 } from 'react-icons/fi';
 import { MdLocalHospital, MdMedicalServices, MdLocalPharmacy } from 'react-icons/md';
+import { useApi } from '../hooks/useApi';
 
 /* ── Constants ──────────────────────────────────────────── */
 const TYPES = ['govt-hospital', 'private-hospital'];
@@ -18,49 +19,20 @@ const TYPE_META = {
   'private-hospital': { color: '#06B6D4', bg: 'rgba(6,182,212,0.1)', icon: MdMedicalServices, label: 'Private Hospital' },
 };
 
-/* Sample data – replace with API call as needed */
-const SAMPLE = [
-  {
-    id: 1, type: 'govt-hospital', name: 'Dhaka Medical College Hospital',
-    area: 'Dhaka', district: 'Dhaka', phone: '02-55165001', rating: 4.5,
-    is_verified: true, badgeKey: 'badge_emergency_24_7'
-  },
-  {
-    id: 2, type: 'govt-hospital', name: 'BSMMU (PG Hospital)',
-    area: 'Dhaka', district: 'Dhaka', phone: '02-9661068', rating: 4.7,
-    is_verified: true, badgeKey: 'badge_research_center'
-  },
-  {
-    id: 3, type: 'govt-hospital', name: 'Shaheed Suhrawardy Medical College and Hospital',
-    area: 'Dhaka', district: 'Dhaka', phone: '02-9661068', rating: 4.2,
-    is_verified: true, badgeKey: 'badge_research_center'
-  },
-  {
-    id: 4, type: 'private-hospital', name: 'Square Hospital Ltd.',
-    area: 'Dhaka', district: 'Dhaka', phone: '02-8159457', rating: 4.8,
-    is_verified: true, badgeKey: 'badge_premium_care'
-  },
-  {
-    id: 5, type: 'private-hospital', name: 'United Hospital',
-    area: 'Dhaka', district: 'Dhaka', phone: '02-8836000', rating: 4.6,
-    is_verified: true, badgeKey: 'badge_specialized'
-  },
-  {
-    id: 6, type: 'private-hospital', name: 'Continental Hospital PLC',
-    area: 'Dhaka', district: 'Dhaka', phone: '02-8836000', rating: 3.8,
-    is_verified: false, badgeKey: null
-  },
-  {
-    id: 7, type: 'govt-hospital', name: 'Barishal General Hospital',
-    area: 'Barishal', district: 'Barishal', phone: '02-9661068', rating: 3.9,
-    is_verified: true, badgeKey: 'badge_emergency_24_7'
-  },
-  {
-    id: 8, type: 'private-hospital', name: 'Apollo Hospitals Dhaka',
-    area: 'Dhaka', district: 'Dhaka', phone: '02-8836000', rating: 4.7,
-    is_verified: true, badgeKey: 'badge_specialized'
-  },
-];
+/* Maps a directory_listings row (subtype) into the shape this page renders */
+function mapListing(row) {
+  return {
+    id: row.id,
+    type: row.subtype,
+    name: row.name,
+    area: row.area || row.district || '',
+    district: row.district,
+    phone: row.phone,
+    rating: Number(row.rating) || 0,
+    is_verified: !!row.is_verified,
+    badgeKey: row.badge_key || null,
+  };
+}
 
 /* ── Animated Counter ─────────────────────────────────── */
 function Counter({ end, suffix = '' }) {
@@ -96,19 +68,12 @@ export default function Health() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState(searchParams.get('type') || '');
-  const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
   useEffect(() => {
     setTypeFilter(searchParams.get('type') || '');
   }, [searchParams]);
-
-  useEffect(() => {
-    setLoading(true);
-    const tmt = setTimeout(() => setLoading(false), 400);
-    return () => clearTimeout(tmt);
-  }, [search, typeFilter]);
 
   const handleTypeChange = (key) => {
     const newParams = new URLSearchParams(searchParams);
@@ -117,7 +82,11 @@ export default function Health() {
     setSearchParams(newParams);
   };
 
-  const filtered = SAMPLE.filter(item => {
+  /* Real data from the admin-managed directory (category = hospital) */
+  const { data, loading } = useApi('/directory', { params: { category: 'hospital' } });
+  const hospitals = (data?.rows || []).map(mapListing);
+
+  const filtered = hospitals.filter(item => {
     const matchesSearch = !search ||
       item.name.toLowerCase().includes(search.toLowerCase()) ||
       item.area.toLowerCase().includes(search.toLowerCase());

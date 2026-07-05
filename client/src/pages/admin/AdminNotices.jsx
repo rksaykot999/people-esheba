@@ -5,8 +5,8 @@ import toast from 'react-hot-toast';
 import { FiPlus, FiTrash2, FiEdit2, FiX, FiSave, FiSearch, FiExternalLink, FiUploadCloud } from 'react-icons/fi';
 import BulkImportModal from '../../components/admin/BulkImportModal';
 
-const CATS = ['govt','education','job','health','general'];
-const BLANK = { title:'', category:'general', source:'', link:'', description:'', is_active:true };
+const CATS = ['academic','career','scholarship','government','donate','general'];
+const BLANK = { title:'', category:'general', source:'', link:'', description:'', is_urgent:false, is_active:true };
 
 export default function AdminNotices() {
   const { isBn } = useLang();
@@ -34,7 +34,7 @@ export default function AdminNotices() {
   useEffect(() => { fetchData(); }, [page, catFilter]); // eslint-disable-line
 
   const openAdd  = () => { setForm(BLANK); setEditing(null); setShowForm(true); };
-  const openEdit = (it) => { setForm({...it, is_active:!!it.is_active}); setEditing(it.id); setShowForm(true); };
+  const openEdit = (it) => { setForm({...it, is_urgent:!!it.is_urgent, is_active:!!it.is_active}); setEditing(it.id); setShowForm(true); };
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -63,7 +63,7 @@ export default function AdminNotices() {
   };
 
   const F = (k,v) => setForm(f=>({...f,[k]:v}));
-  const CAT_COLOR = { govt:'badge-red', education:'badge-cyan', job:'badge-green', health:'badge-amber', general:'badge-gray' };
+  const CAT_COLOR = { academic:'badge-cyan', career:'badge-green', scholarship:'badge-amber', government:'badge-red', donate:'badge-pink', general:'badge-gray' };
 
   return (
     <div>
@@ -159,6 +159,10 @@ export default function AdminNotices() {
               <label style={{display:'flex',alignItems:'center',gap:8,cursor:'pointer',fontSize:'0.85rem',color:'var(--text-muted)'}}>
                 <input type="checkbox" checked={!!form.is_active} onChange={e=>F('is_active',e.target.checked)} style={{width:15,height:15,accentColor:'var(--green)'}}/>
                 {isBn?'সক্রিয় (প্রকাশিত)':'Active (Published)'}
+              </label>
+              <label style={{display:'flex',alignItems:'center',gap:8,cursor:'pointer',fontSize:'0.85rem',color:'var(--text-muted)'}}>
+                <input type="checkbox" checked={!!form.is_urgent} onChange={e=>F('is_urgent',e.target.checked)} style={{width:15,height:15,accentColor:'var(--red)'}}/>
+                {isBn?'জরুরি হিসেবে চিহ্নিত করুন':'Mark as Urgent'}
               </label>
               <div style={{display:'flex',gap:10,marginTop:4}}>
                 <button type="submit" className="btn btn-primary" style={{flex:1,justifyContent:'center'}} disabled={saving}>{saving?<div className="spinner spinner-sm"/>:<><FiSave size={13}/>{isBn?'সংরক্ষণ':'Save'}</>}</button>

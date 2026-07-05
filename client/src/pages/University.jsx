@@ -6,6 +6,7 @@ import {
   FiExternalLink, FiBook, FiNavigation, FiGlobe, FiHeart
 } from 'react-icons/fi';
 import { MdAccountBalance, MdBusiness, MdScience, MdEngineering, MdLocalHospital } from 'react-icons/md';
+import { useApi } from '../hooks/useApi';
 
 const UNI_TYPES = ['public', 'private', 'engineering', 'medical', 'other'];
 
@@ -17,18 +18,17 @@ const TYPE_META = {
   'other':       { color: '#F59E0B', bg: 'rgba(245,158,11,0.1)', icon: MdScience,         label: 'Other' },
 };
 
-const SAMPLE_UNIVERSITIES = [
-  { id: 1,  type: 'public',      name: 'University of Dhaka',          area: 'Dhaka',      district: 'Dhaka',      estd: 1921, is_verified: true, is_old: true },
-  { id: 2,  type: 'public',      name: 'University of Rajshahi',       area: 'Rajshahi',   district: 'Rajshahi',   estd: 1953, is_verified: true, is_old: true },
-  { id: 3,  type: 'public',      name: 'University of Chittagong',     area: 'Chittagong', district: 'Chittagong', estd: 1966, is_verified: true },
-  { id: 4,  type: 'engineering', name: 'BUET',                         area: 'Dhaka',      district: 'Dhaka',      estd: 1962, is_verified: true, is_old: true },
-  { id: 5,  type: 'medical',     name: 'Dhaka Medical College',        area: 'Dhaka',      district: 'Dhaka',      estd: 1946, is_verified: true, is_old: true },
-  { id: 6,  type: 'private',     name: 'BRAC University',              area: 'Dhaka',      district: 'Dhaka',      estd: 2001, is_verified: true },
-  { id: 7,  type: 'private',     name: 'North South University',       area: 'Dhaka',      district: 'Dhaka',      estd: 1992, is_verified: true },
-  { id: 8,  type: 'public',      name: 'Jahangirnagar University',     area: 'Savar',      district: 'Dhaka',      estd: 1970, is_verified: true },
-  { id: 9,  type: 'engineering', name: 'CUET',                         area: 'Chittagong', district: 'Chittagong', estd: 1968, is_verified: true },
-  { id: 10, type: 'private',     name: 'Independent University (IUB)', area: 'Dhaka',      district: 'Dhaka',      estd: 1993, is_verified: true },
-];
+/* Maps an education_institutions row (type=university) into this page's shape */
+function mapUniversity(row) {
+  return {
+    id: row.id,
+    type: UNI_TYPES.includes(row.subtype) ? row.subtype : 'other',
+    name: row.name,
+    area: row.address || row.district || '',
+    district: row.district,
+    is_verified: !!row.is_verified,
+  };
+}
 
 function Counter({ end, suffix = '' }) {
   const [count, setCount] = useState(0);
@@ -57,18 +57,16 @@ export default function University() {
   const { theme } = useTheme();
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
-  const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
   const isDark = theme === 'dark';
 
   useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
-  useEffect(() => {
-    setLoading(true);
-    const tmt = setTimeout(() => setLoading(false), 400);
-    return () => clearTimeout(tmt);
-  }, [search, typeFilter]);
 
-  const filtered = SAMPLE_UNIVERSITIES.filter(u => {
+  /* Real data — managed from Admin → Education (type=university) */
+  const { data, loading } = useApi('/education', { params: { type: 'university', subtype: typeFilter || undefined, search: search || undefined } });
+  const universities = (data?.rows || []).map(mapUniversity);
+
+  const filtered = universities.filter(u => {
     const matchSearch = !search ||
       u.name.toLowerCase().includes(search.toLowerCase()) ||
       u.area.toLowerCase().includes(search.toLowerCase());

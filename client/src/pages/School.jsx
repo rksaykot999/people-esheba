@@ -8,27 +8,30 @@ import {
   FiZap, FiCopy, FiCheckCircle, FiHeart, FiSmile
 } from 'react-icons/fi';
 import { MdSchool, MdLocalLibrary, MdScience, MdEmojiObjects } from 'react-icons/md';
+import { useApi } from '../hooks/useApi';
 
 /* ── Constants ──────────────────────────────────────────── */
-const TYPES = ['govt-school', 'private-school', 'madrasa', 'college', 'other'];
+const TYPES = ['govt-school', 'private-school', 'madrasa', 'other'];
 
 const TYPE_META = {
   'govt-school': { color: '#E63946', bg: 'rgba(230,57,70,0.1)', icon: MdSchool, label: 'Govt School' },
   'private-school': { color: '#06B6D4', bg: 'rgba(6,182,212,0.1)', icon: MdLocalLibrary, label: 'Private School' },
   'madrasa': { color: '#8B5CF6', bg: 'rgba(139,92,246,0.1)', icon: MdEmojiObjects, label: 'Madrasa' },
-  'college': { color: '#F59E0B', bg: 'rgba(245,158,11,0.1)', icon: MdScience, label: 'College' },
   'other': { color: '#10B981', bg: 'rgba(16,185,129,0.1)', icon: MdSchool, label: 'Other' },
 };
 
-/* Sample data – replace with API call as needed */
-const SAMPLE_SCHOOLS = [
-  { id: 1, type: 'govt-school', name: 'Government Laboratory High School', area: 'Dhaka', district: 'Dhaka', estd: 1954, badge: 'Govt School', is_verified: true, is_old: true },
-  { id: 2, type: 'govt-school', name: 'Rajshahi Collegiate School', area: 'Rajshahi', district: 'Rajshahi', estd: 1828, badge: 'Govt School', is_verified: true, is_old: true },
-  { id: 3, type: 'govt-school', name: 'Chittagong Collegiate School', area: 'Chittagong', district: 'Chittagong', estd: 1836, badge: 'Govt School', is_verified: true, is_old: true },
-  { id: 4, type: 'govt-school', name: 'Zilla School, Mymensingh', area: 'Mymensingh', district: 'Mymensingh', estd: 1853, badge: 'Govt School', is_verified: true, is_old: true },
-  { id: 5, type: 'college', name: 'Notre Dame College', area: 'Dhaka', district: 'Dhaka', estd: 1949, badge: 'College', is_verified: true },
-  { id: 6, type: 'madrasa', name: 'Jamia Rahmania Arabia Dhaka', area: 'Dhaka', district: 'Dhaka', estd: 1986, badge: 'Madrasa', is_verified: false },
-];
+/* Maps an education_institutions row (type=school) into this page's shape */
+function mapSchool(row) {
+  return {
+    id: row.id,
+    type: TYPES.includes(row.subtype) ? row.subtype : 'other',
+    name: row.name,
+    area: row.address || row.district || '',
+    district: row.district,
+    badge: TYPE_META[row.subtype]?.label || 'School',
+    is_verified: !!row.is_verified,
+  };
+}
 
 /* ── Animated Counter ─────────────────────────────────── */
 function Counter({ end, suffix = '' }) {
@@ -59,19 +62,16 @@ export default function School() {
   const { theme } = useTheme();
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState(''); // no URL params, local state
-  const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
   const isDark = theme === 'dark';
 
   useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
-  useEffect(() => {
-    // Simulate loading
-    setLoading(true);
-    const tmt = setTimeout(() => setLoading(false), 400);
-    return () => clearTimeout(tmt);
-  }, [search, typeFilter]);
 
-  const filtered = SAMPLE_SCHOOLS.filter(item => {
+  /* Real data — managed from Admin → Education (type=school) */
+  const { data, loading } = useApi('/education', { params: { type: 'school', subtype: typeFilter || undefined, search: search || undefined } });
+  const schools = (data?.rows || []).map(mapSchool);
+
+  const filtered = schools.filter(item => {
     const matchesSearch = !search || item.name.toLowerCase().includes(search.toLowerCase()) || item.area.toLowerCase().includes(search.toLowerCase());
     const matchesType = !typeFilter || item.type === typeFilter;
     return matchesSearch && matchesType;

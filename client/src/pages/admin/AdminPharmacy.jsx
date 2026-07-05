@@ -6,7 +6,8 @@ import { FiPlus, FiTrash2, FiEdit2, FiX, FiSave, FiSearch, FiUploadCloud } from 
 import BulkImportModal from '../../components/admin/BulkImportModal';
 
 const DIVS = ['Dhaka','Chittagong','Rajshahi','Khulna','Barisal','Sylhet','Rangpur','Mymensingh'];
-const BLANK = { name:'', area:'', district:'', division:'', phone:'', hours:'', is_24h:false, is_verified:false, is_active:true };
+const PHARMACY_TYPES = ['retail', 'hospital-pharmacy', '24-7'];
+const BLANK = { name:'', area:'', district:'', division:'', phone:'', hours:'', type:'retail', is_24h:false, is_verified:false, is_active:true };
 
 export default function AdminPharmacy() {
   const { isBn } = useLang();
@@ -135,6 +136,11 @@ export default function AdminPharmacy() {
                   <select value={form.division} onChange={e=>F('division',e.target.value)} className="form-select">
                     <option value="">{isBn?'বেছে নিন':'Select'}</option>
                     {DIVS.map(d=><option key={d} value={d}>{d}</option>)}
+                  </select>
+                </div>
+                <div className="form-group"><label className="form-label">{isBn?'ধরন':'Type'}</label>
+                  <select value={form.type} onChange={e=>F('type',e.target.value)} className="form-select">
+                    {PHARMACY_TYPES.map(tp=><option key={tp} value={tp}>{tp}</option>)}
                   </select>
                 </div>
                 <div className="form-group" style={{gridColumn:'1/-1'}}><label className="form-label">{isBn?'সময়সূচি':'Opening Hours'}</label><input value={form.hours} onChange={e=>F('hours',e.target.value)} className="form-input" placeholder="Sat–Thu 8am–10pm"/></div>

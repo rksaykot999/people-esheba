@@ -80,6 +80,11 @@ router.get('/notices',      cnt.getNotices);
 router.get('/education',    cnt.getEducation);
 router.get('/scholarships', cnt.getScholarships);
 
+// ── Directory (Hospitals, Services, Government, Finance) ──
+const dir = require('../controllers/directory.controller');
+router.get('/directory',     dir.getAll);
+router.get('/directory/:id', dir.getOne);
+
 // ── Admin ─────────────────────────────────────────────────────
 const adm = require('../controllers/admin.controller');
 const A   = [protect, adminOnly];
@@ -100,6 +105,8 @@ router.delete('/admin/donations/:id',     ...A, adm.deleteDonation);
 
 // Jobs
 router.get(   '/admin/jobs',              ...A, adm.getAllJobs);
+router.post(  '/admin/jobs',              ...A, adm.createJob);
+router.put(   '/admin/jobs/:id',          ...A, adm.updateJob);
 router.delete('/admin/jobs/:id',          ...A, adm.deleteJob);
 router.put(   '/admin/jobs/:id/status',   ...A, adm.updateJobStatus);
 
@@ -160,5 +167,11 @@ router.get(   '/admin/scholarships',     ...A, cnt.adminGetScholarships);
 router.post(  '/admin/scholarships',     ...A, cnt.adminCreateScholarship);
 router.put(   '/admin/scholarships/:id', ...A, cnt.adminUpdateScholarship);
 router.delete('/admin/scholarships/:id', ...A, cnt.adminDeleteScholarship);
+
+// Admin CRUD — Directory (Hospitals / Services / Government / Finance)
+router.get(   '/admin/directory',      ...A, dir.adminGetAll);
+router.post(  '/admin/directory',      ...A, dir.adminCreate);
+router.put(   '/admin/directory/:id',  ...A, dir.adminUpdate);
+router.delete('/admin/directory/:id',  ...A, dir.adminRemove);
 
 module.exports = router;

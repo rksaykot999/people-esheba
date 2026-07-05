@@ -9,6 +9,8 @@ import {
   FiCheckCircle, FiTag
 } from 'react-icons/fi';
 
+import { useApi } from '../hooks/useApi';
+
 /* ── Constants ──────────────────────────────────────────── */
 const CATS = [
   { key: 'all', label: 'All Services', color: '#8B5CF6', icon: FiFilter },
@@ -25,26 +27,23 @@ const CAT_META = Object.fromEntries(
   CATS.filter(c => c.key !== 'all').map(c => [c.key, { color: c.color, icon: c.icon, bg: `${c.color}15` }])
 );
 
-const SAMPLE = [
-  { id: 1, cat: 'home', name: 'Sheba.xyz', area: 'Dhaka & Chittagong', phone: '16516', rating: 4.6, reviews: '20k+', badge: 'Home Service', price: 'Varies by Task', desc: 'One-stop solution for house painting, plumbing, and electrical works.', features: ['Verified Pros', 'Service Warranty'], is_verified: true },
-  { id: 2, cat: 'home', name: 'Hello Task', area: 'Dhaka', phone: '09612345678', rating: 4.3, reviews: '5k+', badge: 'Maid Service', price: 'Starts 300 BDT', desc: 'On-demand professional maid and house cleaning services.', features: ['Background Checked', 'Flexible Timing'], is_verified: true },
-  { id: 3, cat: 'home', name: 'Home360', area: 'Dhaka', phone: '09612345679', rating: 4.2, reviews: '3k+', badge: 'Maid Service', price: 'Starts 300 BDT', desc: 'On-demand professional maid and house cleaning services.', features: ['Background Checked', 'Flexible Timing'], is_verified: false },
-  { id: 4, cat: 'home', name: 'HomeFix', area: 'Dhaka', phone: '09612345680', rating: 4.1, reviews: '2k+', badge: 'Maid Service', price: 'Starts 300 BDT', desc: 'On-demand professional maid and house cleaning services.', features: ['Background Checked', 'Flexible Timing'], is_verified: false },
-  { id: 5, cat: 'transport', name: 'Pathao Rides', area: 'Nationwide', phone: '16775', rating: 4.7, reviews: '50k+', badge: 'Ride Sharing', price: 'Distance Based', desc: 'Reliable and fast bike or car booking to move around the city safely.', features: ['GPS Tracking', 'Safety First'], is_verified: true },
-  { id: 6, cat: 'transport', name: 'Uber BD', area: 'Dhaka & Sylhet', phone: '01700000000', rating: 4.5, reviews: '100k+', badge: 'Car Service', price: 'Standard Rates', desc: 'World-class ride-hailing experience with premium car options and safety.', features: ['24/7 Availability', 'Cashless Pay'], is_verified: true },
-  { id: 7, cat: 'transport', name: 'Truck Lagbe', area: 'Nationwide', phone: '09638000245', rating: 4.8, reviews: '10k+', badge: 'Logistics', price: 'Bidding System', desc: 'Hire trucks or pickups for shifting your home or moving commercial goods.', features: ['Verified Drivers', 'Live Tracking'], is_verified: true },
-  { id: 8, cat: 'repairs', name: 'HandyMama', area: 'Dhaka', phone: '09617008080', rating: 4.4, reviews: '3k+', badge: 'Repairing', price: 'Inspection Fee 200', desc: 'Professional AC repair, fridge fixing, and appliance maintenance services.', features: ['Warranty', 'Prompt Response'], is_verified: true },
-  { id: 9, cat: 'repairs', name: 'Jantrik', area: 'Dhaka', phone: '09612341234', rating: 4.5, reviews: '2k+', badge: 'Automobile', price: 'Service Charge', desc: 'Expert car repair, car wash, and emergency breakdown support.', features: ['Spare Parts', 'Emergency'], is_verified: false },
-  { id: 10, cat: 'repairs', name: 'AllSheba', area: 'Dhaka', phone: '09612341235', rating: 4.3, reviews: '1k+', badge: 'Automobile', price: 'Service Charge', desc: 'Expert car repair, car wash, and emergency breakdown support.', features: ['Spare Parts', 'Emergency'], is_verified: false },
-  { id: 11, cat: 'telemedicine', name: 'Praava Health', area: 'Dhaka', phone: '10649', rating: 4.9, reviews: '12k+', badge: 'Healthcare', price: 'Consultation Fee', desc: 'Family doctors and diagnostics with international standard lab facilities.', features: ['Online Report', 'Home Sample'], is_verified: true },
-  { id: 12, cat: 'telemedicine', name: 'Maya Apa', area: 'Nationwide', phone: '16789', rating: 4.6, reviews: '30k+', badge: 'Mental Health', price: 'Subscription Based', desc: 'Anonymous messaging and video calls for medical and mental health advice.', features: ['Privacy Focused', 'Expert Advice'], is_verified: true },
-  { id: 13, cat: 'tutor', name: 'Care Tutors', area: 'Major Cities', phone: '01756441122', rating: 4.7, reviews: '8k+', badge: 'Tutor Provider', price: 'Negotiable', desc: 'Find highly qualified home tutors or online mentors for any subject.', features: ['Academic Help', 'Skill Training'], is_verified: true },
-  { id: 14, cat: 'tutor', name: '10 Minute School', area: 'Nationwide', phone: '16106', rating: 4.9, reviews: '1M+', badge: 'Ed-Tech', price: 'Free & Premium', desc: 'Largest online platform for SSC, HSC, and University admission preparation.', features: ['Live Classes', 'Recorded Course'], is_verified: true },
-  { id: 15, cat: 'utility', name: 'Desco Bill Pay', area: 'Dhaka', phone: '16120', rating: 4.5, reviews: '15k+', badge: 'Electricity', price: 'Bill Amount', desc: 'Pay your electricity bill online or through mobile app quickly.', features: ['Instant Payment', '24/7 Service'], is_verified: true },
-  { id: 16, cat: 'utility', name: 'Titas Gas', area: 'Dhaka & Surroundings', phone: '16400', rating: 4.2, reviews: '8k+', badge: 'Gas Service', price: 'Bill Amount', desc: 'Gas bill payment and new connection request service for residential areas.', features: ['Online Payment', 'Easy Process'], is_verified: true },
-  { id: 17, cat: 'utility', name: 'Palli Biddyut', area: 'All over Bangladesh', phone: '16400', rating: 4.1, reviews: '8k+', badge: 'Electricity Service', price: 'Bill Amount', desc: 'Gas bill payment and new connection request service for residential areas.', features: ['Online Payment', 'Easy Process'], is_verified: false },
-  { id: 18, cat: 'telemedicine', name: 'Medex', area: 'Nationwide', phone: '16789', rating: 4.6, reviews: '30k+', badge: 'Mental Health', price: 'Subscription Based', desc: 'Anonymous messaging and video calls for medical and mental health advice.', features: ['Privacy Focused', 'Expert Advice'], is_verified: true },
-];
+/* Maps a directory_listings row (category=service) into this page's shape */
+function mapService(row) {
+  return {
+    id: row.id,
+    cat: row.subtype,
+    name: row.name,
+    area: row.area || row.district || 'Nationwide',
+    phone: row.phone,
+    rating: Number(row.rating) || 0,
+    reviews: null, // real listings don't fabricate review counts
+    badge: row.badge_key || CATS.find(c => c.key === row.subtype)?.label,
+    price: row.price_info || 'Contact for pricing',
+    desc: row.description,
+    features: row.features ? row.features.split(',').map(f => f.trim()) : [],
+    is_verified: !!row.is_verified,
+  };
+}
 
 /* ── Animated Counter ─────────────────────────────────── */
 function Counter({ end, suffix = '' }) {
@@ -80,7 +79,6 @@ export default function Services() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
   const [activeCat, setActiveCat] = useState(searchParams.get('cat') || 'all');
-  const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
@@ -88,11 +86,9 @@ export default function Services() {
     setActiveCat(searchParams.get('cat') || 'all');
   }, [searchParams]);
 
-  useEffect(() => {
-    setLoading(true);
-    const tmt = setTimeout(() => setLoading(false), 400);
-    return () => clearTimeout(tmt);
-  }, [search, activeCat]);
+  /* Real data — managed from Admin → Directory → Services */
+  const { data, loading } = useApi('/directory', { params: { category: 'service', subtype: activeCat !== 'all' ? activeCat : undefined, search: search || undefined } });
+  const services = (data?.rows || []).map(mapService);
 
   const handleCatChange = (key) => {
     const newParams = new URLSearchParams(searchParams);
@@ -101,7 +97,7 @@ export default function Services() {
     setSearchParams(newParams);
   };
 
-  const filtered = SAMPLE.filter(item => {
+  const filtered = services.filter(item => {
     const matchesSearch = !search ||
       item.name.toLowerCase().includes(search.toLowerCase()) ||
       item.area.toLowerCase().includes(search.toLowerCase());
@@ -415,7 +411,7 @@ export default function Services() {
                     </span>
                     <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.8rem', color: 'var(--amber)', fontWeight: 600 }}>
                       <FiStar size={12} style={{ fill: 'var(--amber)', color: 'var(--amber)' }} />
-                      {item.rating} <span style={{ fontWeight: 400, color: 'var(--text-dim)' }}>({item.reviews} reviews)</span>
+                      {item.rating} {item.reviews && <span style={{ fontWeight: 400, color: 'var(--text-dim)' }}>({item.reviews} reviews)</span>}
                     </span>
                   </div>
 

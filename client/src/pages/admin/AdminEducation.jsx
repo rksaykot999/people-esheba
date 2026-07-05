@@ -7,7 +7,12 @@ import BulkImportModal from '../../components/admin/BulkImportModal';
 
 const TYPES = ['school','college','university'];
 const DIVS = ['Dhaka','Chittagong','Rajshahi','Khulna','Barisal','Sylhet','Rangpur','Mymensingh'];
-const BLANK = { name:'', type:'school', district:'', division:'', address:'', phone:'', website:'', description:'', is_verified:false, is_active:true };
+const SUBTYPES = {
+  school:     ['govt-school', 'private-school', 'madrasa', 'other'],
+  college:    ['govt-college', 'private-college', 'madrasah', 'technical', 'other'],
+  university: ['public', 'private', 'engineering', 'medical', 'other'],
+};
+const BLANK = { name:'', type:'school', subtype:'govt-school', district:'', division:'', address:'', phone:'', website:'', description:'', is_verified:false, is_active:true };
 
 export default function AdminEducation() {
   const { isBn } = useLang();
@@ -145,8 +150,13 @@ export default function AdminEducation() {
                   <input value={form.name} onChange={e=>F('name',e.target.value)} className="form-input" placeholder="Institution name" required/>
                 </div>
                 <div className="form-group"><label className="form-label">{isBn?'ধরন':'Type'}</label>
-                  <select value={form.type} onChange={e=>F('type',e.target.value)} className="form-select">
+                  <select value={form.type} onChange={e=>setForm(f=>({...f,type:e.target.value,subtype:(SUBTYPES[e.target.value]||['other'])[0]}))} className="form-select">
                     {TYPES.map(t=><option key={t} value={t}>{TYPE_ICON[t]} {t}</option>)}
+                  </select>
+                </div>
+                <div className="form-group"><label className="form-label">{isBn?'উপধরন':'Subtype'}</label>
+                  <select value={form.subtype} onChange={e=>F('subtype',e.target.value)} className="form-select">
+                    {(SUBTYPES[form.type]||[]).map(s=><option key={s} value={s}>{s}</option>)}
                   </select>
                 </div>
                 <div className="form-group"><label className="form-label">{isBn?'ফোন':'Phone'}</label>
