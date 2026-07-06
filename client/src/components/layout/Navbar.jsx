@@ -394,17 +394,7 @@ export default function Navbar() {
         },
       ],
     },
-    {
-      key: "finance",
-      icon: <FiDollarSign size={15} />,
-      color: "#8B5CF6",
-      label: "Finance",
-      items: [
-        { icon: <FiDollarSign size={15} />, label: "Banks", to: "/finance?type=bank" },
-        { icon: <FiDollarSign size={15} />, label: "Mobile Finance", to: "/finance?type=mfs" },
-        { icon: <FiShield size={15} />, label: "Insurance", to: "/finance?type=insurance" },
-      ],
-    },
+
     {
       key: "donation",
       icon: <FiHeart size={15} />,
@@ -467,11 +457,7 @@ export default function Navbar() {
       label: t("nav.government"),
       to: "/government",
     },
-    {
-      icon: <FiDollarSign size={16} />,
-      label: "Finance",
-      to: "/finance",
-    },
+
     { icon: <FiBell size={16} />, label: t("nav.notices"), to: "/notices" },
     ...(!isAuth
       ? [{ icon: <FiUser size={16} />, label: t("nav.login"), to: "/login" }]

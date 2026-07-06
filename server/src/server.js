@@ -55,8 +55,8 @@ app.use('/api', rateLimit({
 
 
 // ── Body Parsing ──────────────────────────────────────────────
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '500mb' }));
+app.use(express.urlencoded({ extended: true, limit: '500mb' }));
 
 // ── Logging ───────────────────────────────────────────────────
 if (process.env.NODE_ENV !== 'production') app.use(morgan('dev'));

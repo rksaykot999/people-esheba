@@ -24,6 +24,29 @@ export default function AdminJobs() {
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
 
+  // Applicants modal state
+  const [showApplicants, setShowApplicants] = useState(false);
+  const [activeJobId, setActiveJobId] = useState(null);
+  const [activeJobTitle, setActiveJobTitle] = useState('');
+  const [applicants, setApplicants] = useState([]);
+  const [loadingApplicants, setLoadingApplicants] = useState(false);
+
+  const openApplicants = async (jobId, title) => {
+    setActiveJobId(jobId);
+    setActiveJobTitle(title);
+    setShowApplicants(true);
+    setLoadingApplicants(true);
+    try {
+      const { data } = await api.get(`/jobs/${jobId}/applications`);
+      setApplicants(data.data || []);
+    } catch (err) {
+      setApplicants([]);
+      toast.error('Failed to load applicants');
+    } finally {
+      setLoadingApplicants(false);
+    }
+  };
+
   const fetch = async () => {
     setLoading(true);
     try {
@@ -132,7 +155,7 @@ export default function AdminJobs() {
                     <td style={{ fontSize:'0.83rem', color:'var(--text-muted)' }}>{j.company}</td>
                     <td><span className="badge" style={{ background:`${TYPE_COLOR[j.type]||'var(--green)'}18`, color:TYPE_COLOR[j.type]||'var(--green)' }}>{j.type}</span></td>
                     <td style={{ fontSize:'0.8rem', color:'var(--text-muted)' }}>{j.district||'—'}</td>
-                    <td>
+                    <td style={{ cursor: 'pointer' }} onClick={() => openApplicants(j.id, j.title)}>
                       <span style={{ display:'flex', alignItems:'center', gap:4, fontSize:'0.83rem', color:'var(--cyan)' }}>
                         <FiUsers size={12}/>{j.applicants||0}
                       </span>
@@ -248,6 +271,52 @@ export default function AdminJobs() {
                 <button type="button" onClick={() => setShowForm(false)} className="btn btn-ghost" style={{ flex:1, height:48, borderRadius:12, border:'1px solid var(--border)' }}>{isBn ? 'বাতিল' : 'Cancel'}</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Applicants Modal */}
+      {showApplicants && (
+        <div style={{ position:'fixed', inset:0, zIndex:999, display:'flex', alignItems:'center', justifyContent:'center', padding:'1rem' }}>
+          <div onClick={() => setShowApplicants(false)} style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.75)', backdropFilter:'blur(8px)' }}/>
+          <div style={{ position:'relative', background:'var(--surface)', border:'1px solid var(--border)', borderRadius:24, width:'100%', maxWidth:700, padding:'2.5rem', maxHeight:'90vh', overflowY:'auto', boxShadow:'0 25px 50px -12px rgba(0,0,0,0.5)' }}>
+            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'1.5rem' }}>
+              <h2 style={{ fontWeight:800, fontSize:'1.25rem', color:'#fff' }}>
+                Applicants for: <span style={{ color: 'var(--cyan)' }}>{activeJobTitle}</span>
+              </h2>
+              <button onClick={() => setShowApplicants(false)} style={{ width:32, height:32, borderRadius:10, border:'1px solid var(--border)', background:'transparent', color:'var(--text-muted)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}><FiX size={16}/></button>
+            </div>
+            {loadingApplicants ? (
+              <div style={{ display:'flex', justifyContent:'center', padding:'3rem' }}><div className="spinner"/></div>
+            ) : applicants.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>No applicants yet for this job.</div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {applicants.map(app => (
+                  <div key={app.id} style={{ background: 'var(--surface-2)', padding: '1.25rem', borderRadius: 16, border: '1px solid var(--border)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                      <div style={{ fontWeight: 700, color: '#fff' }}>{app.name}</div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>{new Date(app.created_at).toLocaleDateString()}</div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '1rem', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+                      <span>✉️ {app.email}</span>
+                      {app.phone && <span>📞 {app.phone}</span>}
+                    </div>
+                    <div style={{ background: 'var(--surface)', padding: '1rem', borderRadius: 10, fontSize: '0.85rem', color: 'var(--text-muted)', whiteSpace: 'pre-wrap', border: '1px solid var(--border)' }}>
+                      <strong style={{ color: 'var(--text)', display: 'block', marginBottom: 4 }}>Cover Letter:</strong>
+                      {app.cover_letter || 'No cover letter provided.'}
+                    </div>
+                    {app.resume && (
+                      <div style={{ marginTop: '1rem' }}>
+                        <a href={`${import.meta.env.VITE_API_URL || ''}${app.resume}`} target="_blank" rel="noreferrer" className="btn btn-primary btn-sm">
+                          View Resume
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

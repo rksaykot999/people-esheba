@@ -136,6 +136,10 @@ router.post(  '/admin/bulk-import',         ...A, adm.bulkImport);
 
 // Settings (CMS)
 router.put(   '/admin/settings',            ...A, settings.updateSettings);
+// Backup
+const backup = require('../controllers/backup.controller');
+router.get('/admin/backup/status',   ...A, backup.getBackupStatus);
+router.get('/admin/backup/download', ...A, backup.downloadBackup);
 
 
 // Admin CRUD — Doctors

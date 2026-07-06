@@ -19,7 +19,7 @@ const NAV_ITEMS = (t) => [
   { icon:<FiDroplet/>,      label:t('admin.blood'),         to:'/admin/blood',        group:'core' },
   { icon:<FiVol/>,          label:t('admin.volunteers'),    to:'/admin/volunteers',   group:'core' },
   { icon:<FiAlertTriangle/>,label:t('admin.emergency'),     to:'/admin/emergency',    group:'core' },
-  { icon:<FiBox/>,label:'Directory (Health/Services/Govt/Finance)', to:'/admin/directory', group:'core' },
+  { icon:<FiBox/>,label:'Services & Directory', to:'/admin/directory', group:'core' },
   // Content management
   { icon:<MdOutlineMedicalServices/>, label: t('nav.doctors') || 'Doctors',       to:'/admin/doctors',      group:'content' },
   { icon:<MdOutlineLocalPharmacy/>,   label: 'Pharmacy',                           to:'/admin/pharmacy',     group:'content' },

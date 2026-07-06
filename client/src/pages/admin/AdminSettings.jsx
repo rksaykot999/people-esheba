@@ -3,7 +3,7 @@ import { useLang } from '../../context/LanguageContext';
 import {
   FiSettings, FiSave, FiGlobe, FiShield, FiBell, FiHome,
   FiEdit3, FiRefreshCw, FiCheckCircle, FiAlertTriangle,
-  FiShare2, FiPhone, FiMail, FiBarChart2,
+  FiShare2, FiPhone, FiMail, FiBarChart2, FiHardDrive, FiDownload,
 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import api from '../../services/api';
@@ -14,6 +14,7 @@ const TABS = [
   { id: 'stats', icon: <FiBarChart2 />, label: 'Stats & Numbers' },
   { id: 'social', icon: <FiShare2 />, label: 'Social Links' },
   { id: 'security', icon: <FiShield />, label: 'Security' },
+  { id: 'backup', icon: <FiHardDrive />, label: 'Backup & Restore' },
 ];
 
 function Field({ label, hint, children }) {
@@ -58,12 +59,16 @@ export default function AdminSettings() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [dirty, setDirty] = useState(false);
+  const [backupStatus, setBackupStatus] = useState(null);
+  const [backupLoading, setBackupLoading] = useState(false);
 
   useEffect(() => {
     api.get('/settings').then(r => {
       setSettings(r.data.data || {});
       setLoading(false);
     }).catch(() => setLoading(false));
+    // Also load backup status
+    api.get('/admin/backup/status').then(r => setBackupStatus(r.data.data)).catch(() => {});
   }, []);
 
   const set = (key, value) => {
@@ -299,6 +304,87 @@ export default function AdminSettings() {
 
           <InfoBox type="warning">
             ⚠️ Turning on Maintenance Mode will immediately block all users (except admins) from accessing the website.
+          </InfoBox>
+        </div>
+      )}
+
+      {/* ── BACKUP TAB ──────────────────────────────────────── */}
+      {activeTab === 'backup' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <Section title="💾 Backup & Restore" subtitle="Download a complete backup of the website source code and database">
+
+            {/* Status box */}
+            {backupStatus && (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '0.5rem' }}>
+                <div style={{ padding: '1rem', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 12 }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginBottom: 4, fontWeight: 700 }}>DATABASE</div>
+                  <div style={{ fontWeight: 700, color: 'var(--text-strong)', fontSize: '0.9rem' }}>{backupStatus.db_name}</div>
+                </div>
+                <div style={{ padding: '1rem', background: 'var(--surface-2)', border: `1px solid ${backupStatus.mysqldump_available ? 'rgba(16,185,129,0.3)' : 'rgba(245,158,11,0.3)'}`, borderRadius: 12 }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginBottom: 4, fontWeight: 700 }}>MYSQLDUMP</div>
+                  <div style={{ fontWeight: 700, color: backupStatus.mysqldump_available ? 'var(--green)' : 'var(--amber)', fontSize: '0.9rem' }}>
+                    {backupStatus.mysqldump_available ? '✓ Available' : '⚠ Not in PATH'}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div style={{ padding: '1.25rem', background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.2)', borderRadius: 12, lineHeight: 1.7, fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+              <p style={{ fontWeight: 700, color: 'var(--text-strong)', marginBottom: '0.5rem' }}>📦 What is included in the backup?</p>
+              <ul style={{ paddingLeft: '1.25rem', margin: 0 }}>
+                <li>All server source files (excluding <code>node_modules</code>)</li>
+                <li>All client source files (excluding <code>node_modules</code> and <code>dist</code>)</li>
+                <li>Full database SQL dump (if mysqldump is available)</li>
+              </ul>
+            </div>
+
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <a
+                href={`${api.defaults.baseURL || ''}/admin/backup/download`}
+                onClick={(e) => {
+                  // Attach auth token to the download link
+                  const token = localStorage.getItem('pes_token');
+                  if (!token) { e.preventDefault(); toast.error('Not authenticated'); return; }
+                  // Use fetch to download with auth
+                  e.preventDefault();
+                  setBackupLoading(true);
+                  const baseURL = (api.defaults.baseURL || '/api').startsWith('http')
+                    ? (api.defaults.baseURL || '/api').replace(/\/api$/, '')
+                    : window.location.origin;
+                  fetch(`${baseURL}/api/admin/backup/download`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                  })
+                  .then(r => {
+                    const cd = r.headers.get('content-disposition');
+                    const match = cd && cd.match(/filename="?([^"]+)"?/);
+                    const fn = match ? match[1] : 'backup.zip';
+                    return r.blob().then(b => ({ b, fn }));
+                  })
+                  .then(({ b, fn }) => {
+                    const url = URL.createObjectURL(b);
+                    const a = document.createElement('a');
+                    a.href = url; a.download = fn; a.click();
+                    URL.revokeObjectURL(url);
+                    toast.success('Backup downloaded!');
+                  })
+                  .catch(() => toast.error('Download failed'))
+                  .finally(() => setBackupLoading(false));
+                }}
+                style={{ textDecoration: 'none' }}
+              >
+                <button
+                  className="btn btn-primary"
+                  style={{ height: 46, padding: '0 28px', fontSize: '0.9rem', fontWeight: 700, pointerEvents: backupLoading ? 'none' : 'auto' }}
+                  disabled={backupLoading}
+                >
+                  {backupLoading ? <><div className="spinner spinner-sm" /> Generating...</> : <><FiDownload size={16} /> Download Full Backup (ZIP)</>}
+                </button>
+              </a>
+            </div>
+          </Section>
+
+          <InfoBox type="warning">
+            ⚠️ The backup may take 10–30 seconds to generate depending on project size. Do not close the browser tab during download.
           </InfoBox>
         </div>
       )}

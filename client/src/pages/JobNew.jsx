@@ -29,7 +29,7 @@ export default function JobNew() {
     try {
       const { data } = await api.post('/jobs', form);
       toast.success(isBn ? 'চাকরি পোস্ট হয়েছে!' : 'Job posted successfully!');
-      navigate(`/jobs/${data.data.id}`);
+      navigate('/jobs');
     } catch (err) { toast.error(err.response?.data?.message || 'Failed'); }
     finally { setLoading(false); }
   };

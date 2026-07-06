@@ -30,7 +30,6 @@ import Health       from './pages/Health';
 import Education    from './pages/Education';
 import Services     from './pages/Services';
 import Notices      from './pages/Notices';
-import Finance      from './pages/Finance';
 import Government   from './pages/Government';
 import Doctors      from './pages/Doctors';
 import Pharmacy     from './pages/Pharmacy';
@@ -111,7 +110,6 @@ function AppRoutes() {
           <Route path="education"      element={<Education />} />
           <Route path="services"       element={<Services />} />
           <Route path="notices"        element={<Notices />} />
-          <Route path="finance"        element={<Finance />} />
           <Route path="government"     element={<Government />} />
           <Route path="doctors"        element={<Doctors />} />
           <Route path="pharmacy"       element={<Pharmacy />} />

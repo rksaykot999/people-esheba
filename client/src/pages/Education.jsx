@@ -6,6 +6,7 @@ import {
 } from 'react-icons/fi';
 import { useTheme } from '../context/ThemeContext';
 import { useLang } from '../context/LanguageContext';
+import { useApi } from '../hooks/useApi';
 
 export default function Education() {
   const { theme } = useTheme();
@@ -19,29 +20,12 @@ export default function Education() {
     { key: 'scholarship', label: t('education.scholarships') || 'Scholarships', color: '#F59E0B' },
   ];
 
-  const SAMPLE_EDU = [
-    {
-      id: 201, cat: 'school', name: 'Dhaka Residential Model College', area: 'Mohammadpur, Dhaka', phone: '02-911456', rating: 4.8, reviews: '10k+', badge: 'School',
-      price: 'Govt Fee', desc: 'A reputed government-funded public school providing quality education.', features: ['Morning Shift', 'Day Shift']
-    },
-    {
-      id: 202, cat: 'college', name: 'Dhaka College', area: 'New Market, Dhaka', phone: '02-9661555', rating: 4.7, reviews: '15k+', badge: 'College',
-      price: 'Govt Fee', desc: 'One of the oldest and most prestigious colleges in Bangladesh.', features: ['HSC', 'Honors']
-    },
-    {
-      id: 203, cat: 'university', name: 'University of Dhaka', area: 'Shahbagh, Dhaka', phone: '02-9661900', rating: 4.9, reviews: '50k+', badge: 'University',
-      price: 'Public', desc: 'The oldest university in Bangladesh, known as the Oxford of the East.', features: ['Undergraduate', 'Postgraduate']
-    },
-    {
-      id: 204, cat: 'scholarship', name: 'Prime Minister Education Trust', area: 'All Bangladesh', phone: '16224', rating: 4.9, reviews: '200k+', badge: 'Grant',
-      price: 'Stipend', desc: 'Financial assistance for underprivileged students to continue their studies.', features: ['Degree', 'Honors']
-    }
-  ];
-
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
   const [activeCat, setActiveCat] = useState(searchParams.get('cat') || 'all');
 
+  const { data, loading } = useApi('/education', { params: { subtype: activeCat !== 'all' ? activeCat : undefined, search: search || undefined } });
+  
   const handleCatChange = (key) => {
     const newParams = new URLSearchParams(searchParams);
     if (key === 'all') newParams.delete('cat');
@@ -50,7 +34,21 @@ export default function Education() {
     setActiveCat(key);
   };
 
-  const filtered = SAMPLE_EDU.filter(item => {
+  const eduItems = (data?.rows || []).map(row => ({
+    id: row.id,
+    cat: row.type || row.subtype,
+    name: row.name,
+    area: row.address || row.district || 'Nationwide',
+    phone: row.phone || 'N/A',
+    rating: Number(row.rating) || 0,
+    reviews: null,
+    badge: row.type,
+    price: row.price_info || 'Contact for details',
+    desc: row.description,
+    features: row.features ? row.features.split(',').map(f => f.trim()) : [],
+  }));
+
+  const filtered = eduItems.filter(item => {
     const matchCat = activeCat === 'all' || item.cat === activeCat;
     const matchSearch = !search || 
       item.name.toLowerCase().includes(search.toLowerCase());
@@ -147,6 +145,11 @@ export default function Education() {
         </div>
 
         {/* Grid Results */}
+        {loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '4rem' }}><div className="spinner"/></div>
+        ) : filtered.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-muted)' }}>No education services listed yet for this category.</div>
+        ) : (
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
@@ -201,6 +204,7 @@ export default function Education() {
             </div>
           ))}
         </div>
+        )}
       </div>
     </div>
   );

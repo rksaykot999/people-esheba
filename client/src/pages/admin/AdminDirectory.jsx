@@ -16,7 +16,6 @@ const CATEGORIES = [
   { key: 'hospital',   label: 'Hospitals',  icon: <MdLocalHospital/>,           subtypes: ['govt-hospital', 'private-hospital'] },
   { key: 'service',    label: 'Services',   icon: <MdMiscellaneousServices/>,   subtypes: ['home', 'transport', 'repairs', 'telemedicine', 'tutor', 'utility'] },
   { key: 'government', label: 'Government', icon: <MdAccountBalance/>,          subtypes: ['nid', 'schemes', 'passport', 'land', 'utility'] },
-  { key: 'finance',    label: 'Finance',    icon: <MdAttachMoney/>,             subtypes: ['bank', 'nbfi', 'mfs', 'insurance', 'other'] },
 ];
 
 const DIVS  = ['Dhaka','Chittagong','Rajshahi','Khulna','Barisal','Sylhet','Rangpur','Mymensingh'];
@@ -98,7 +97,7 @@ export default function AdminDirectory() {
             {isBn ? 'ডিরেক্টরি ব্যবস্থাপনা' : 'Directory Manager'}
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>
-            {isBn ? 'হাসপাতাল, সেবা, সরকারি ও আর্থিক তালিকা এখান থেকে নিয়ন্ত্রণ করুন' : 'Controls what shows on Health, Services, Government & Finance pages'}
+            {isBn ? 'হাসপাতাল, সেবা, সরকারি ও অন্যান্য তালিকা এখান থেকে নিয়ন্ত্রণ করুন' : 'Controls what shows on Health, Services, and Government pages'}
           </p>
         </div>
         <button onClick={openAdd} className="btn btn-primary" style={{ height: 42, borderRadius: 10 }}>
