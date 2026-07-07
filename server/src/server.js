@@ -19,19 +19,17 @@ app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (mobile, curl, etc.) and all localhost/dev origins
     const allowed = [
-      process.env.FRONTEND_URL || 'http://localhost:5173',
+      process.env.FRONTEND_URL || 'https://people-esheba.vercel.app',
       'http://localhost:5173',
       'http://localhost:5174',
       'http://localhost:5175',
       'http://localhost:3000',
-      'https://people-esheba.vercel.app',
     ];
     if (!origin || allowed.includes(origin)) {
       callback(null, true);
     } else {
-      callback(null, true); // Allow all for now — restrict in production later
+      callback(null, true); // লোকাল ডেভেলপমেন্ট সহজ করার জন্য আপাতত ট্রু রাখা হলো
     }
   },
   credentials: true,
@@ -44,29 +42,29 @@ const isDev = process.env.NODE_ENV !== 'production';
 
 app.use('/api/auth', rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: isDev ? 200 : 20,    // Relaxed in dev
+  max: isDev ? 200 : 30,    // প্রোডাকশনে রিয়েল ইউজারদের জন্য সামান্য বাড়ানো হলো (30)
   message: { success: false, message: 'Too many requests, please try again later.' },
-  skip: (req) => isDev && req.ip === '::1', // Skip localhost in dev
-  validate: { trustProxy: false }, // Vercel ক্র্যাশ এড়ানোর জন্য ভ্যালিডেশন ফ্ল্যাগ
-}));
-
-app.use('/api', rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: isDev ? 2000 : 300,
   skip: (req) => isDev && req.ip === '::1',
   validate: { trustProxy: false },
 }));
 
-// ── Body Parsing ──────────────────────────────────────────────
-app.use(express.json({ limit: '500mb' }));
-app.use(express.urlencoded({ extended: true, limit: '500mb' }));
+app.use('/api', rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: isDev ? 2000 : 500,
+  skip: (req) => isDev && req.ip === '::1',
+  validate: { trustProxy: false },
+}));
+
+// ── Body Parsing (Vercel রিকোয়েস্ট লিমিট অনুযায়ী ফিক্সড) ───────
+app.use(express.json({ limit: '4.5mb' }));
+app.use(express.urlencoded({ extended: true, limit: '4.5mb' }));
 
 // ── Logging ───────────────────────────────────────────────────
 if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
 
-// ── Static Uploads ────────────────────────────────────────────
+// ── Static Uploads (লোকালহোস্টের জন্য ঠিক আছে, Vercel-এ সাময়িক কাজ করবে) ──
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // ── Health Check ──────────────────────────────────────────────
@@ -92,7 +90,6 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 // ── Start Server ──────────────────────────────────────────────
-// শুধু লোকাল ডেভেলপমেন্ট এনভায়রনমেন্টে সার্ভার লিসেন করবে, Vercel প্রোডাকশনে নয়
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
     console.log(`\n🚀 People E-Sheba API`);
@@ -102,5 +99,4 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-// Vercel সার্ভারলেস ফাংশনের জন্য এক্সপ্রেস অ্যাপটি এক্সপোর্ট করা হলো
 module.exports = app;
