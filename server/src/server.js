@@ -11,6 +11,9 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Vercel বা অন্য কোনো রিভার্স প্রক্সির পেছনে থাকার কারণে ট্রাস্ট প্রক্সি অন করা হলো
+app.set('trust proxy', 1);
+
 // ── Security ──────────────────────────────────────────────────
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
@@ -36,7 +39,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-
 // ── Rate Limiting ─────────────────────────────────────────────
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -45,14 +47,15 @@ app.use('/api/auth', rateLimit({
   max: isDev ? 200 : 20,    // Relaxed in dev
   message: { success: false, message: 'Too many requests, please try again later.' },
   skip: (req) => isDev && req.ip === '::1', // Skip localhost in dev
+  validate: { trustProxy: false }, // Vercel ক্র্যাশ এড়ানোর জন্য ভ্যালিডেশন ফ্ল্যাগ
 }));
 
 app.use('/api', rateLimit({
   windowMs: 15 * 60 * 1000,
   max: isDev ? 2000 : 300,
   skip: (req) => isDev && req.ip === '::1',
+  validate: { trustProxy: false },
 }));
-
 
 // ── Body Parsing ──────────────────────────────────────────────
 app.use(express.json({ limit: '500mb' }));
@@ -60,9 +63,8 @@ app.use(express.urlencoded({ extended: true, limit: '500mb' }));
 
 // ── Logging ───────────────────────────────────────────────────
 if (process.env.NODE_ENV !== 'production') {
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-};
+  app.use(morgan('dev'));
+}
 
 // ── Static Uploads ────────────────────────────────────────────
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
@@ -90,11 +92,15 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 // ── Start Server ──────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`\n🚀 People E-Sheba API`);
-  console.log(`   → http://localhost:${PORT}`);
-  console.log(`   → Health: http://localhost:${PORT}/health`);
-  console.log(`   → ENV: ${process.env.NODE_ENV || 'development'}\n`);
-});
+// শুধু লোকাল ডেভেলপমেন্ট এনভায়রনমেন্টে সার্ভার লিসেন করবে, Vercel প্রোডাকশনে নয়
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`\n🚀 People E-Sheba API`);
+    console.log(`   → http://localhost:${PORT}`);
+    console.log(`   → Health: http://localhost:${PORT}/health`);
+    console.log(`   → ENV: ${process.env.NODE_ENV || 'development'}\n`);
+  });
+}
 
+// Vercel সার্ভারলেস ফাংশনের জন্য এক্সপ্রেস অ্যাপটি এক্সপোর্ট করা হলো
 module.exports = app;
