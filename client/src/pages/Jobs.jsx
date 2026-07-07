@@ -377,10 +377,10 @@ export default function Jobs({ forcedType = '', forcedRemote = false, title = ''
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem', flexWrap: 'wrap' }}>
                         <div>
                           <h3 style={{ fontWeight: 800, color: 'var(--text)', fontSize: '0.97rem', marginBottom: 4 }}>
-                            {job.title}
+                            {(isBn && job.title_bn) ? job.title_bn : job.title}
                           </h3>
                           <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                            {job.company}
+                            {(isBn && job.company_bn) ? job.company_bn : job.company}
                           </div>
                         </div>
                         <div style={{ display: 'flex', gap: 6, flexShrink: 0, flexWrap: 'wrap' }}>

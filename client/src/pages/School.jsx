@@ -20,14 +20,18 @@ const TYPE_META = {
   'other': { color: '#10B981', bg: 'rgba(16,185,129,0.1)', icon: MdSchool, label: 'Other' },
 };
 
-/* Maps an education_institutions row (type=school) into this page's shape */
-function mapSchool(row) {
+/* Maps an education_institutions row (type=school) into this page's shape.
+   isBn picks the Bengali column when the site is in Bengali mode and a
+   translation exists, falling back to the English value otherwise. */
+function mapSchool(row, isBn) {
+  const address = (isBn && row.address_bn) ? row.address_bn : row.address;
   return {
     id: row.id,
     type: TYPES.includes(row.subtype) ? row.subtype : 'other',
-    name: row.name,
-    area: row.address || row.district || '',
+    name: (isBn && row.name_bn) ? row.name_bn : row.name,
+    area: address || row.district || '',
     district: row.district,
+    description: (isBn && row.description_bn) ? row.description_bn : row.description,
     badge: TYPE_META[row.subtype]?.label || 'School',
     is_verified: !!row.is_verified,
   };
@@ -69,7 +73,7 @@ export default function School() {
 
   /* Real data — managed from Admin → Education (type=school) */
   const { data, loading } = useApi('/education', { params: { type: 'school', subtype: typeFilter || undefined, search: search || undefined } });
-  const schools = (data?.rows || []).map(mapSchool);
+  const schools = (data?.rows || []).map(row => mapSchool(row, isBn));
 
   const filtered = schools.filter(item => {
     const matchesSearch = !search || item.name.toLowerCase().includes(search.toLowerCase()) || item.area.toLowerCase().includes(search.toLowerCase());

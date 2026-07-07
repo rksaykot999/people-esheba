@@ -46,7 +46,7 @@ function Counter({ end, suffix = '' }) {
 
 /* ── Main Component ───────────────────────────────────── */
 export default function Pharmacy() {
-  const { t } = useLang();
+  const { t, isBn } = useLang();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -78,6 +78,10 @@ export default function Pharmacy() {
     const matchesType = !typeFilter || item.type === typeFilter;
     return matchesSearch && matchesType;
   });
+
+  /* Bengali-aware display helpers — fall back to English if no _bn value */
+  const dName = (item) => (isBn && item.name_bn) ? item.name_bn : item.name;
+  const dArea = (item) => (isBn && item.area_bn) ? item.area_bn : item.area;
 
   return (
     <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
@@ -392,13 +396,13 @@ export default function Pharmacy() {
                     fontWeight: 800, color: 'var(--text)',
                     marginBottom: '0.4rem', fontSize: '0.97rem', lineHeight: 1.35,
                   }}>
-                    {item.name}
+                    {dName(item)}
                   </h3>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: '1rem' }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: 'var(--text-muted)' }}>
                       <FiMapPin size={11} style={{ flexShrink: 0, color: meta.color, opacity: 0.7 }} />
-                      {item.area}
+                      {dArea(item)}
                     </span>
                     <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: 'var(--text-muted)' }}>
                       <FiClock size={11} style={{ flexShrink: 0, color: meta.color, opacity: 0.7 }} />

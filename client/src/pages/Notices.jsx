@@ -25,16 +25,17 @@ const CAT_META = Object.fromEntries(
   NOTICE_CATS.filter(c => c.key !== 'all').map(c => [c.key, { color: c.color, icon: c.icon, bg: `${c.color}15` }])
 );
 
-/* Maps a notices table row into this page's shape */
-function mapNotice(row) {
+/* Maps a notices table row into this page's shape. isBn picks the Bengali
+   column when the site is in Bengali mode and a translation exists. */
+function mapNotice(row, isBn) {
   return {
     id: row.id,
     cat: row.category,
-    title: row.title,
+    title: (isBn && row.title_bn) ? row.title_bn : row.title,
     date: new Date(row.created_at).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
     org: row.source || 'People E-Sheba',
     urgent: !!row.is_urgent,
-    desc: row.description || '',
+    desc: (isBn && row.description_bn) ? row.description_bn : (row.description || ''),
     link: row.link,
   };
 }
@@ -66,7 +67,7 @@ function Counter({ end, suffix = '' }) {
 
 /* ── Main Component ───────────────────────────────────── */
 export default function Notices() {
-  const { t } = useLang();
+  const { t, isBn } = useLang();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -89,7 +90,7 @@ export default function Notices() {
 
   /* Real data — managed from Admin → Notices */
   const { data, loading } = useApi('/notices', { params: { category: activeCat !== 'all' ? activeCat : undefined, search: search || undefined } });
-  const allNotices = (data?.rows || []).map(mapNotice);
+  const allNotices = (data?.rows || []).map(row => mapNotice(row, isBn));
 
   const filtered = allNotices.filter(item => {
     const matchesSearch = !search ||

@@ -22,12 +22,13 @@ const TYPE_META = {
 };
 
 /* Maps a scholarships table row into what this page renders */
-function mapScholarship(row) {
+function mapScholarship(row, isBn) {
   return {
     id: row.id,
     type: SCHOLARSHIP_TYPES.includes(row.category) ? row.category : 'other',
-    name: row.title,
-    area: row.provider || 'Nationwide',
+    name: (isBn && row.title_bn) ? row.title_bn : row.title,
+    area: (isBn && row.provider_bn) ? row.provider_bn : (row.provider || 'Nationwide'),
+    description: (isBn && row.description_bn) ? row.description_bn : row.description,
     amount: row.amount || 'Contact provider',
     is_verified: true, // admin-published listings are treated as verified
     badge: row.deadline ? `Deadline: ${new Date(row.deadline).toLocaleDateString()}` : undefined,
@@ -60,7 +61,7 @@ function Counter({ end, suffix = '' }) {
 
 /* ── Main Scholarships Component ────────────────────────── */
 export default function Scholarships() {
-  const { t } = useLang();
+  const { t, isBn } = useLang();
   const { theme } = useTheme();
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
@@ -71,7 +72,7 @@ export default function Scholarships() {
 
   /* Real data — managed from Admin → Scholarships */
   const { data, loading } = useApi('/scholarships', { params: { category: typeFilter || undefined, search: search || undefined } });
-  const scholarships = (data?.rows || []).map(mapScholarship);
+  const scholarships = (data?.rows || []).map(row => mapScholarship(row, isBn));
 
   const filtered = scholarships.filter(item => {
     const matchesSearch = !search || item.name.toLowerCase().includes(search.toLowerCase()) || item.area.toLowerCase().includes(search.toLowerCase());

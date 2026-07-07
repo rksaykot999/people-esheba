@@ -83,6 +83,15 @@ export default function Doctors() {
     return meta?.labelKey ? t(meta.labelKey) : s;
   };
 
+  /* Bengali-aware display helpers — fall back to English if no _bn value */
+  const dName = (item) => (isBn && item.name_bn) ? item.name_bn : item.name;
+  const dArea = (item) => (isBn && item.area_bn) ? item.area_bn : item.area;
+  const dSpecialty = (item) => {
+    const meta = SPECIALTY_META[item.specialty];
+    if (meta?.labelKey) return t(meta.labelKey); // known specialty — use fixed translation
+    return (isBn && item.specialty_bn) ? item.specialty_bn : item.specialty; // free-text — use bulk-imported _bn
+  };
+
   // Stats for hero section
   const stats = [
     { label: t("health.stat_doctors") || "Doctors Listed", value: 240, suffix: '+', icon: <FiUser size={16} />, color: '#8B5CF6' },
@@ -393,19 +402,19 @@ export default function Doctors() {
                     fontWeight: 800, color: 'var(--text)',
                     marginBottom: '0.3rem', fontSize: '0.97rem', lineHeight: 1.35,
                   }}>
-                    {item.name}
+                    {dName(item)}
                   </h3>
                   <span style={{
                     fontSize: '0.72rem', fontWeight: 600, padding: '2px 10px',
                     borderRadius: 10, background: meta.bg, color: meta.color,
                     display: 'inline-block', marginBottom: '0.8rem',
                   }}>
-                    {getSpecialtyLabel(item.specialty)}
+                    {dSpecialty(item)}
                   </span>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: '1.1rem' }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                      <FiMapPin size={11} style={{ flexShrink: 0, color: meta.color, opacity: 0.7 }} /> {item.area}
+                      <FiMapPin size={11} style={{ flexShrink: 0, color: meta.color, opacity: 0.7 }} /> {dArea(item)}
                     </span>
                     <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: 'var(--text-muted)' }}>
                       <FiPhone size={11} style={{ flexShrink: 0, color: meta.color, opacity: 0.7 }} /> {item.phone}

@@ -145,8 +145,8 @@ export default function JobDetail() {
                 {job.is_remote && <span className="badge badge-cyan">🌐 Remote</span>}
                 <span className={`badge ${job.status === 'active' ? 'badge-green' : 'badge-gray'}`}>{job.status}</span>
               </div>
-              <h1 style={{ fontSize: '1.7rem', fontWeight: 800, color: '#fff', marginBottom: 8, lineHeight: 1.2 }}>{job.title}</h1>
-              <div style={{ fontSize: '1.1rem', color: 'var(--cyan)', fontWeight: 700, marginBottom: '1.5rem' }}>{job.company}</div>
+              <h1 style={{ fontSize: '1.7rem', fontWeight: 800, color: '#fff', marginBottom: 8, lineHeight: 1.2 }}>{(isBn && job.title_bn) ? job.title_bn : job.title}</h1>
+              <div style={{ fontSize: '1.1rem', color: 'var(--cyan)', fontWeight: 700, marginBottom: '1.5rem' }}>{(isBn && job.company_bn) ? job.company_bn : job.company}</div>
               <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', fontSize: '0.85rem', color: 'var(--text-muted)', paddingBottom: '1.25rem', borderBottom: '1px solid var(--border)' }}>
                 {job.district && <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><FiMapPin size={13} />📍 {job.district}{job.division && `, ${job.division}`}</span>}
                 {job.salary_min && <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><FiDollarSign size={13} />৳{Number(job.salary_min).toLocaleString()}{job.salary_max && `–${Number(job.salary_max).toLocaleString()}`}</span>}
@@ -155,7 +155,7 @@ export default function JobDetail() {
               </div>
               <div style={{ marginTop: '1.5rem' }}>
                 <h3 style={{ fontWeight: 700, color: '#fff', marginBottom: '0.75rem' }}>{isBn ? 'বিস্তারিত বিবরণ' : 'Job Description'}</h3>
-                <div style={{ color: 'var(--text-muted)', lineHeight: 1.8, fontSize: '0.9rem', whiteSpace: 'pre-wrap' }}>{job.description}</div>
+                <div style={{ color: 'var(--text-muted)', lineHeight: 1.8, fontSize: '0.9rem', whiteSpace: 'pre-wrap' }}>{(isBn && job.description_bn) ? job.description_bn : job.description}</div>
               </div>
               {job.requirements && (
                 <div style={{ marginTop: '1.5rem' }}>
@@ -218,8 +218,8 @@ export default function JobDetail() {
         <div style={{ position: 'fixed', inset: 0, zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
           <div onClick={() => setShowForm(false)} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)' }} />
           <div style={{ position: 'relative', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 20, width: '100%', maxWidth: 500, padding: '2rem', animation: 'fadeUp 0.25s ease' }}>
-            <h2 style={{ fontWeight: 800, fontSize: '1.2rem', marginBottom: 5, color: '#fff' }}>{t('jobs.apply')}: {job.title}</h2>
-            <p style={{ fontSize: '0.83rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>{job.company}</p>
+            <h2 style={{ fontWeight: 800, fontSize: '1.2rem', marginBottom: 5, color: '#fff' }}>{t('jobs.apply')}: {(isBn && job.title_bn) ? job.title_bn : job.title}</h2>
+            <p style={{ fontSize: '0.83rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>{(isBn && job.company_bn) ? job.company_bn : job.company}</p>
             <form onSubmit={handleApply} style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
               <div className="form-group">
                 <label className="form-label">{isBn ? 'কভার লেটার' : 'Cover Letter'}</label>

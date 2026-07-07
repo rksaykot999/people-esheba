@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 import api from '../../services/api';
 
 const TABS = [
-  { id: 'homepage', icon: <FiHome />, label: 'Homepage CMS' },
+  { id: 'homepage', icon: <FiHome />, label: 'Homepage' },
   { id: 'general', icon: <FiGlobe />, label: 'General & Contact' },
   { id: 'stats', icon: <FiBarChart2 />, label: 'Stats & Numbers' },
   { id: 'social', icon: <FiShare2 />, label: 'Social Links' },

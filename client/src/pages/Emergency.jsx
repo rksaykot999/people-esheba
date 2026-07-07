@@ -512,14 +512,14 @@ export default function EmergencyPage() {
                     fontWeight:800, color:'var(--text)',
                     marginBottom:'0.6rem', fontSize:'0.97rem', lineHeight:1.35,
                   }}>
-                    {s.name}
+                    {(isBn && s.name_bn) ? s.name_bn : s.name}
                   </h3>
 
                   <div style={{ display:'flex', flexDirection:'column', gap:4, marginBottom:'1.1rem' }}>
                     {s.address && (
                       <span style={{ display:'flex', alignItems:'flex-start', gap:6, fontSize:'0.78rem', color:'var(--text-muted)' }}>
                         <FiMapPin size={11} style={{ marginTop:2, flexShrink:0, color:meta.color, opacity:0.7 }}/>
-                        {s.address}
+                        {(isBn && s.address_bn) ? s.address_bn : s.address}
                       </span>
                     )}
                     {s.district && (

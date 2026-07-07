@@ -19,13 +19,15 @@ const TYPE_META = {
 };
 
 /* Maps an education_institutions row (type=university) into this page's shape */
-function mapUniversity(row) {
+function mapUniversity(row, isBn) {
+  const address = (isBn && row.address_bn) ? row.address_bn : row.address;
   return {
     id: row.id,
     type: UNI_TYPES.includes(row.subtype) ? row.subtype : 'other',
-    name: row.name,
-    area: row.address || row.district || '',
+    name: (isBn && row.name_bn) ? row.name_bn : row.name,
+    area: address || row.district || '',
     district: row.district,
+    description: (isBn && row.description_bn) ? row.description_bn : row.description,
     is_verified: !!row.is_verified,
   };
 }
@@ -64,7 +66,7 @@ export default function University() {
 
   /* Real data — managed from Admin → Education (type=university) */
   const { data, loading } = useApi('/education', { params: { type: 'university', subtype: typeFilter || undefined, search: search || undefined } });
-  const universities = (data?.rows || []).map(mapUniversity);
+  const universities = (data?.rows || []).map(row => mapUniversity(row, isBn));
 
   const filtered = universities.filter(u => {
     const matchSearch = !search ||
