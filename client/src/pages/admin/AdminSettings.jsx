@@ -63,6 +63,8 @@ export default function AdminSettings() {
   const [dirty, setDirty] = useState(false);
   const [backupStatus, setBackupStatus] = useState(null);
   const [backupLoading, setBackupLoading] = useState(false);
+  const [restoreFile, setRestoreFile] = useState(null);
+  const [restoring, setRestoring] = useState(false);
 
   useEffect(() => {
     api.get('/settings').then(r => {
@@ -88,6 +90,28 @@ export default function AdminSettings() {
       toast.error(e.response?.data?.message || 'Failed to save settings');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleRestore = async (e) => {
+    e.preventDefault();
+    if (!restoreFile) return toast.error('Please select a backup zip file first');
+    if (!window.confirm('Are you sure you want to restore? This will overwrite the current project files.')) return;
+    
+    setRestoring(true);
+    const formData = new FormData();
+    formData.append('backup', restoreFile);
+    
+    try {
+      await api.post('/admin/backup/restore', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      toast.success('Backup restored successfully! Server will restart soon.');
+      setRestoreFile(null);
+    } catch (e) {
+      toast.error(e.response?.data?.message || 'Restore failed');
+    } finally {
+      setRestoring(false);
     }
   };
 
@@ -452,6 +476,29 @@ export default function AdminSettings() {
           <InfoBox type="warning">
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><FiAlertTriangle/> The backup may take 10–30 seconds to generate depending on project size. Do not close the browser tab during download.</div>
           </InfoBox>
+
+          <Section title={<span style={{display:'flex', alignItems:'center', gap: 6}}><FiRefreshCw/> Restore Site</span>} subtitle="Upload a backup zip file to overwrite current site files and restore a previous state.">
+            <form onSubmit={handleRestore} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{ padding: '1rem', background: 'var(--surface-2)', border: '1px dashed var(--border)', borderRadius: 12 }}>
+                <input 
+                  type="file" 
+                  accept=".zip" 
+                  onChange={(e) => setRestoreFile(e.target.files[0])}
+                  style={{ color: 'var(--text)', fontSize: '0.9rem' }}
+                />
+              </div>
+              <div>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{ height: 46, padding: '0 28px', fontSize: '0.9rem', fontWeight: 700, pointerEvents: restoring ? 'none' : 'auto', background: 'var(--red)', border: 'none' }}
+                  disabled={restoring || !restoreFile}
+                >
+                  {restoring ? <><div className="spinner spinner-sm" /> Restoring...</> : <><FiRefreshCw size={16} /> Restore from ZIP</>}
+                </button>
+              </div>
+            </form>
+          </Section>
         </div>
       )}
 
