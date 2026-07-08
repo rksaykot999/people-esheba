@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLang } from '../../context/LanguageContext';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
-import { FiTrash2, FiShield } from 'react-icons/fi';
+import { FiTrash2, FiShield, FiCheckCircle } from 'react-icons/fi';
 
 export default function AdminVolunteers() {
   const { t, isBn } = useLang();
@@ -68,7 +68,7 @@ export default function AdminVolunteers() {
                         <div>
                           <div style={{ fontWeight:600, color:'var(--text-strong)', fontSize:'0.85rem' }}>{v.name}</div>
                           <div style={{ fontSize:'0.72rem', color:'var(--text-dim)' }}>{v.email}</div>
-                          {v.is_verified ? <span style={{ fontSize:'0.65rem', color:'var(--green)' }}>✓ verified</span> : null}
+                          {v.is_verified ? <span style={{ fontSize:'0.65rem', color:'var(--green)', display:'flex', alignItems:'center', gap:2 }}><FiCheckCircle size={10}/> verified</span> : null}
                         </div>
                       </div>
                     </td>

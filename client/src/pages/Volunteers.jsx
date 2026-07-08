@@ -4,10 +4,10 @@ import { useLang } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
-import { FiPlus, FiMapPin, FiSearch, FiPhone, FiShield } from 'react-icons/fi';
+import { FiPlus, FiMapPin, FiSearch, FiPhone, FiShield, FiUsers, FiHeart, FiBook, FiAlertCircle, FiCoffee, FiFeather, FiMonitor, FiStar, FiCheckCircle } from 'react-icons/fi';
 
 const CATS = ['general','medical','education','disaster','food','environment','tech','other'];
-const CAT_ICONS = { general:'🙌', medical:'⚕️', education:'📚', disaster:'🆘', food:'🍱', environment:'🌱', tech:'💻', other:'⭐' };
+const CAT_ICONS = { general:<FiUsers/>, medical:<FiHeart/>, education:<FiBook/>, disaster:<FiAlertCircle/>, food:<FiCoffee/>, environment:<FiFeather/>, tech:<FiMonitor/>, other:<FiStar/> };
 
 export default function Volunteers() {
   const { t, isBn } = useLang();
@@ -92,8 +92,8 @@ export default function Volunteers() {
             <button onClick={()=>setShowReg(true)} className="btn btn-primary"><FiPlus size={14}/>{t('volunteers.register')}</button>
           )}
           {myVol && (
-            <div style={{ padding:'8px 14px', background:'var(--green-light)', border:'1px solid rgba(16,185,129,0.2)', borderRadius:10, fontSize:'0.83rem', color:'var(--green)', fontWeight:600 }}>
-              ✅ {isBn?'আপনি নিবন্ধিত স্বেচ্ছাসেবক':'You are a registered volunteer'}
+            <div style={{ padding:'8px 14px', background:'var(--green-light)', border:'1px solid rgba(16,185,129,0.2)', borderRadius:10, fontSize:'0.83rem', color:'var(--green)', fontWeight:600, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <FiCheckCircle size={14}/> {isBn?'আপনি নিবন্ধিত স্বেচ্ছাসেবক':'You are a registered volunteer'}
             </div>
           )}
         </div>
@@ -103,7 +103,7 @@ export default function Volunteers() {
         <div style={{ display:'flex', gap:8, marginBottom:'1.5rem', flexWrap:'wrap' }}>
           <button onClick={()=>handleCat('')} className={`btn btn-sm ${!catQuery?'btn-primary':'btn-ghost'}`}>{isBn?'সব':'All'}</button>
           {CATS.map(c => (
-            <button key={c} onClick={()=>handleCat(c)} className={`btn btn-sm ${catQuery===c?'btn-primary':'btn-ghost'}`}>
+            <button key={c} onClick={()=>handleCat(c)} className={`btn btn-sm ${catQuery===c?'btn-primary':'btn-ghost'}`} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
               {CAT_ICONS[c]} {c}
             </button>
           ))}
@@ -118,7 +118,7 @@ export default function Volunteers() {
         {loading ? (
           <div style={{ display:'flex', justifyContent:'center', padding:'3rem' }}><div className="spinner"/></div>
         ) : vols.length === 0 ? (
-          <div className="empty"><div className="empty-icon">🙌</div><div>{t('common.noResults')}</div></div>
+          <div className="empty"><div className="empty-icon"><FiUsers size={40} style={{ opacity: 0.4 }}/></div><div>{t('common.noResults')}</div></div>
         ) : (
           <div className="grid-4">
             {vols.map(v => (
@@ -127,7 +127,7 @@ export default function Volunteers() {
                   <div style={{ width:46, height:46, borderRadius:'50%', background:'var(--grad-cyan)', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:800, color:'#fff', fontSize:'1.1rem' }}>
                     {v.name?.[0]?.toUpperCase()||'V'}
                   </div>
-                  <span className="badge badge-green">{CAT_ICONS[v.category]||'🙌'} {v.category}</span>
+                  <span className="badge badge-green" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>{CAT_ICONS[v.category]||<FiUsers/>} {v.category}</span>
                 </div>
                 <div style={{ display:'flex', alignItems:'center', gap:5, marginBottom:3 }}>
                   <span style={{ fontWeight:700, color:'var(--text)', fontSize:'0.95rem' }}>{v.name}</span>
@@ -164,12 +164,12 @@ export default function Volunteers() {
         <div style={{ position:'fixed', inset:0, zIndex:999, display:'flex', alignItems:'center', justifyContent:'center', padding:'1rem' }}>
           <div onClick={closeReg} style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.7)', backdropFilter:'blur(6px)' }}/>
           <div style={{ position: 'relative', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 20, width: '100%', maxWidth: 480, padding: '2rem', animation: 'fadeUp 0.25s ease', maxHeight: '90vh', overflowY: 'auto' }}>
-            <h2 style={{ fontWeight: 800, fontSize: '1.2rem', marginBottom: '1.5rem', color: 'var(--text)' }}>🙌 {t('volunteers.register')}</h2>
+            <h2 style={{ fontWeight: 800, fontSize: '1.2rem', marginBottom: '1.5rem', color: 'var(--text)', display: 'flex', alignItems: 'center', gap: 8 }}><FiUsers size={18}/> {t('volunteers.register')}</h2>
             <form onSubmit={handleRegister} style={{ display:'flex', flexDirection:'column', gap:'1rem' }}>
               <div className="form-group">
                 <label className="form-label">{isBn?'বিভাগ':'Category'}</label>
                 <select value={regForm.category} onChange={e=>setRegForm(f=>({...f,category:e.target.value}))} className="form-select">
-                  {CATS.map(c=><option key={c} value={c}>{CAT_ICONS[c]} {c}</option>)}
+                  {CATS.map(c=><option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div className="form-group">

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useLang } from '../../context/LanguageContext';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
-import { FiSend, FiBell } from 'react-icons/fi';
+import { FiSend, FiBell, FiAlertTriangle, FiCheckCircle, FiCalendar } from 'react-icons/fi';
 
 export default function AdminNotifications() {
   const { t, isBn } = useLang();
@@ -54,7 +54,7 @@ export default function AdminNotifications() {
                 placeholder={isBn?'ঘোষণার বিস্তারিত বিবরণ...':'Full announcement message...'} className="form-textarea" style={{ minHeight:140 }} required/>
             </div>
             <div style={{ padding:'12px 16px', background:'rgba(245,158,11,0.08)', border:'1px solid rgba(245,158,11,0.2)', borderRadius:10, fontSize:'0.82rem', color:'var(--amber)' }}>
-              ⚠️ {isBn?'এই ঘোষণাটি সব নিবন্ধিত ব্যবহারকারীর নোটিফিকেশনে যাবে।':'This will create notifications for all registered users.'}
+              <FiAlertTriangle size={14}/> {isBn?'এই ঘোষণাটি সব নিবন্ধিত ব্যবহারকারীর নোটিফিকেশনে যাবে।':'This will create notifications for all registered users.'}
             </div>
             <button type="submit" className="btn btn-primary" style={{ justifyContent:'center', height:46 }} disabled={loading}>
               {loading ? <><div className="spinner spinner-sm"/>{isBn?'পাঠানো হচ্ছে...':'Sending...'}</> : <><FiSend size={14}/>{isBn?'সবাইকে পাঠান':'Send to All Users'}</>}
@@ -66,12 +66,12 @@ export default function AdminNotifications() {
           {sent && (
             <div style={{ background:'var(--surface)', border:'1px solid rgba(16,185,129,0.25)', borderRadius:16, padding:'1.5rem' }}>
               <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:'0.75rem' }}>
-                <span style={{ fontSize:'1.1rem' }}>✅</span>
+                <span style={{ fontSize:'1.1rem', color:'var(--green)', display: 'flex' }}><FiCheckCircle /></span>
                 <span style={{ fontWeight:700, color:'var(--green)', fontSize:'0.9rem' }}>{isBn?'সফলভাবে পাঠানো হয়েছে':'Successfully Sent'}</span>
               </div>
               <div style={{ fontWeight:700, color:'var(--text-strong)', fontSize:'0.88rem', marginBottom:5 }}>{sent.title}</div>
               <div style={{ fontSize:'0.8rem', color:'var(--text-muted)', lineHeight:1.5, marginBottom:8 }}>{sent.body}</div>
-              <div style={{ fontSize:'0.72rem', color:'var(--text-dim)' }}>📅 {sent.sentAt}</div>
+              <div style={{ fontSize:'0.72rem', color:'var(--text-dim)', display: 'flex', alignItems: 'center', gap: 4 }}><FiCalendar size={11} /> {sent.sentAt}</div>
             </div>
           )}
           <div style={{ background:'var(--surface)', border:'1px solid var(--border)', borderRadius:16, padding:'1.5rem' }}>

@@ -204,7 +204,7 @@ export default function Jobs({ forcedType = '', forcedRemote = false, title = ''
               />
             </div>
             <button type="submit" className="btn btn-primary" style={{ height: 46, padding: '0 1.5rem', borderRadius: 12, fontSize: '0.85rem' }}>
-              <FiSearch size={14} /> Search
+              <FiSearch size={14} /> {isBn ? 'খুঁজুন' : 'Search'}
             </button>
           </form>
 
@@ -224,7 +224,7 @@ export default function Jobs({ forcedType = '', forcedRemote = false, title = ''
                   color: !typeFilter ? '#fff' : 'var(--text-muted)',
                 }}
               >
-                All Types
+                {isBn ? 'সকল ধরন' : 'All Types'}
               </button>
               {TYPES.map(tp => {
                 const active = typeFilter === tp;
@@ -325,10 +325,10 @@ export default function Jobs({ forcedType = '', forcedRemote = false, title = ''
             padding: '5rem 2rem', gap: '1rem', textAlign: 'center',
           }}>
             <FiBriefcase size={48} style={{ opacity: 0.4, color: 'var(--text-dim)' }} />
-            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)' }}>No jobs found</div>
-            <div style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>Try adjusting your search or filters</div>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)' }}>{isBn ? 'কোনো চাকরি পাওয়া যায়নি' : 'No jobs found'}</div>
+            <div style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>{isBn ? 'অনুসন্ধান বা ফিল্টার পরিবর্তন করে দেখুন' : 'Try adjusting your search or filters'}</div>
             <button onClick={() => { setSearch(''); setRemote(false); handleType(''); }} className="btn btn-outline btn-sm">
-              Reset Filters
+              {isBn ? 'রিসেট ফিল্টার' : 'Reset Filters'}
             </button>
           </div>
         ) : (

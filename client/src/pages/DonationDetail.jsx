@@ -4,7 +4,7 @@ import { useLang } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
-import { FiArrowLeft, FiUser, FiCalendar, FiPhone, FiHeart, FiShield } from 'react-icons/fi';
+import { FiArrowLeft, FiUser, FiCalendar, FiPhone, FiHeart, FiShield, FiXCircle, FiZap, FiMapPin } from 'react-icons/fi';
 
 export default function DonationDetail() {
   const { id }      = useParams();
@@ -27,7 +27,7 @@ export default function DonationDetail() {
     setDonating(true);
     try {
       await api.post(`/donations/${id}/donate`, { amount:Number(amount), message, is_anonymous:anon });
-      toast.success(isBn ? 'দান করার জন্য ধন্যবাদ! ❤️' : 'Thank you for your donation! ❤️');
+      toast.success(isBn ? 'দান করার জন্য ধন্যবাদ!' : 'Thank you for your donation!');
       const r = await api.get(`/donations/${id}`);
       setItem(r.data.data);
       setAmount(''); setMsg('');
@@ -36,7 +36,7 @@ export default function DonationDetail() {
   };
 
   if (loading) return <div style={{ display:'flex', justifyContent:'center', padding:'5rem' }}><div className="spinner"/></div>;
-  if (!item)   return <div className="empty"><div className="empty-icon">❌</div><div>Not found</div></div>;
+  if (!item)   return <div className="empty"><div className="empty-icon"><FiXCircle size={48} style={{ opacity: 0.4 }} /></div><div>Not found</div></div>;
 
   const pct = Math.min(100, Math.round((item.amount_raised / item.amount_needed) * 100));
 
@@ -53,14 +53,14 @@ export default function DonationDetail() {
           <div>
             {item.image && <img src={item.image} alt={item.title} style={{ width:'100%', borderRadius:16, marginBottom:'1.5rem', maxHeight:320, objectFit:'cover', border:'1px solid var(--border)' }}/>}
             <div style={{ display:'flex', gap:8, marginBottom:'1rem', flexWrap:'wrap' }}>
-              {item.is_urgent && <span className="badge badge-red">⚡ {t('donation.urgent')}</span>}
+              {item.is_urgent && <span className="badge badge-red" style={{ display: 'flex', alignItems: 'center', gap: 4 }}><FiZap size={12} /> {t('donation.urgent')}</span>}
               <span className="badge badge-gray">{item.category}</span>
               <span className={`badge ${item.status==='approved'?'badge-green':'badge-amber'}`}>{item.status}</span>
             </div>
             <h1 style={{ fontSize:'1.6rem', fontWeight:800, color:'#fff', marginBottom:'1rem', lineHeight:1.2 }}>{item.title}</h1>
             <div style={{ display:'flex', gap:'1rem', flexWrap:'wrap', marginBottom:'1.5rem', fontSize:'0.82rem', color:'var(--text-muted)' }}>
               <span style={{ display:'flex', alignItems:'center', gap:5 }}><FiUser size={13}/>{item.poster_name}{item.poster_verified&&<FiShield size={11} style={{ color:'var(--cyan)' }}/>}</span>
-              {item.district && <span>📍 {item.district}</span>}
+              {item.district && <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><FiMapPin size={13} /> {item.district}</span>}
               {item.deadline && <span style={{ display:'flex', alignItems:'center', gap:5 }}><FiCalendar size={13}/>{new Date(item.deadline).toLocaleDateString()}</span>}
             </div>
             <div style={{ background:'var(--surface)', border:'1px solid var(--border)', borderRadius:14, padding:'1.5rem', marginBottom:'1.5rem' }}>

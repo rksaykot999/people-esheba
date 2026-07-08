@@ -5,7 +5,7 @@ A production-level, full-stack, AI-powered citizen services platform for Banglad
 ## 📁 Project Structure
 ```
 pesheba/
-├── frontend/          # React + Vite + Tailwind CSS
+├── client/            # React + Vite + Tailwind CSS
 │   ├── src/
 │   │   ├── components/   layout, ui, admin
 │   │   ├── pages/        auth, admin, public pages
@@ -13,7 +13,7 @@ pesheba/
 │   │   ├── services/     Axios API client
 │   │   └── translations/ en.json + bn.json
 │   └── package.json
-└── backend/           # Node.js + Express + MySQL
+└── server/            # Node.js + Express + MySQL
     ├── src/
     │   ├── controllers/  auth, user, emergency, blood, donation, job, volunteer, admin
     │   ├── routes/       index.js (all routes)
@@ -29,12 +29,12 @@ pesheba/
 
 ### 1. Database
 ```bash
-mysql -u root -p < backend/database/schema.sql
+mysql -u root -p < server/database/schema.sql
 ```
 
 ### 2. Backend
 ```bash
-cd backend
+cd server
 cp .env.example .env      # edit with your DB credentials
 npm install
 npm run dev               # http://localhost:5000
@@ -42,7 +42,7 @@ npm run dev               # http://localhost:5000
 
 ### 3. Frontend
 ```bash
-cd frontend
+cd client
 npm install
 npm run dev               # http://localhost:5173
 ```

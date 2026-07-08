@@ -102,7 +102,7 @@ export default function AdminEducation() {
             <thead><tr>
               <th>{isBn?'নাম':'Name'}</th><th>{isBn?'ধরন':'Type'}</th>
               <th>{isBn?'জেলা':'District'}</th><th>{isBn?'ফোন':'Phone'}</th>
-              <th>Status</th><th>{isBn?'কার্যক্রম':'Actions'}</th>
+              <th>{isBn?'স্ট্যাটাস':'Status'}</th><th>{isBn?'কার্যক্রম':'Actions'}</th>
             </tr></thead>
             <tbody>
               {items.map(it=>(
@@ -115,7 +115,7 @@ export default function AdminEducation() {
                   <td><span className="badge badge-cyan">{TYPE_ICON[it.type]} {it.type}</span></td>
                   <td style={{fontSize:'0.8rem',color:'var(--text-muted)'}}>{it.district||'—'}{it.division&&`, ${it.division}`}</td>
                   <td style={{fontSize:'0.8rem',color:'var(--text-muted)'}}>{it.phone||'—'}</td>
-                  <td><span className={`badge ${it.is_active?'badge-green':'badge-gray'}`}>{it.is_active?'Active':'Inactive'}</span></td>
+                  <td><span className={`badge ${it.is_active?'badge-green':'badge-gray'}`}>{it.is_active?(isBn?'সক্রিয়':'Active'):(isBn?'নিষ্ক্রিয়':'Inactive')}</span></td>
                   <td><div style={{display:'flex',gap:5}}>
                     <button onClick={()=>openEdit(it)} style={{width:28,height:28,borderRadius:7,border:'1px solid rgba(6,182,212,0.3)',background:'transparent',color:'var(--cyan)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}><FiEdit2 size={12}/></button>
                     <button onClick={()=>deleteItem(it.id,it.name)} style={{width:28,height:28,borderRadius:7,border:'1px solid rgba(230,57,70,0.2)',background:'transparent',color:'var(--red)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}><FiTrash2 size={12}/></button>

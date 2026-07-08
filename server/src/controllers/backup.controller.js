@@ -23,6 +23,8 @@ exports.downloadBackup = async (req, res) => {
 
     // ── 1. Add the server source files (not node_modules / .git)
     const serverRoot = path.join(__dirname, '../../');
+    const projectRoot = path.resolve(serverRoot, '../');
+
     archive.glob('**/*', {
       cwd: serverRoot,
       ignore: [
@@ -32,16 +34,23 @@ exports.downloadBackup = async (req, res) => {
         '*.log',
         '.env',            // security
       ],
+      prefix: 'server',
     });
 
     // ── 2. Add the client source files
-    const clientRoot = path.resolve(serverRoot, '../client');
+    const clientRoot = path.resolve(projectRoot, 'client');
     if (fs.existsSync(clientRoot)) {
       archive.glob('**/*', {
         cwd: clientRoot,
         ignore: ['node_modules/**', '.git/**', 'dist/**', '*.log'],
         prefix: 'client',
       });
+    }
+
+    // ── 3. Add README.md
+    const readmePath = path.join(projectRoot, 'README.md');
+    if (fs.existsSync(readmePath)) {
+      archive.file(readmePath, { name: 'README.md' });
     }
 
     // ── 3. Try to add a DB dump (mysqldump)
@@ -100,5 +109,35 @@ exports.getBackupStatus = async (req, res) => {
     });
   } catch {
     err(res, 'Status check failed', 500);
+  }
+};
+
+/* ── POST /admin/backup/restore ─────────────────────────────
+   Extracts an uploaded zip file directly into the project root
+────────────────────────────────────────────────────────────── */
+exports.restoreBackup = async (req, res) => {
+  try {
+    if (!req.file) {
+      return err(res, 'No backup file provided', 400);
+    }
+    const zipPath = req.file.path;
+    const projectRoot = path.resolve(__dirname, '../../../');
+    
+    // Extract using tar (available in Windows 10+)
+    const cmd = `tar -xf "${zipPath}" -C "${projectRoot}"`;
+    exec(cmd, (error, stdout, stderr) => {
+      // Remove uploaded file
+      fs.unlink(zipPath, () => {});
+      
+      if (error) {
+        console.error('Extraction error:', error);
+        return err(res, 'Failed to restore backup', 500);
+      }
+      
+      ok(res, { message: 'Backup restored successfully! Server will restart with new files.' });
+    });
+  } catch (e) {
+    console.error('Restore error:', e);
+    err(res, 'Restore failed', 500);
   }
 };

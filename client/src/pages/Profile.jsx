@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useLang } from '../context/LanguageContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
-import { FiUser, FiEdit2, FiLock, FiBriefcase, FiHeart, FiBookmark, FiBell, FiCheck, FiSave } from 'react-icons/fi';
+import { FiUser, FiEdit2, FiLock, FiBriefcase, FiHeart, FiBookmark, FiBell, FiCheck, FiSave, FiMapPin } from 'react-icons/fi';
 
 export default function Profile() {
   const { user, updateUser } = useAuth();
@@ -94,12 +94,12 @@ export default function Profile() {
           <div style={{ display:'flex', alignItems:'center', justifyContent:'inherit', gap:9, marginBottom:4, flexWrap:'wrap' }}>
             <h1 style={{ fontWeight:800, fontSize:'1.3rem', color:'#fff' }}>{user?.name}</h1>
             <div style={{ display:'flex', gap:6 }}>
-              {user?.is_verified && <span className="badge badge-cyan">✓ {t('common.verified')}</span>}
+              {user?.is_verified && <span className="badge badge-cyan" style={{ display: 'flex', alignItems: 'center', gap: 4 }}><FiCheck size={11} /> {t('common.verified')}</span>}
               {user?.role === 'admin' && <span className="badge badge-red">ADMIN</span>}
             </div>
           </div>
           <div style={{ fontSize:'0.85rem', color:'var(--text-muted)' }}>{user?.email}</div>
-          {user?.district && <div style={{ fontSize:'0.8rem', color:'var(--text-dim)', marginTop:3 }}>📍 {user.district}{user.division&&`, ${user.division}`}</div>}
+          {user?.district && <div style={{ fontSize:'0.8rem', color:'var(--text-dim)', marginTop:3, display: 'flex', alignItems: 'center', gap: 4 }}><FiMapPin size={11} /> {user.district}{user.division&&`, ${user.division}`}</div>}
         </div>
       </div>
 
@@ -162,7 +162,7 @@ export default function Profile() {
             <div>
               <h2 style={{ fontWeight:700, color:'#fff', fontSize:'1.05rem', marginBottom:'1.25rem' }}>{isBn?'আবেদন করা চাকরি':'Job Applications'} ({appliedJobs.length})</h2>
               {appliedJobs.length === 0 ? (
-                <div className="empty"><div className="empty-icon">💼</div><div>{isBn?'কোনো আবেদন নেই':'No applications yet'}</div></div>
+                <div className="empty"><div className="empty-icon"><FiBriefcase size={40} style={{ opacity: 0.4 }} /></div><div>{isBn?'কোনো আবেদন নেই':'No applications yet'}</div></div>
               ) : (
                 <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
                   {appliedJobs.map(a => (
@@ -184,7 +184,7 @@ export default function Profile() {
             <div>
               <h2 style={{ fontWeight:700, color:'#fff', fontSize:'1.05rem', marginBottom:'1.25rem' }}>{isBn?'আমার সাহায্যের অনুরোধ':'My Help Requests'} ({myDonations.length})</h2>
               {myDonations.length === 0 ? (
-                <div className="empty"><div className="empty-icon">❤️</div><div>{isBn?'কোনো অনুরোধ নেই':'No requests yet'}</div></div>
+                <div className="empty"><div className="empty-icon"><FiHeart size={40} style={{ opacity: 0.4 }} /></div><div>{isBn?'কোনো অনুরোধ নেই':'No requests yet'}</div></div>
               ) : (
                 <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
                   {myDonations.map(d => {
@@ -212,12 +212,12 @@ export default function Profile() {
             <div>
               <h2 style={{ fontWeight:700, color:'#fff', fontSize:'1.05rem', marginBottom:'1.25rem' }}>{isBn?'সেভ করা আইটেম':'Saved Items'} ({bookmarks.length})</h2>
               {bookmarks.length === 0 ? (
-                <div className="empty"><div className="empty-icon">🔖</div><div>{isBn?'কোনো সেভ করা আইটেম নেই':'No saved items'}</div></div>
+                <div className="empty"><div className="empty-icon"><FiBookmark size={40} style={{ opacity: 0.4 }} /></div><div>{isBn?'কোনো সেভ করা আইটেম নেই':'No saved items'}</div></div>
               ) : (
                 <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
                   {bookmarks.map(b => (
                     <div key={b.id} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'11px 14px', background:'var(--surface-2)', borderRadius:10, border:'1px solid var(--border)' }}>
-                      <span style={{ color:'var(--text-muted)', fontSize:'0.85rem' }}>📌 {b.entity_type} #{b.entity_id}</span>
+                      <span style={{ color:'var(--text-muted)', fontSize:'0.85rem', display:'flex', alignItems:'center', gap:4 }}><FiBookmark size={11} /> {b.entity_type} #{b.entity_id}</span>
                       <span className="badge badge-gray">{b.entity_type}</span>
                     </div>
                   ))}
@@ -234,7 +234,7 @@ export default function Profile() {
                 {notifs.some(n=>!n.is_read) && <button onClick={markRead} className="btn btn-ghost btn-sm"><FiCheck size={13}/>{isBn?'সব পড়া হয়েছে':'Mark all read'}</button>}
               </div>
               {notifs.length === 0 ? (
-                <div className="empty"><div className="empty-icon">🔔</div><div>{isBn?'কোনো বিজ্ঞপ্তি নেই':'No notifications'}</div></div>
+                <div className="empty"><div className="empty-icon"><FiBell size={40} style={{ opacity: 0.4 }} /></div><div>{isBn?'কোনো বিজ্ঞপ্তি নেই':'No notifications'}</div></div>
               ) : (
                 <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
                   {notifs.map(n => (

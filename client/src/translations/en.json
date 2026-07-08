@@ -331,6 +331,8 @@
     "analytics": "Analytics",
     "notifications": "Notifications",
     "settings": "Settings",
+    "directory": "Services & Directory",
+    "logs": "System Logs",
     "backToSite": "Back to Website",
     "logout": "Secure Logout",
     "totalUsers": "Total Users",

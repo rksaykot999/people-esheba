@@ -95,7 +95,7 @@ export default function AdminNotices() {
           <div className="table-wrap"><table>
             <thead><tr>
               <th>{isBn?'শিরোনাম':'Title'}</th><th>{isBn?'বিভাগ':'Category'}</th>
-              <th>{isBn?'উৎস':'Source'}</th><th>Status</th><th>{isBn?'তারিখ':'Date'}</th><th>{isBn?'কার্যক্রম':'Actions'}</th>
+              <th>{isBn?'উৎস':'Source'}</th><th>{isBn?'স্ট্যাটাস':'Status'}</th><th>{isBn?'তারিখ':'Date'}</th><th>{isBn?'কার্যক্রম':'Actions'}</th>
             </tr></thead>
             <tbody>
               {items.map(n=>(
@@ -106,7 +106,7 @@ export default function AdminNotices() {
                   </td>
                   <td><span className={`badge ${CAT_COLOR[n.category]||'badge-gray'}`}>{n.category}</span></td>
                   <td style={{fontSize:'0.78rem',color:'var(--text-muted)',maxWidth:120,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{n.source||'—'}</td>
-                  <td><span className={`badge ${n.is_active?'badge-green':'badge-gray'}`}>{n.is_active?'Active':'Hidden'}</span></td>
+                  <td><span className={`badge ${n.is_active?'badge-green':'badge-gray'}`}>{n.is_active?(isBn?'সক্রিয়':'Active'):(isBn?'লুকানো':'Hidden')}</span></td>
                   <td style={{fontSize:'0.78rem',color:'var(--text-dim)'}}>{new Date(n.created_at).toLocaleDateString()}</td>
                   <td><div style={{display:'flex',gap:5}}>
                     <button onClick={()=>openEdit(n)} style={{width:28,height:28,borderRadius:7,border:'1px solid rgba(6,182,212,0.3)',background:'transparent',color:'var(--cyan)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}><FiEdit2 size={12}/></button>

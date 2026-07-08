@@ -282,14 +282,14 @@ export default function AdminJobs() {
           <div style={{ position:'relative', background:'var(--surface)', border:'1px solid var(--border)', borderRadius:24, width:'100%', maxWidth:700, padding:'2.5rem', maxHeight:'90vh', overflowY:'auto', boxShadow:'0 25px 50px -12px rgba(0,0,0,0.5)' }}>
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'1.5rem' }}>
               <h2 style={{ fontWeight:800, fontSize:'1.25rem', color:'#fff' }}>
-                Applicants for: <span style={{ color: 'var(--cyan)' }}>{activeJobTitle}</span>
+                {isBn ? 'আবেদনকারী:' : 'Applicants for:'} <span style={{ color: 'var(--cyan)' }}>{activeJobTitle}</span>
               </h2>
               <button onClick={() => setShowApplicants(false)} style={{ width:32, height:32, borderRadius:10, border:'1px solid var(--border)', background:'transparent', color:'var(--text-muted)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}><FiX size={16}/></button>
             </div>
             {loadingApplicants ? (
               <div style={{ display:'flex', justifyContent:'center', padding:'3rem' }}><div className="spinner"/></div>
             ) : applicants.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>No applicants yet for this job.</div>
+              <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>{isBn ? 'এই চাকরির জন্য এখনও কোনো আবেদনকারী নেই।' : 'No applicants yet for this job.'}</div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {applicants.map(app => (
@@ -303,13 +303,13 @@ export default function AdminJobs() {
                       {app.phone && <span>📞 {app.phone}</span>}
                     </div>
                     <div style={{ background: 'var(--surface)', padding: '1rem', borderRadius: 10, fontSize: '0.85rem', color: 'var(--text-muted)', whiteSpace: 'pre-wrap', border: '1px solid var(--border)' }}>
-                      <strong style={{ color: 'var(--text)', display: 'block', marginBottom: 4 }}>Cover Letter:</strong>
-                      {app.cover_letter || 'No cover letter provided.'}
+                      <strong style={{ color: 'var(--text)', display: 'block', marginBottom: 4 }}>{isBn ? 'কভার লেটার:' : 'Cover Letter:'}</strong>
+                      {app.cover_letter || (isBn ? 'কোনো কভার লেটার দেওয়া হয়নি।' : 'No cover letter provided.')}
                     </div>
                     {app.resume && (
                       <div style={{ marginTop: '1rem' }}>
                         <a href={`${import.meta.env.VITE_API_URL || ''}${app.resume}`} target="_blank" rel="noreferrer" className="btn btn-primary btn-sm">
-                          View Resume
+                          {isBn ? 'রেজুমে দেখুন' : 'View Resume'}
                         </a>
                       </div>
                     )}

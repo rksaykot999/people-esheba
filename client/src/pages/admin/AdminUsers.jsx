@@ -114,7 +114,7 @@ export default function AdminUsers() {
                         </div>
                         <div>
                           <div style={{ fontWeight:600, color:'var(--text-strong)', fontSize:'0.85rem' }}>{u.name}</div>
-                          {u.is_verified && <span style={{ fontSize:'0.68rem', color:'var(--cyan)' }}>✓ verified</span>}
+                          {u.is_verified && <span style={{ fontSize:'0.68rem', color:'var(--cyan)', display:'flex', alignItems:'center', gap:2 }}><FiCheckCircle size={10}/> verified</span>}
                         </div>
                       </div>
                     </td>

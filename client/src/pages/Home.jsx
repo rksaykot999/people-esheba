@@ -192,9 +192,9 @@ export default function Home() {
   ];
 
   const trustStats = [
-    { value: cms.stat_services || '500+', label: t('home.statServices'), icon: <FiLayers /> },
-    { value: cms.stat_donors   || '10K+', label: t('home.statDonors'),   icon: <FiDroplet /> },
-    { value: cms.stat_helped   || '50K+', label: t('home.statHelped'),   icon: <FiThumbsUp /> },
+    { value: (isBn && cms.stat_services_bn) ? cms.stat_services_bn : (cms.stat_services || (isBn ? '৫০০+' : '500+')), label: t('home.statServices'), icon: <FiLayers /> },
+    { value: (isBn && cms.stat_donors_bn) ? cms.stat_donors_bn : (cms.stat_donors   || (isBn ? '১০ হাজার+' : '10K+')), label: t('home.statDonors'),   icon: <FiDroplet /> },
+    { value: (isBn && cms.stat_helped_bn) ? cms.stat_helped_bn : (cms.stat_helped   || (isBn ? '৫০ হাজার+' : '50K+')), label: t('home.statHelped'),   icon: <FiThumbsUp /> },
   ];
 
 
@@ -236,21 +236,21 @@ export default function Home() {
               >
                 <span className="flex h-2 w-2 rounded-full bg-red-500 animate-ping" />
                 <span style={{ color: 'var(--text-muted)' }} className="text-xs font-bold uppercase">
-                  {cms.hero_badge || t('home.badge')}
+                  {(isBn && cms.hero_badge_bn) ? cms.hero_badge_bn : (cms.hero_badge || t('home.badge'))}
                 </span>
               </div>
 
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black leading-[0.95] tracking-tight mb-6 md:mb-8">
-                {cms.hero_title || t('home.title')}
+                {(isBn && cms.hero_title_bn) ? cms.hero_title_bn : (cms.hero_title || t('home.title'))}
                 <br />
-                <span className="text-red-500">{cms.hero_highlight || t('home.highlight')}</span>
+                <span className="text-red-500">{(isBn && cms.hero_highlight_bn) ? cms.hero_highlight_bn : (cms.hero_highlight || t('home.highlight'))}</span>
               </h1>
 
               <p
                 className="max-w-2xl text-base md:text-lg lg:text-xl mb-8 md:mb-10 leading-relaxed"
                 style={{ color: 'var(--text-muted)' }}
               >
-                {cms.hero_subtitle || t('home.subtitle')}
+                {(isBn && cms.hero_subtitle_bn) ? cms.hero_subtitle_bn : (cms.hero_subtitle || t('home.subtitle'))}
               </p>
 
 
@@ -522,12 +522,12 @@ export default function Home() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-6 mb-8 md:mb-12">
             <div className="max-w-2xl">
               <h2 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight mb-3 md:mb-4">
-                {cms.how_title || (isBn ? 'কীভাবে কাজ করে' : 'How the platform works')}
+                {(isBn && cms.how_title_bn) ? cms.how_title_bn : (cms.how_title || (isBn ? 'কীভাবে কাজ করে' : 'How the platform works'))}
               </h2>
               <p className="text-sm md:text-base" style={{ color: 'var(--text-muted)' }}>
-                {cms.how_sub || (isBn
+                {(isBn && cms.how_sub_bn) ? cms.how_sub_bn : (cms.how_sub || (isBn
                   ? 'দ্রুত তথ্য খুঁজে অ্যাকশন নেওয়ার জন্য ফ্লোটা সহজ রাখা হয়েছে।'
-                  : 'The experience is kept simple so people can move from search to action quickly.')}
+                  : 'The experience is kept simple so people can move from search to action quickly.'))}
               </p>
             </div>
           </div>
@@ -645,10 +645,10 @@ export default function Home() {
                 <FiMessageCircle size={20} />
               </div>
               <h2 className="text-2xl sm:text-3xl md:text-5xl font-black leading-tight tracking-tight mb-4 md:mb-5">
-                {cms.cta_title || t('home.ctaTitle')}
+                {(isBn && cms.cta_title_bn) ? cms.cta_title_bn : (cms.cta_title || t('home.ctaTitle'))}
               </h2>
               <p className="text-sm md:text-lg leading-relaxed mb-6 md:mb-10" style={{ color: 'var(--text-muted)' }}>
-                {cms.cta_sub || t('home.ctaSub')}
+                {(isBn && cms.cta_sub_bn) ? cms.cta_sub_bn : (cms.cta_sub || t('home.ctaSub'))}
               </p>
 
 

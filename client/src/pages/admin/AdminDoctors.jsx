@@ -102,7 +102,7 @@ export default function AdminDoctors() {
                 <th>{isBn ? 'ফোন' : 'Phone'}</th>
                 <th>{isBn ? 'সময়' : 'Hours'}</th>
                 <th>{isBn ? 'রেটিং' : 'Rating'}</th>
-                <th>Status</th>
+                <th>{isBn ? 'স্ট্যাটাস' : 'Status'}</th>
                 <th>{isBn ? 'কার্যক্রম' : 'Actions'}</th>
               </tr></thead>
               <tbody>
@@ -117,7 +117,7 @@ export default function AdminDoctors() {
                     <td style={{ fontSize:'0.8rem', color:'var(--text-muted)' }}>{d.phone || '—'}</td>
                     <td style={{ fontSize:'0.78rem', color:'var(--text-dim)' }}>{d.hours || '—'}</td>
                     <td style={{ fontSize:'0.83rem', color:'var(--amber)', fontWeight:700 }}>{d.rating ? `⭐ ${d.rating}` : '—'}</td>
-                    <td><span className={`badge ${d.is_active ? 'badge-green' : 'badge-gray'}`}>{d.is_active ? 'Active' : 'Inactive'}</span></td>
+                    <td><span className={`badge ${d.is_active ? 'badge-green' : 'badge-gray'}`}>{d.is_active ? (isBn ? 'সক্রিয়' : 'Active') : (isBn ? 'নিষ্ক্রিয়' : 'Inactive')}</span></td>
                     <td>
                       <div style={{ display:'flex', gap:5 }}>
                         <button onClick={() => openEdit(d)} style={{ width:28, height:28, borderRadius:7, border:'1px solid rgba(6,182,212,0.3)', background:'transparent', color:'var(--cyan)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}><FiEdit2 size={12}/></button>

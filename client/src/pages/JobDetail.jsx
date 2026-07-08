@@ -5,14 +5,14 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
-import { FiArrowLeft, FiMapPin, FiClock, FiUser, FiDollarSign, FiSend, FiUpload, FiBriefcase, FiZap, FiShield } from 'react-icons/fi';
+import { FiArrowLeft, FiMapPin, FiClock, FiUser, FiDollarSign, FiSend, FiUpload, FiBriefcase, FiZap, FiShield, FiXCircle, FiGlobe, FiCheckCircle } from 'react-icons/fi';
 
 export default function JobDetail() {
   const { id } = useParams();
   const { t, isBn } = useLang();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  const { isAuth } = useAuth();
+  const { isAuth, user } = useAuth();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [applied, setApplied] = useState(false);
@@ -43,7 +43,7 @@ export default function JobDetail() {
   };
 
   if (loading) return <div style={{ display: 'flex', justifyContent: 'center', padding: '5rem' }}><div className="spinner" /></div>;
-  if (!job) return <div className="empty"><div className="empty-icon">❌</div><div>Job not found</div></div>;
+  if (!job) return <div className="empty"><div className="empty-icon"><FiXCircle size={48} style={{ opacity: 0.4 }} /></div><div>Job not found</div></div>;
 
   const TYPE_COLOR = { 'full-time': 'var(--green)', 'part-time': 'var(--cyan)', 'freelance': 'var(--purple)', 'internship': 'var(--amber)', 'govt': 'var(--red)' };
 
@@ -142,13 +142,13 @@ export default function JobDetail() {
             <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 18, padding: '2rem', marginBottom: '1.5rem' }}>
               <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
                 <span className="badge" style={{ background: `${TYPE_COLOR[job.type]}18`, color: TYPE_COLOR[job.type] }}>{job.type}</span>
-                {job.is_remote && <span className="badge badge-cyan">🌐 Remote</span>}
+                {job.is_remote && <span className="badge badge-cyan" style={{ display: 'flex', alignItems: 'center', gap: 4 }}><FiGlobe size={13} /> Remote</span>}
                 <span className={`badge ${job.status === 'active' ? 'badge-green' : 'badge-gray'}`}>{job.status}</span>
               </div>
               <h1 style={{ fontSize: '1.7rem', fontWeight: 800, color: '#fff', marginBottom: 8, lineHeight: 1.2 }}>{(isBn && job.title_bn) ? job.title_bn : job.title}</h1>
               <div style={{ fontSize: '1.1rem', color: 'var(--cyan)', fontWeight: 700, marginBottom: '1.5rem' }}>{(isBn && job.company_bn) ? job.company_bn : job.company}</div>
               <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', fontSize: '0.85rem', color: 'var(--text-muted)', paddingBottom: '1.25rem', borderBottom: '1px solid var(--border)' }}>
-                {job.district && <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><FiMapPin size={13} />📍 {job.district}{job.division && `, ${job.division}`}</span>}
+                {job.district && <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><FiMapPin size={13} />{job.district}{job.division && `, ${job.division}`}</span>}
                 {job.salary_min && <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><FiDollarSign size={13} />৳{Number(job.salary_min).toLocaleString()}{job.salary_max && `–${Number(job.salary_max).toLocaleString()}`}</span>}
                 {job.deadline && <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><FiClock size={13} />{isBn ? 'শেষ তারিখ' : 'Deadline'}: {new Date(job.deadline).toLocaleDateString()}</span>}
                 {job.poster_name && <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><FiUser size={13} />{job.poster_name}</span>}
@@ -169,7 +169,7 @@ export default function JobDetail() {
           {/* Right */}
           <div style={{ position: 'sticky', top: 80 }}>
             <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 18, padding: '1.5rem', marginBottom: '1rem' }}>
-              <div style={{ display: 'flex', flex: 'column', gap: 6, marginBottom: '1.25rem', fontSize: '0.83rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: '1.25rem', fontSize: '0.83rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid var(--border)' }}>
                   <span style={{ color: 'var(--text-dim)' }}>{isBn ? 'ধরন' : 'Type'}</span>
                   <span style={{ fontWeight: 600, color: TYPE_COLOR[job.type] }}>{job.type}</span>
@@ -199,8 +199,8 @@ export default function JobDetail() {
                   </Link>
                 )
               ) : (
-                <div style={{ textAlign: 'center', padding: '1rem', background: 'var(--green-light)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 10, color: 'var(--green)', fontWeight: 700, fontSize: '0.88rem' }}>
-                  ✅ {isBn ? 'আবেদন পাঠানো হয়েছে' : 'Application Submitted'}
+                <div style={{ textAlign: 'center', padding: '1rem', background: 'var(--green-light)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 10, color: 'var(--green)', fontWeight: 700, fontSize: '0.88rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                  <FiCheckCircle size={16} /> {isBn ? 'আবেদন পাঠানো হয়েছে' : 'Application Submitted'}
                 </div>
               )}
               {job.poster_email && (
@@ -221,6 +221,20 @@ export default function JobDetail() {
             <h2 style={{ fontWeight: 800, fontSize: '1.2rem', marginBottom: 5, color: '#fff' }}>{t('jobs.apply')}: {(isBn && job.title_bn) ? job.title_bn : job.title}</h2>
             <p style={{ fontSize: '0.83rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>{(isBn && job.company_bn) ? job.company_bn : job.company}</p>
             <form onSubmit={handleApply} style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-group">
+                  <label className="form-label" style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{isBn ? 'আপনার নাম' : 'Your Name'}</label>
+                  <input type="text" value={user?.name || ''} disabled className="form-input" style={{ opacity: 0.6, cursor: 'not-allowed', padding: '10px 14px', background: 'var(--surface-2)' }} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label" style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{isBn ? 'ফোন / ইমেইল' : 'Phone / Email'}</label>
+                  <input type="text" value={user?.phone || user?.email || ''} disabled className="form-input" style={{ opacity: 0.6, cursor: 'not-allowed', padding: '10px 14px', background: 'var(--surface-2)' }} />
+                </div>
+              </div>
+              <p style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginTop: '-8px' }}>
+                * {isBn ? 'আপনার প্রোফাইলের তথ্য স্বয়ংক্রিয়ভাবে যুক্ত হবে।' : 'Your profile details will be attached automatically.'}
+              </p>
+
               <div className="form-group">
                 <label className="form-label">{isBn ? 'কভার লেটার' : 'Cover Letter'}</label>
                 <textarea value={cover} onChange={e => setCover(e.target.value)} placeholder={isBn ? 'নিজের সম্পর্কে সংক্ষেপে লিখুন...' : 'Briefly introduce yourself...'} className="form-textarea" style={{ minHeight: 110 }} />

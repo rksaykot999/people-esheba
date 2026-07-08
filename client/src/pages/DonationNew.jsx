@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useLang } from '../context/LanguageContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
-import { FiArrowLeft, FiUpload } from 'react-icons/fi';
+import { FiArrowLeft, FiUpload, FiZap } from 'react-icons/fi';
 
 const CATS = ['medical','education','disaster','food','other'];
 const DIVS = ['Dhaka','Chittagong','Rajshahi','Khulna','Barisal','Sylhet','Rangpur','Mymensingh'];
@@ -83,7 +83,7 @@ export default function DonationNew() {
             <div className="form-group" style={{ justifyContent:'flex-end' }}>
               <label style={{ display:'flex', alignItems:'center', gap:9, cursor:'pointer', marginTop:'1.5rem' }}>
                 <input type="checkbox" checked={form.is_urgent} onChange={e=>F('is_urgent',e.target.checked)} style={{ width:16, height:16, accentColor:'var(--red)' }}/>
-                <span style={{ fontSize:'0.88rem', color:'var(--text-muted)', fontWeight:600 }}>⚡ {isBn?'জরুরি হিসেবে চিহ্নিত করুন':'Mark as Urgent'}</span>
+                <span style={{ fontSize:'0.88rem', color:'var(--text-muted)', fontWeight:600, display: 'flex', alignItems: 'center' }}><FiZap size={14} style={{ marginRight: 6 }} /> {isBn?'জরুরি হিসেবে চিহ্নিত করুন':'Mark as Urgent'}</span>
               </label>
             </div>
           </div>

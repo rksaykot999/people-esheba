@@ -19,17 +19,17 @@ const NAV_ITEMS = (t) => [
   { icon:<FiDroplet/>,      label:t('admin.blood'),         to:'/admin/blood',        group:'core' },
   { icon:<FiVol/>,          label:t('admin.volunteers'),    to:'/admin/volunteers',   group:'core' },
   { icon:<FiAlertTriangle/>,label:t('admin.emergency'),     to:'/admin/emergency',    group:'core' },
-  { icon:<FiBox/>,label:'Services & Directory', to:'/admin/directory', group:'core' },
+  { icon:<FiBox/>,label:t('admin.directory') || 'Services & Directory', to:'/admin/directory', group:'core' },
   // Content management
-  { icon:<MdOutlineMedicalServices/>, label: t('nav.doctors') || 'Doctors',       to:'/admin/doctors',      group:'content' },
-  { icon:<MdOutlineLocalPharmacy/>,   label: 'Pharmacy',                           to:'/admin/pharmacy',     group:'content' },
+  { icon:<MdOutlineMedicalServices/>, label: t('health.doctors') || 'Doctors',       to:'/admin/doctors',      group:'content' },
+  { icon:<MdOutlineLocalPharmacy/>,   label: t('health.pharmacy') || 'Pharmacy',                           to:'/admin/pharmacy',     group:'content' },
   { icon:<FiFileText/>,               label: t('nav.notices') || 'Notices',        to:'/admin/notices',      group:'content' },
   { icon:<MdOutlineSchool/>,          label: t('nav.education') || 'Education',    to:'/admin/education',    group:'content' },
-  { icon:<FiAward/>,                  label: 'Scholarships',                        to:'/admin/scholarships', group:'content' },
+  { icon:<FiAward/>,                  label: t('education.scholarships') || 'Scholarships',                        to:'/admin/scholarships', group:'content' },
   // System
   { icon:<FiFlag/>,         label:t('admin.reports'),       to:'/admin/reports',      group:'system' },
   { icon:<FiBarChart2/>,    label:t('admin.analytics'),     to:'/admin/analytics',    group:'system' },
-  { icon:<FiPieChart/>,     label: 'System Logs',            to:'/admin/logs',         group:'system' },
+  { icon:<FiPieChart/>,     label: t('admin.logs') || 'System Logs',            to:'/admin/logs',         group:'system' },
   { icon:<FiSettings/>,     label: t('admin.settings'),     to:'/admin/settings',     group:'system' },
   { icon:<FiBell/>,         label:t('admin.notifications'), to:'/admin/notifications', group:'system' },
 ];

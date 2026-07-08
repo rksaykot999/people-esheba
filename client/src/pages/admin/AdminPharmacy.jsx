@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLang } from '../../context/LanguageContext';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
-import { FiPlus, FiTrash2, FiEdit2, FiX, FiSave, FiSearch, FiUploadCloud } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit2, FiX, FiSave, FiSearch, FiUploadCloud, FiActivity, FiCheckCircle } from 'react-icons/fi';
 import BulkImportModal from '../../components/admin/BulkImportModal';
 
 const DIVS = ['Dhaka','Chittagong','Rajshahi','Khulna','Barisal','Sylhet','Rangpur','Mymensingh'];
@@ -68,7 +68,7 @@ export default function AdminPharmacy() {
     <div>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'1.5rem',flexWrap:'wrap',gap:'0.75rem'}}>
         <div>
-          <h1 style={{fontWeight:800,fontSize:'1.4rem',color:'#fff',marginBottom:3}}>💊 {isBn?'ফার্মেসি ব্যবস্থাপনা':'Pharmacy Management'}</h1>
+          <h1 style={{fontWeight:800,fontSize:'1.4rem',color:'#fff',marginBottom:3,display:'flex',alignItems:'center',gap:6}}><FiActivity size={20}/> {isBn?'ফার্মেসি ব্যবস্থাপনা':'Pharmacy Management'}</h1>
           <p style={{color:'var(--text-muted)',fontSize:'0.85rem'}}>{total} {isBn?'মোট ফার্মেসি':'total pharmacies'}</p>
         </div>
         <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
@@ -88,24 +88,24 @@ export default function AdminPharmacy() {
           <div className="table-wrap"><table>
             <thead><tr>
               <th>{isBn?'নাম':'Name'}</th><th>{isBn?'এলাকা':'Area'}</th><th>{isBn?'জেলা':'District'}</th>
-              <th>{isBn?'ফোন':'Phone'}</th><th>24/7</th><th>Status</th><th>{isBn?'কার্যক্রম':'Actions'}</th>
+              <th>{isBn?'ফোন':'Phone'}</th><th>24/7</th><th>{isBn?'স্ট্যাটাস':'Status'}</th><th>{isBn?'কার্যক্রম':'Actions'}</th>
             </tr></thead>
             <tbody>
               {items.map(p=>(
                 <tr key={p.id}>
-                  <td><div style={{fontWeight:600,color:'var(--text-strong)',fontSize:'0.85rem'}}>{p.name}</div>{p.is_verified&&<span style={{fontSize:'0.68rem',color:'var(--green)'}}>✓ verified</span>}</td>
+                  <td><div style={{fontWeight:600,color:'var(--text-strong)',fontSize:'0.85rem'}}>{p.name}</div>{p.is_verified&&<span style={{fontSize:'0.68rem',color:'var(--green)',display:'flex',alignItems:'center',gap:2}}><FiCheckCircle size={10}/> verified</span>}</td>
                   <td style={{fontSize:'0.8rem',color:'var(--text-muted)'}}>{p.area||'—'}</td>
                   <td style={{fontSize:'0.8rem',color:'var(--text-muted)'}}>{p.district||'—'}</td>
                   <td style={{fontSize:'0.8rem',color:'var(--text-muted)'}}>{p.phone||'—'}</td>
-                  <td><span className={`badge ${p.is_24h?'badge-cyan':'badge-gray'}`}>{p.is_24h?'24h':'No'}</span></td>
-                  <td><span className={`badge ${p.is_active?'badge-green':'badge-gray'}`}>{p.is_active?'Active':'Inactive'}</span></td>
+                  <td><span className={`badge ${p.is_24h?'badge-cyan':'badge-gray'}`}>{p.is_24h?'24h':(isBn?'না':'No')}</span></td>
+                  <td><span className={`badge ${p.is_active?'badge-green':'badge-gray'}`}>{p.is_active?(isBn?'সক্রিয়':'Active'):(isBn?'নিষ্ক্রিয়':'Inactive')}</span></td>
                   <td><div style={{display:'flex',gap:5}}>
                     <button onClick={()=>openEdit(p)} style={{width:28,height:28,borderRadius:7,border:'1px solid rgba(6,182,212,0.3)',background:'transparent',color:'var(--cyan)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}><FiEdit2 size={12}/></button>
                     <button onClick={()=>deleteItem(p.id,p.name)} style={{width:28,height:28,borderRadius:7,border:'1px solid rgba(230,57,70,0.2)',background:'transparent',color:'var(--red)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}><FiTrash2 size={12}/></button>
                   </div></td>
                 </tr>
               ))}
-              {items.length===0&&<tr><td colSpan={7} style={{textAlign:'center',padding:'2.5rem',color:'var(--text-dim)'}}>💊 {isBn?'কোনো ফার্মেসি নেই':'No pharmacies found'}</td></tr>}
+              {items.length===0&&<tr><td colSpan={7} style={{textAlign:'center',padding:'2.5rem',color:'var(--text-dim)'}}><div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:6}}><FiActivity size={18}/> {isBn?'কোনো ফার্মেসি নেই':'No pharmacies found'}</div></td></tr>}
             </tbody>
           </table></div>
         )}

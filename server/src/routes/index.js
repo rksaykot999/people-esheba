@@ -138,8 +138,12 @@ router.post(  '/admin/bulk-import',         ...A, adm.bulkImport);
 router.put(   '/admin/settings',            ...A, settings.updateSettings);
 // Backup
 const backup = require('../controllers/backup.controller');
+const multer = require('multer');
+const uploadBackup = multer({ dest: 'uploads/backups/' });
+
 router.get('/admin/backup/status',   ...A, backup.getBackupStatus);
 router.get('/admin/backup/download', ...A, backup.downloadBackup);
+router.post('/admin/backup/restore', ...A, uploadBackup.single('backup'), backup.restoreBackup);
 
 
 // Admin CRUD — Doctors

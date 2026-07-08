@@ -90,7 +90,7 @@ export default function AdminScholarships() {
             <thead><tr>
               <th>{isBn?'নাম':'Title'}</th><th>{isBn?'প্রদানকারী':'Provider'}</th>
               <th>{isBn?'পরিমাণ':'Amount'}</th><th>{isBn?'শেষ সময়':'Deadline'}</th>
-              <th>Status</th><th>{isBn?'কার্যক্রম':'Actions'}</th>
+              <th>{isBn?'স্ট্যাটাস':'Status'}</th><th>{isBn?'কার্যক্রম':'Actions'}</th>
             </tr></thead>
             <tbody>
               {items.map(s=>(
@@ -103,10 +103,10 @@ export default function AdminScholarships() {
                   <td style={{fontSize:'0.8rem',color:'var(--green)'}}>{s.amount||'—'}</td>
                   <td>
                     {s.deadline?(
-                      new Date(s.deadline)<new Date() ? <span className="badge badge-red">Expired</span> : <span style={{fontSize:'0.78rem',color:'var(--text-dim)'}}>{new Date(s.deadline).toLocaleDateString()}</span>
+                      new Date(s.deadline)<new Date() ? <span className="badge badge-red">{isBn?'মেয়াদোত্তীর্ণ':'Expired'}</span> : <span style={{fontSize:'0.78rem',color:'var(--text-dim)'}}>{new Date(s.deadline).toLocaleDateString()}</span>
                     ):'—'}
                   </td>
-                  <td><span className={`badge ${s.is_active?'badge-green':'badge-gray'}`}>{s.is_active?'Active':'Hidden'}</span></td>
+                  <td><span className={`badge ${s.is_active?'badge-green':'badge-gray'}`}>{s.is_active?(isBn?'সক্রিয়':'Active'):(isBn?'লুকানো':'Hidden')}</span></td>
                   <td><div style={{display:'flex',gap:5}}>
                     <button onClick={()=>openEdit(s)} style={{width:28,height:28,borderRadius:7,border:'1px solid rgba(6,182,212,0.3)',background:'transparent',color:'var(--cyan)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}><FiEdit2 size={12}/></button>
                     <button onClick={()=>deleteItem(s.id,s.title)} style={{width:28,height:28,borderRadius:7,border:'1px solid rgba(230,57,70,0.2)',background:'transparent',color:'var(--red)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}><FiTrash2 size={12}/></button>

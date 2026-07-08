@@ -4,6 +4,8 @@ import {
   FiSettings, FiSave, FiGlobe, FiShield, FiBell, FiHome,
   FiEdit3, FiRefreshCw, FiCheckCircle, FiAlertTriangle,
   FiShare2, FiPhone, FiMail, FiBarChart2, FiHardDrive, FiDownload,
+  FiStar, FiBookOpen, FiMessageCircle, FiInfo, FiLink,
+  FiFacebook, FiTwitter, FiYoutube, FiLinkedin, FiCheck, FiAlertCircle, FiPackage, FiLock
 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import api from '../../services/api';
@@ -80,7 +82,7 @@ export default function AdminSettings() {
     setSaving(true);
     try {
       await api.put('/admin/settings', settings);
-      toast.success('✅ Settings saved successfully! Changes are now live on the website.');
+      toast.success('Settings saved successfully! Changes are now live on the website.');
       setDirty(false);
     } catch (e) {
       toast.error(e.response?.data?.message || 'Failed to save settings');
@@ -150,47 +152,93 @@ export default function AdminSettings() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
           {/* Hero Section */}
-          <Section title="🦸 Hero Section" subtitle="The big headline area at the top of the homepage">
+          <Section title={<span style={{display:'flex', alignItems:'center', gap: 6}}><FiStar/> Hero Section</span>} subtitle="The big headline area at the top of the homepage">
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <Field label="Hero Badge Text" hint="Small pill text above the headline">
+              <Field label="Hero Badge Text (EN)" hint="Small pill text above the headline">
                 <TextInput value={settings.hero_badge} onChange={v => set('hero_badge', v)} placeholder="Bangladesh No.1 Citizen Platform" />
               </Field>
-              <Field label="Hero Main Title" hint="Big headline (first line)">
+              <Field label="Hero Badge Text (BN)" hint="Small pill text above the headline">
+                <TextInput value={settings.hero_badge_bn} onChange={v => set('hero_badge_bn', v)} placeholder="বাংলাদেশের ১নং সিটিজেন প্ল্যাটফর্ম" />
+              </Field>
+              <Field label="Hero Main Title (EN)" hint="Big headline (first line)">
                 <TextInput value={settings.hero_title} onChange={v => set('hero_title', v)} placeholder="Empowering Citizens" />
               </Field>
-              <Field label="Hero Highlight Word" hint="Red highlighted text on second line">
+              <Field label="Hero Main Title (BN)" hint="Big headline (first line)">
+                <TextInput value={settings.hero_title_bn} onChange={v => set('hero_title_bn', v)} placeholder="নাগরিকদের ক্ষমতায়ন" />
+              </Field>
+              <Field label="Hero Highlight Word (EN)" hint="Red highlighted text on second line">
                 <TextInput value={settings.hero_highlight} onChange={v => set('hero_highlight', v)} placeholder="Connecting Communities" />
               </Field>
+              <Field label="Hero Highlight Word (BN)" hint="Red highlighted text on second line">
+                <TextInput value={settings.hero_highlight_bn} onChange={v => set('hero_highlight_bn', v)} placeholder="কমিউনিটির সাথে সংযোগ" />
+              </Field>
             </div>
-            <Field label="Hero Subtitle" hint="Paragraph text below the headline">
-              <TextArea value={settings.hero_subtitle} onChange={v => set('hero_subtitle', v)} rows={3} placeholder="Join the largest digital service platform..." />
-            </Field>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <Field label="Hero Subtitle (EN)" hint="Paragraph text below the headline">
+                <TextArea value={settings.hero_subtitle} onChange={v => set('hero_subtitle', v)} rows={3} placeholder="Join the largest digital service platform..." />
+              </Field>
+              <Field label="Hero Subtitle (BN)" hint="Paragraph text below the headline">
+                <TextArea value={settings.hero_subtitle_bn} onChange={v => set('hero_subtitle_bn', v)} rows={3} placeholder="বাংলাদেশের সবচেয়ে বড় ডিজিটাল সেবা প্ল্যাটফর্মে যুক্ত হোন..." />
+              </Field>
+            </div>
           </Section>
 
           {/* About Section */}
-          <Section title="📖 About / Features Section" subtitle="Content in the middle info section">
-            <Field label="Section Title">
-              <TextInput value={settings.about_title} onChange={v => set('about_title', v)} placeholder="Essential support for citizens..." />
-            </Field>
-            <Field label="Section Body Text" hint="Main paragraph describing the platform">
-              <TextArea value={settings.about_text} onChange={v => set('about_text', v)} rows={4} placeholder="People E-Sheba is a comprehensive platform..." />
-            </Field>
+          <Section title={<span style={{display:'flex', alignItems:'center', gap: 6}}><FiBookOpen/> About / Features Section</span>} subtitle="Content in the middle info section">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <Field label="Section Title (EN)">
+                <TextInput value={settings.about_title} onChange={v => set('about_title', v)} placeholder="Essential support for citizens..." />
+              </Field>
+              <Field label="Section Title (BN)">
+                <TextInput value={settings.about_title_bn} onChange={v => set('about_title_bn', v)} placeholder="নাগরিকদের জন্য প্রয়োজনীয় সহায়তা..." />
+              </Field>
+              <Field label="Section Body Text (EN)" hint="Main paragraph describing the platform">
+                <TextArea value={settings.about_text} onChange={v => set('about_text', v)} rows={4} placeholder="People E-Sheba is a comprehensive platform..." />
+              </Field>
+              <Field label="Section Body Text (BN)" hint="Main paragraph describing the platform">
+                <TextArea value={settings.about_text_bn} onChange={v => set('about_text_bn', v)} rows={4} placeholder="পিপল ই-সেবা একটি সমন্বিত প্ল্যাটফর্ম..." />
+              </Field>
+            </div>
           </Section>
 
           {/* CTA Section */}
-          <Section title="📣 Call-to-Action Section" subtitle="Bottom CTA banner on the homepage">
+          <Section title={<span style={{display:'flex', alignItems:'center', gap: 6}}><FiMessageCircle/> Call-to-Action Section</span>} subtitle="Bottom CTA banner on the homepage">
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <Field label="CTA Title">
+              <Field label="CTA Title (EN)">
                 <TextInput value={settings.cta_title} onChange={v => set('cta_title', v)} placeholder="Join People E-Sheba Today" />
               </Field>
-              <Field label="CTA Subtitle">
+              <Field label="CTA Title (BN)">
+                <TextInput value={settings.cta_title_bn} onChange={v => set('cta_title_bn', v)} placeholder="আজই পিপল ই-সেবা-তে যুক্ত হোন" />
+              </Field>
+              <Field label="CTA Subtitle (EN)">
                 <TextInput value={settings.cta_sub} onChange={v => set('cta_sub', v)} placeholder="Become part of a growing community..." />
+              </Field>
+              <Field label="CTA Subtitle (BN)">
+                <TextInput value={settings.cta_sub_bn} onChange={v => set('cta_sub_bn', v)} placeholder="ক্রমবর্ধমান এই কমিউনিটির অংশ হোন..." />
+              </Field>
+            </div>
+          </Section>
+
+          {/* How It Works Section */}
+          <Section title={<span style={{display:'flex', alignItems:'center', gap: 6}}><FiCheckCircle/> How It Works Section</span>} subtitle="Step by step flow section">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <Field label="Section Title (EN)">
+                <TextInput value={settings.how_title} onChange={v => set('how_title', v)} placeholder="How the platform works" />
+              </Field>
+              <Field label="Section Title (BN)">
+                <TextInput value={settings.how_title_bn} onChange={v => set('how_title_bn', v)} placeholder="কীভাবে কাজ করে" />
+              </Field>
+              <Field label="Section Subtitle (EN)">
+                <TextInput value={settings.how_sub} onChange={v => set('how_sub', v)} placeholder="The experience is kept simple..." />
+              </Field>
+              <Field label="Section Subtitle (BN)">
+                <TextInput value={settings.how_sub_bn} onChange={v => set('how_sub_bn', v)} placeholder="দ্রুত তথ্য খুঁজে অ্যাকশন নেওয়ার জন্য..." />
               </Field>
             </div>
           </Section>
 
           <InfoBox>
-            💡 After saving, the homepage will automatically display the new content. No rebuild needed.
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><FiInfo/> After saving, the homepage will automatically display the new content. No rebuild needed.</div>
           </InfoBox>
         </div>
       )}
@@ -198,18 +246,24 @@ export default function AdminSettings() {
       {/* ── GENERAL TAB ──────────────────────────────────────── */}
       {activeTab === 'general' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <Section title="🌐 Site Information" subtitle="Basic platform identity information">
+          <Section title={<span style={{display:'flex', alignItems:'center', gap: 6}}><FiGlobe/> Site Information</span>} subtitle="Basic platform identity information">
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <Field label="Site Name">
+              <Field label="Site Name (EN)">
                 <TextInput value={settings.site_name} onChange={v => set('site_name', v)} placeholder="People E-Sheba" />
               </Field>
-              <Field label="Site Description" hint="Used in browser metadata / SEO">
+              <Field label="Site Name (BN)">
+                <TextInput value={settings.site_name_bn} onChange={v => set('site_name_bn', v)} placeholder="পিপল ই-সেবা" />
+              </Field>
+              <Field label="Site Description (EN)" hint="Used in browser metadata / SEO">
                 <TextInput value={settings.site_description} onChange={v => set('site_description', v)} placeholder="A community platform..." />
+              </Field>
+              <Field label="Site Description (BN)" hint="Used in browser metadata / SEO">
+                <TextInput value={settings.site_description_bn} onChange={v => set('site_description_bn', v)} placeholder="একটি কমিউনিটি প্ল্যাটফর্ম..." />
               </Field>
             </div>
           </Section>
 
-          <Section title="📞 Contact Information" subtitle="Contact details shown on the website">
+          <Section title={<span style={{display:'flex', alignItems:'center', gap: 6}}><FiPhone/> Contact Information</span>} subtitle="Contact details shown on the website">
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <Field label={<><FiMail size={12} style={{ marginRight: 5 }} />Contact Email</>}>
                 <TextInput type="email" value={settings.contact_email} onChange={v => set('contact_email', v)} placeholder="admin@peopleesheba.com" />
@@ -217,8 +271,11 @@ export default function AdminSettings() {
               <Field label={<><FiPhone size={12} style={{ marginRight: 5 }} />Contact Phone</>}>
                 <TextInput value={settings.contact_phone} onChange={v => set('contact_phone', v)} placeholder="+880-1700-000000" />
               </Field>
-              <Field label="Footer Text" hint="Short text shown at the bottom of every page">
+              <Field label="Footer Text (EN)" hint="Short text shown at the bottom of every page">
                 <TextInput value={settings.footer_text} onChange={v => set('footer_text', v)} placeholder="Empowering Bangladeshi citizens..." />
+              </Field>
+              <Field label="Footer Text (BN)" hint="Short text shown at the bottom of every page">
+                <TextInput value={settings.footer_text_bn} onChange={v => set('footer_text_bn', v)} placeholder="বাংলাদেশের নাগরিকদের ক্ষমতায়ন..." />
               </Field>
             </div>
           </Section>
@@ -228,16 +285,25 @@ export default function AdminSettings() {
       {/* ── STATS TAB ────────────────────────────────────────── */}
       {activeTab === 'stats' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <Section title="📊 Homepage Statistics" subtitle="The 3 big numbers shown in the hero panel">
+          <Section title={<span style={{display:'flex', alignItems:'center', gap: 6}}><FiBarChart2/> Homepage Statistics</span>} subtitle="The 3 big numbers shown in the hero panel">
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
-              <Field label="Stat 1 — Services" hint='e.g. "500+"'>
+              <Field label="Stat 1 — Services (EN)" hint='e.g. "500+"'>
                 <TextInput value={settings.stat_services} onChange={v => set('stat_services', v)} placeholder="500+" />
               </Field>
-              <Field label="Stat 2 — Donors" hint='e.g. "10K+"'>
+              <Field label="Stat 2 — Donors (EN)" hint='e.g. "10K+"'>
                 <TextInput value={settings.stat_donors} onChange={v => set('stat_donors', v)} placeholder="10K+" />
               </Field>
-              <Field label="Stat 3 — People Helped" hint='e.g. "50K+"'>
+              <Field label="Stat 3 — People Helped (EN)" hint='e.g. "50K+"'>
                 <TextInput value={settings.stat_helped} onChange={v => set('stat_helped', v)} placeholder="50K+" />
+              </Field>
+              <Field label="Stat 1 — Services (BN)" hint='e.g. "৫০০+"'>
+                <TextInput value={settings.stat_services_bn} onChange={v => set('stat_services_bn', v)} placeholder="৫০০+" />
+              </Field>
+              <Field label="Stat 2 — Donors (BN)" hint='e.g. "১০ হাজার+"'>
+                <TextInput value={settings.stat_donors_bn} onChange={v => set('stat_donors_bn', v)} placeholder="১০ হাজার+" />
+              </Field>
+              <Field label="Stat 3 — People Helped (BN)" hint='e.g. "৫০ হাজার+"'>
+                <TextInput value={settings.stat_helped_bn} onChange={v => set('stat_helped_bn', v)} placeholder="৫০ হাজার+" />
               </Field>
             </div>
 
@@ -264,13 +330,13 @@ export default function AdminSettings() {
       {/* ── SOCIAL TAB ───────────────────────────────────────── */}
       {activeTab === 'social' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <Section title="🔗 Social Media Links" subtitle="Links to your official social media profiles">
+          <Section title={<span style={{display:'flex', alignItems:'center', gap: 6}}><FiLink/> Social Media Links</span>} subtitle="Links to your official social media profiles">
             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>
               {[
-                { key: 'social_facebook', label: '📘 Facebook URL', placeholder: 'https://facebook.com/peopleesheba' },
-                { key: 'social_twitter', label: '🐦 Twitter / X URL', placeholder: 'https://x.com/peopleesheba' },
-                { key: 'social_youtube', label: '▶️ YouTube URL', placeholder: 'https://youtube.com/@peopleesheba' },
-                { key: 'social_linkedin', label: '💼 LinkedIn URL', placeholder: 'https://linkedin.com/company/peopleesheba' },
+                { key: 'social_facebook', label: <span style={{display:'flex', alignItems:'center', gap: 6}}><FiFacebook/> Facebook URL</span>, placeholder: 'https://facebook.com/peopleesheba' },
+                { key: 'social_twitter', label: <span style={{display:'flex', alignItems:'center', gap: 6}}><FiTwitter/> Twitter / X URL</span>, placeholder: 'https://x.com/peopleesheba' },
+                { key: 'social_youtube', label: <span style={{display:'flex', alignItems:'center', gap: 6}}><FiYoutube/> YouTube URL</span>, placeholder: 'https://youtube.com/@peopleesheba' },
+                { key: 'social_linkedin', label: <span style={{display:'flex', alignItems:'center', gap: 6}}><FiLinkedin/> LinkedIn URL</span>, placeholder: 'https://linkedin.com/company/peopleesheba' },
               ].map(s => (
                 <Field key={s.key} label={s.label}>
                   <TextInput value={settings[s.key]} onChange={v => set(s.key, v)} placeholder={s.placeholder} />
@@ -284,7 +350,7 @@ export default function AdminSettings() {
       {/* ── SECURITY TAB ─────────────────────────────────────── */}
       {activeTab === 'security' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <Section title="🔒 Platform Security Settings" subtitle="Control access and platform availability">
+          <Section title={<span style={{display:'flex', alignItems:'center', gap: 6}}><FiLock/> Platform Security Settings</span>} subtitle="Control access and platform availability">
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <ToggleSetting
                 label="Maintenance Mode"
@@ -303,7 +369,7 @@ export default function AdminSettings() {
           </Section>
 
           <InfoBox type="warning">
-            ⚠️ Turning on Maintenance Mode will immediately block all users (except admins) from accessing the website.
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><FiAlertTriangle/> Turning on Maintenance Mode will immediately block all users (except admins) from accessing the website.</div>
           </InfoBox>
         </div>
       )}
@@ -311,7 +377,7 @@ export default function AdminSettings() {
       {/* ── BACKUP TAB ──────────────────────────────────────── */}
       {activeTab === 'backup' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <Section title="💾 Backup & Restore" subtitle="Download a complete backup of the website source code and database">
+          <Section title={<span style={{display:'flex', alignItems:'center', gap: 6}}><FiHardDrive/> Backup & Restore</span>} subtitle="Download a complete backup of the website source code and database">
 
             {/* Status box */}
             {backupStatus && (
@@ -323,14 +389,14 @@ export default function AdminSettings() {
                 <div style={{ padding: '1rem', background: 'var(--surface-2)', border: `1px solid ${backupStatus.mysqldump_available ? 'rgba(16,185,129,0.3)' : 'rgba(245,158,11,0.3)'}`, borderRadius: 12 }}>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginBottom: 4, fontWeight: 700 }}>MYSQLDUMP</div>
                   <div style={{ fontWeight: 700, color: backupStatus.mysqldump_available ? 'var(--green)' : 'var(--amber)', fontSize: '0.9rem' }}>
-                    {backupStatus.mysqldump_available ? '✓ Available' : '⚠ Not in PATH'}
+                    {backupStatus.mysqldump_available ? <span style={{display:'flex', alignItems:'center', gap:4}}><FiCheck/> Available</span> : <span style={{display:'flex', alignItems:'center', gap:4}}><FiAlertCircle/> Not in PATH</span>}
                   </div>
                 </div>
               </div>
             )}
 
             <div style={{ padding: '1.25rem', background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.2)', borderRadius: 12, lineHeight: 1.7, fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              <p style={{ fontWeight: 700, color: 'var(--text-strong)', marginBottom: '0.5rem' }}>📦 What is included in the backup?</p>
+              <p style={{ fontWeight: 700, color: 'var(--text-strong)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: 6 }}><FiPackage/> What is included in the backup?</p>
               <ul style={{ paddingLeft: '1.25rem', margin: 0 }}>
                 <li>All server source files (excluding <code>node_modules</code>)</li>
                 <li>All client source files (excluding <code>node_modules</code> and <code>dist</code>)</li>
@@ -384,7 +450,7 @@ export default function AdminSettings() {
           </Section>
 
           <InfoBox type="warning">
-            ⚠️ The backup may take 10–30 seconds to generate depending on project size. Do not close the browser tab during download.
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><FiAlertTriangle/> The backup may take 10–30 seconds to generate depending on project size. Do not close the browser tab during download.</div>
           </InfoBox>
         </div>
       )}

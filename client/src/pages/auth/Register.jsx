@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useLang } from '../../context/LanguageContext';
 import toast from 'react-hot-toast';
-import { FiUser, FiMail, FiPhone, FiLock, FiEye, FiEyeOff, FiMapPin } from 'react-icons/fi';
+import { FiUser, FiMail, FiPhone, FiLock, FiEye, FiEyeOff, FiMapPin, FiDroplet } from 'react-icons/fi';
 
 const DIVISIONS = ['Dhaka','Chittagong','Rajshahi','Khulna','Barisal','Sylhet','Rangpur','Mymensingh'];
 const GROUPS = ['A+','A-','B+','B-','AB+','AB-','O+','O-'];
@@ -23,7 +23,7 @@ export default function Register() {
     setLoading(true);
     try {
       await register(form);
-      toast.success('Account created successfully! Welcome 🎉');
+      toast.success('Account created successfully! Welcome');
       navigate('/');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Registration failed');
@@ -78,7 +78,7 @@ export default function Register() {
               </div>
             </div>
             <div className="form-group">
-              <label className="form-label">🩸 {isBn?'রক্তের গ্রুপ':'Blood Group'}<span style={{color:'var(--red)'}}>*</span></label>
+              <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: 4 }}><FiDroplet style={{ color: 'var(--red)' }} /> {isBn?'রক্তের গ্রুপ':'Blood Group'}<span style={{color:'var(--red)'}}>*</span></label>
               <select value={form.blood_group} onChange={e=>F('blood_group',e.target.value)} className="form-select" required>
                 <option value="">{isBn?'রক্তের গ্রুপ বেছে নিন':'Select Blood Group'}</option>
                 {GROUPS.map(g=><option key={g} value={g}>{g}</option>)}

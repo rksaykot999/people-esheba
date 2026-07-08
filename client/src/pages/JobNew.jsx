@@ -4,7 +4,7 @@ import { useLang } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
-import { FiArrowLeft, FiBriefcase, FiZap, FiShield } from 'react-icons/fi';
+import { FiArrowLeft, FiBriefcase, FiZap, FiShield, FiGlobe } from 'react-icons/fi';
 
 const TYPES = ['full-time', 'part-time', 'freelance', 'internship', 'govt'];
 const DIVS = ['Dhaka', 'Chittagong', 'Rajshahi', 'Khulna', 'Barisal', 'Sylhet', 'Rangpur', 'Mymensingh'];
@@ -180,7 +180,7 @@ export default function JobNew() {
           </div>
           <label style={{ display: 'flex', alignItems: 'center', gap: 9, cursor: 'pointer' }}>
             <input type="checkbox" checked={form.is_remote} onChange={e => F('is_remote', e.target.checked)} style={{ width: 16, height: 16, accentColor: 'var(--cyan)' }} />
-            <span style={{ fontSize: '0.88rem', color: 'var(--text-muted)', fontWeight: 600 }}>🌐 {isBn ? 'রিমোট কাজ সম্ভব' : 'This is a remote job'}</span>
+            <span style={{ fontSize: '0.88rem', color: 'var(--text-muted)', fontWeight: 600, display: 'flex', alignItems: 'center' }}><FiGlobe size={14} style={{ marginRight: 6 }} /> {isBn ? 'রিমোট কাজ সম্ভব' : 'This is a remote job'}</span>
           </label>
           <div style={{ display: 'flex', gap: 10 }}>
             <button type="submit" className="btn btn-primary" style={{ flex: 1, justifyContent: 'center', height: 46 }} disabled={loading}>
