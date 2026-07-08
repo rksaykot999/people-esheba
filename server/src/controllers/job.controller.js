@@ -5,7 +5,7 @@ exports.getAll = async (req, res) => {
   try {
     const { type, category, district, search, remote, page = 1, limit = 12 } = req.query;
     const offset = (parseInt(page) - 1) * parseInt(limit);
-    let   where  = ['j.status = "active"'];
+    let   where  = ["j.status = 'active'"];
     const params = [];
 
     if (type)     { where.push('j.type = ?');           params.push(type); }

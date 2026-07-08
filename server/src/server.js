@@ -90,7 +90,8 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 // ── Start Server ──────────────────────────────────────────────
-if (process.env.NODE_ENV !== 'production') {
+// VERCEL=1 অটোমেটিক Vercel-এ set থাকে, তাই এটা না থাকলেই শুধু listen করবে
+if (!process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`\n🚀 People E-Sheba API`);
     console.log(`   → http://localhost:${PORT}`);

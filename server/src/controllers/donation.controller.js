@@ -73,7 +73,7 @@ exports.donate = async (req, res) => {
     if (!amount || amount <= 0) return err(res, 'Valid amount required', 400);
 
     const [[donation]] = await db.execute(
-      'SELECT * FROM donations WHERE id=? AND status="approved"', [req.params.id]
+      "SELECT * FROM donations WHERE id=? AND status='approved'", [req.params.id]
     );
     if (!donation) return err(res, 'Donation not found or not active', 404);
 

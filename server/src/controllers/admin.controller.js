@@ -204,7 +204,7 @@ exports.getReports = async (req, res) => {
 };
 
 exports.resolveReport = async (req, res) => {
-  await db.execute('UPDATE reports SET status="resolved" WHERE id=?', [req.params.id]);
+  await db.execute("UPDATE reports SET status='resolved' WHERE id=?", [req.params.id]);
   ok(res, null, 'Resolved');
 };
 
@@ -299,7 +299,7 @@ exports.getAnalytics = async (req, res) => {
       'SELECT title, company, views, type FROM jobs ORDER BY views DESC LIMIT 5'
     );
     const [topDonations] = await db.execute(
-      'SELECT title, amount_needed, amount_raised, category FROM donations WHERE status="approved" ORDER BY amount_raised DESC LIMIT 5'
+      "SELECT title, amount_needed, amount_raised, category FROM donations WHERE status='approved' ORDER BY amount_raised DESC LIMIT 5"
     );
     const [bloodByGroup] = await db.execute(
       'SELECT blood_group, COUNT(*) AS count FROM blood_donors WHERE is_available=1 GROUP BY blood_group'
