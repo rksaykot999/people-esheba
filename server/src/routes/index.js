@@ -139,7 +139,8 @@ router.put(   '/admin/settings',            ...A, settings.updateSettings);
 // Backup
 const backup = require('../controllers/backup.controller');
 const multer = require('multer');
-const uploadBackup = multer({ dest: 'uploads/backups/' });
+const os = require('os');
+const uploadBackup = multer({ dest: os.tmpdir() });
 
 router.get('/admin/backup/status',   ...A, backup.getBackupStatus);
 router.get('/admin/backup/download', ...A, backup.downloadBackup);
