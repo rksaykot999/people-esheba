@@ -48,14 +48,19 @@ exports.create = async (req, res) => {
   try {
     const { title, company, description, requirements, category, type, salary_min, salary_max, division, district, is_remote, deadline } = req.body;
     if (!title || !company || !description) return err(res, 'Required fields missing', 400);
+    // Admin-posted jobs are active immediately; user-submitted jobs go to pending
+    const insertStatus = req.user.role === 'admin' ? 'active' : 'pending';
     const [r] = await db.execute(
-      `INSERT INTO jobs (user_id,title,company,description,requirements,category,type,salary_min,salary_max,division,district,is_remote,deadline)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+      `INSERT INTO jobs (user_id,title,company,description,requirements,category,type,salary_min,salary_max,division,district,is_remote,deadline,status)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       [req.user.id, title, company, description, requirements||null, category||'general',
-       type||'full-time', salary_min||null, salary_max||null, division||null, district||null, is_remote||0, deadline||null]
+       type||'full-time', salary_min||null, salary_max||null, division||null, district||null, is_remote||0, deadline||null, insertStatus]
     );
     const [[job]] = await db.execute('SELECT * FROM jobs WHERE id=?', [r.insertId]);
-    ok(res, job, 'Job posted', 201);
+    const msg = insertStatus === 'pending'
+      ? 'Job submitted for admin review'
+      : 'Job posted successfully';
+    ok(res, job, msg, 201);
   } catch { err(res, 'Failed to post job', 500); }
 };
 

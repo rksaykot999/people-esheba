@@ -60,10 +60,23 @@
     "govt_college": "Government College",
     "college_title": "Government Colleges",
     "college_sub": "Prestigious government colleges in Bangladesh",
+    "private_college": "Private College",
+    "madrasah": "Madrasah",
+    "technical": "Technical",
+    "other_college": "Other",
     "public_uni": "Public University",
     "private_uni": "Private University",
     "university_title": "Universities",
     "university_sub": "Explore Public and Private Universities in Bangladesh"
+  },
+  "scholarship": {
+    "type": {
+      "govt": "Govt",
+      "ngo": "NGO",
+      "international": "International",
+      "corporate": "Corporate",
+      "other": "Other"
+    }
   },
   "services": {
     "title": "All Services",

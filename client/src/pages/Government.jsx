@@ -30,6 +30,7 @@ const IMPORTANT_LINKS = [
   { label:'NID Service',        sublabel:'services.nidw.gov.bd', color:'#10B981', Icon: FiCreditCard, link: 'https://services.nidw.gov.bd' },
   { label:'E-Passport',         sublabel:'epassport.gov.bd',  color:'#F59E0B', Icon: MdCardTravel, link: 'https://epassport.gov.bd' },
   { label:'Land Ministry',      sublabel:'minland.gov.bd',    color:'#EF4444', Icon: MdTerrain, link: 'https://minland.gov.bd' },
+  { label:'Birth Registration', sublabel:'bdris.gov.bd',      color:'#06B6D4', Icon: FiFileText, link: 'https://bdris.gov.bd' },
 ];
 
 /* ── Animated Counter ─────────────────────────────────── */

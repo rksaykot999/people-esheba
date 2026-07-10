@@ -61,10 +61,23 @@
     "govt_college": "সরকারি কলেজ",
     "college_title": "সরকারি কলেজ",
     "college_sub": "বাংলাদেশের ঐতিহ্যবাহী সরকারি কলেজসমূহ",
+    "private_college": "প্রাইভেট কলেজ",
+    "madrasah": "মাদরাসা",
+    "technical": "টেকনিক্যাল",
+    "other_college": "অন্যান্য",
     "public_uni": "পাবলিক বিশ্ববিদ্যালয়",
     "private_uni": "প্রাইভেট বিশ্ববিদ্যালয়",
     "university_title": "বিশ্ববিদ্যালয়",
     "university_sub": "বাংলাদেশের সরকারি ও বেসরকারি বিশ্ববিদ্যালয়সমূহ দেখুন"
+  },
+  "scholarship": {
+    "type": {
+      "govt": "সরকারি",
+      "ngo": "এনজিও",
+      "international": "আন্তর্জাতিক",
+      "corporate": "কর্পোরেট",
+      "other": "অন্যান্য"
+    }
   },
   "services": {
     "title": "সকল সেবা",

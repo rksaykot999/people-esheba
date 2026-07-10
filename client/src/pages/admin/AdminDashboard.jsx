@@ -59,14 +59,27 @@ export default function AdminDashboard() {
         <p style={{ color:'var(--text-muted)', fontSize:'0.87rem' }}>{isBn?'প্ল্যাটফর্মের সামগ্রিক অবস্থা':'Platform summary at a glance'}</p>
       </div>
 
+      {/* Pending approvals banner */}
+      {((s.pending_jobs||0) + (s.pending_donations||0) + (s.pending_blood||0) + (s.pending_volunteers||0)) > 0 && (
+        <div style={{ marginBottom:'1.5rem', padding:'1rem 1.5rem', background:'rgba(245,158,11,0.08)', border:'1px solid rgba(245,158,11,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', gap:'1rem', alignItems:'center' }}>
+          <span style={{ fontWeight:800, color:'#F59E0B', fontSize:'0.9rem', display:'flex', alignItems:'center', gap:6 }}>
+            <FiClock size={16}/> {isBn ? 'অনুমোদন প্রয়োজন:' : 'Needs Approval:'}
+          </span>
+          {s.pending_jobs>0 && <Link to="/admin/jobs" style={{ textDecoration:'none', background:'rgba(245,158,11,0.15)', color:'#F59E0B', borderRadius:10, padding:'4px 12px', fontSize:'0.8rem', fontWeight:700 }}>&#x1F4BC; {s.pending_jobs} {isBn?'চাকরি':'Jobs'}</Link>}
+          {s.pending_donations>0 && <Link to="/admin/donations" style={{ textDecoration:'none', background:'rgba(230,57,70,0.15)', color:'#E63946', borderRadius:10, padding:'4px 12px', fontSize:'0.8rem', fontWeight:700 }}>&#x2764;&#xFE0F; {s.pending_donations} {isBn?'ডোনেশন':'Donations'}</Link>}
+          {s.pending_blood>0 && <Link to="/admin/blood" style={{ textDecoration:'none', background:'rgba(239,68,68,0.15)', color:'#EF4444', borderRadius:10, padding:'4px 12px', fontSize:'0.8rem', fontWeight:700 }}>&#x1FA78; {s.pending_blood} {isBn?'রক্তদাতা':'Blood Donors'}</Link>}
+          {s.pending_volunteers>0 && <Link to="/admin/volunteers" style={{ textDecoration:'none', background:'rgba(139,92,246,0.15)', color:'#8B5CF6', borderRadius:10, padding:'4px 12px', fontSize:'0.8rem', fontWeight:700 }}>&#x1F64B; {s.pending_volunteers} {isBn?'স্বেচ্ছাসেবক':'Volunteers'}</Link>}
+        </div>
+      )}
+
       {/* Stat cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem', marginBottom: '2rem' }}>
         <StatCard icon={<FiUsers/>} label={t('admin.totalUsers')}  value={s.total_users?.toLocaleString()}  color="#06B6D4"   to="/admin/users"     sub={`+${s.new_users_today} today`}/>
-        <StatCard icon={<FiBriefcase/>} label={t('admin.totalJobs')} value={s.active_jobs?.toLocaleString()} color="#10B981"  to="/admin/jobs"/>
-        <StatCard icon={<FiHeart/>} label={t('admin.totalDonations')} value={s.pending_donations?.toLocaleString()} color="#E63946" to="/admin/donations" sub={s.pending_donations>0? (isBn ? 'রিভিউ প্রয়োজন' : 'Review needed') : undefined}/>
-        <StatCard icon={<FiVol/>} label={t('admin.totalVolunteers')} value={s.active_volunteers?.toLocaleString()} color="#8B5CF6" to="/admin/volunteers"/>
-        <StatCard icon={<FiDroplet/>} label="Available Donors" value={s.available_donors?.toLocaleString()} color="#E63946" to="/admin/blood"/>
-        <StatCard icon={<FiDollarSign/>} label="Total Donated (৳)" value={Number(s.total_donated||0).toLocaleString()} color="#F59E0B"/>
+        <StatCard icon={<FiBriefcase/>} label={t('admin.totalJobs')} value={s.active_jobs?.toLocaleString()} color="#10B981"  to="/admin/jobs" sub={s.pending_jobs>0 ? `${s.pending_jobs} pending` : undefined}/>
+        <StatCard icon={<FiHeart/>} label={t('admin.totalDonations')} value={s.pending_donations?.toLocaleString()} color="#E63946" to="/admin/donations" sub={s.pending_donations>0? (isBn ? 'রিভিউ প্রয়োজন' : 'Review needed') : undefined}/>
+        <StatCard icon={<FiVol/>} label={t('admin.totalVolunteers')} value={s.active_volunteers?.toLocaleString()} color="#8B5CF6" to="/admin/volunteers" sub={s.pending_volunteers>0 ? `${s.pending_volunteers} pending` : undefined}/>
+        <StatCard icon={<FiDroplet/>} label="Blood Donors" value={s.available_donors?.toLocaleString()} color="#E63946" to="/admin/blood" sub={s.pending_blood>0 ? `${s.pending_blood} pending` : undefined}/>
+        <StatCard icon={<FiDollarSign/>} label="Total Donated" value={Number(s.total_donated||0).toLocaleString()} color="#F59E0B"/>
         <StatCard icon={<FiAlertTriangle/>} label="Emergency Services" value={s.emergency_services?.toLocaleString()} color="#E63946" to="/admin/emergency"/>
         <StatCard icon={<FiClock/>} label="Pending Reports" value={s.pending_reports?.toLocaleString()} color="#F59E0B" to="/admin/reports"/>
       </div>

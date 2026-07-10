@@ -111,14 +111,16 @@ router.delete('/admin/jobs/:id',          ...A, adm.deleteJob);
 router.put(   '/admin/jobs/:id/status',   ...A, adm.updateJobStatus);
 
 // Blood donors
-router.get(   '/admin/blood-donors',            ...A, adm.getBloodDonors);
+router.get(   '/admin/blood-donors',            ...A, adm.getBloodDonorsAdmin);
 router.delete('/admin/blood-donors/:id',        ...A, adm.deleteBloodDonor);
 router.put(   '/admin/blood-donors/:id/verify', ...A, adm.verifyBloodDonor);
+router.put(   '/admin/blood-donors/:id/status', ...A, adm.approveBloodDonor);
 
 // Volunteers
-router.get(   '/admin/volunteers',           ...A, adm.getVolunteers);
-router.delete('/admin/volunteers/:id',       ...A, adm.deleteVolunteer);
-router.put(   '/admin/volunteers/:id/verify',...A, adm.verifyVolunteer);
+router.get(   '/admin/volunteers',             ...A, adm.getVolunteersAdmin);
+router.delete('/admin/volunteers/:id',          ...A, adm.deleteVolunteer);
+router.put(   '/admin/volunteers/:id/verify',   ...A, adm.verifyVolunteer);
+router.put(   '/admin/volunteers/:id/status',   ...A, adm.approveVolunteer);
 
 // Emergency
 router.get(   '/admin/emergency',         ...A, adm.getEmergencyServices);

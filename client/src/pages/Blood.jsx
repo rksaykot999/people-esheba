@@ -111,7 +111,7 @@ export default function Blood() {
       const { data } = await api.post('/blood-donors', regForm);
       setMyDonor(data.data);
       setShowReg(false);
-      toast.success('Registered as blood donor!');
+      toast.success(isBn ? 'আপনার রেজিস্ট্রেশন অনুমোদনের জন্য পাঠানো হয়েছে!' : 'Registration submitted for admin review!');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed');
     }

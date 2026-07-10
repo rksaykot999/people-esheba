@@ -5,7 +5,8 @@ exports.getAll = async (req, res) => {
   try {
     const { blood_group, district, division, available, page = 1, limit = 20 } = req.query;
     const offset = (parseInt(page) - 1) * parseInt(limit);
-    let   where  = ['b.is_available = 1'];
+    // Only show approved & available donors publicly
+    let   where  = ['b.is_available = 1', "COALESCE(b.status,'approved') = 'approved'"];
     const params = [];
 
     if (blood_group) { where.push('b.blood_group = ?');    params.push(blood_group); }
@@ -40,15 +41,15 @@ exports.register = async (req, res) => {
     if (existing) return err(res, 'Already registered as donor', 409);
 
     const [r] = await db.execute(
-      `INSERT INTO blood_donors (user_id, blood_group, division, district, upazila, address, emergency_contact)
-       VALUES (?,?,?,?,?,?,?)`,
-      [req.user.id, blood_group, division||null, district||null, upazila||null, address||null, emergency_contact||null]
+      `INSERT INTO blood_donors (user_id, blood_group, division, district, upazila, address, emergency_contact, status)
+       VALUES (?,?,?,?,?,?,?,?)`,
+      [req.user.id, blood_group, division||null, district||null, upazila||null, address||null, emergency_contact||null, 'pending']
     );
     const [[row]] = await db.execute(
       'SELECT b.*, u.name, u.phone FROM blood_donors b JOIN users u ON b.user_id=u.id WHERE b.id=?',
       [r.insertId]
     );
-    ok(res, row, 'Registered as blood donor', 201);
+    ok(res, row, 'Registration submitted for admin review', 201);
   } catch {
     err(res, 'Registration failed', 500);
   }

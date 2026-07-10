@@ -208,22 +208,11 @@ export default function Donate() {
         <div style={{
           background: 'var(--surface)', border: '1px solid var(--border)',
           borderRadius: 20, padding: '1.25rem', marginBottom: '2rem',
-          display: 'flex', flexDirection: 'column', gap: '1rem',
+          display: 'flex', flexDirection: 'row', flexWrap: 'wrap', 
+          justifyContent: 'space-between', alignItems: 'center', gap: '1rem',
         }}>
-          <div style={{ display: 'flex', gap: 10, justifyContent: 'space-between', flexWrap: 'wrap' }}>
-            <button 
-              onClick={() => setShowRequestModal(true)}
-              style={{
-                background: 'linear-gradient(135deg, #ef4444, #dc2626)', color: '#fff', border: 'none',
-                padding: '0 1.5rem', height: 46, borderRadius: 12, fontSize: '0.85rem', fontWeight: 700,
-                display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer',
-                boxShadow: '0 4px 14px rgba(239,68,68,0.3)',
-              }}>
-              <FiPlusCircle size={16} /> {t("donate.post_request") || "Post Help Request"}
-            </button>
-          </div>
-
-          {/* Category filter pills */}
+          
+          {/* Category filter pills (Left Side) */}
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px', marginRight: 4 }}>
               <FiFilter size={11} style={{ marginRight: 4 }} />{t("common.filter") || "Filter"}:
@@ -250,6 +239,20 @@ export default function Donate() {
                 </button>
               );
             })}
+          </div>
+
+          {/* Action Button (Right Side) */}
+          <div style={{ display: 'flex', gap: 10 }}>
+            <button 
+              onClick={() => setShowRequestModal(true)}
+              style={{
+                background: 'linear-gradient(135deg, #ef4444, #dc2626)', color: '#fff', border: 'none',
+                padding: '0 1.5rem', height: 46, borderRadius: 12, fontSize: '0.85rem', fontWeight: 700,
+                display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer',
+                boxShadow: '0 4px 14px rgba(239,68,68,0.3)',
+              }}>
+              <FiPlusCircle size={16} /> {t("donate.post_request") || "Post Help Request"}
+            </button>
           </div>
         </div>
 

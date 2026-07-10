@@ -11,12 +11,15 @@ exports.getDashboard = async (req, res) => {
         (SELECT COUNT(*) FROM users WHERE is_active=0)          AS blocked_users,
         (SELECT COUNT(*) FROM users WHERE DATE(created_at)=CURDATE()) AS new_users_today,
         (SELECT COUNT(*) FROM jobs WHERE status='active')       AS active_jobs,
+        (SELECT COUNT(*) FROM jobs WHERE status='pending')      AS pending_jobs,
         (SELECT COUNT(*) FROM jobs)                             AS total_jobs,
         (SELECT COUNT(*) FROM donations WHERE status='pending') AS pending_donations,
         (SELECT COUNT(*) FROM donations WHERE status='approved')AS active_donations,
         (SELECT COALESCE(SUM(amount),0) FROM donation_transactions) AS total_donated,
-        (SELECT COUNT(*) FROM blood_donors WHERE is_available=1) AS available_donors,
+        (SELECT COUNT(*) FROM blood_donors WHERE is_available=1 AND COALESCE(status,'approved')='approved') AS available_donors,
+        (SELECT COUNT(*) FROM blood_donors WHERE COALESCE(status,'approved')='pending') AS pending_blood,
         (SELECT COUNT(*) FROM volunteers WHERE is_active=1)     AS active_volunteers,
+        (SELECT COUNT(*) FROM volunteers WHERE is_active=0)     AS pending_volunteers,
         (SELECT COUNT(*) FROM emergency_services)               AS emergency_services,
         (SELECT COUNT(*) FROM job_applications)                 AS total_applications,
         (SELECT COUNT(*) FROM reports WHERE status='pending')   AS pending_reports
@@ -135,15 +138,21 @@ exports.deleteDonation = async (req, res) => {
 /* ── Jobs management ──────────────────────────────────────── */
 exports.getAllJobs = async (req, res) => {
   try {
-    const { page = 1, limit = 15 } = req.query;
+    const { page = 1, limit = 15, status } = req.query;
     const offset = (parseInt(page) - 1) * parseInt(limit);
+    let where = ['1=1'];
+    const params = [];
+    if (status) { where.push('j.status = ?'); params.push(status); }
+    const cond = where.join(' AND ');
     const [rows] = await db.execute(
       `SELECT j.*, u.name AS poster_name,
        (SELECT COUNT(*) FROM job_applications a WHERE a.job_id=j.id) AS applicants
        FROM jobs j JOIN users u ON j.user_id=u.id
-       ORDER BY j.created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`
+       WHERE ${cond}
+       ORDER BY j.created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`,
+      params
     );
-    const [[{ total }]] = await db.execute('SELECT COUNT(*) AS total FROM jobs');
+    const [[{ total }]] = await db.execute(`SELECT COUNT(*) AS total FROM jobs j WHERE ${cond}`, params);
     ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
   } catch { err(res, 'Failed', 500); }
 };
@@ -320,6 +329,33 @@ exports.verifyBloodDonor = async (req, res) => {
   await db.execute('UPDATE users u JOIN blood_donors b ON u.id=b.user_id SET u.is_verified=1 WHERE b.id=?', [req.params.id]);
   ok(res, null, 'Verified');
 };
+exports.approveBloodDonor = async (req, res) => {
+  const { status } = req.body;
+  if (!['approved','rejected'].includes(status)) return err(res, 'Invalid status', 400);
+  await db.execute('UPDATE blood_donors SET status=? WHERE id=?', [status, req.params.id]);
+  ok(res, null, `Blood donor ${status}`);
+};
+
+/* ── Admin blood donors list with status filter ───────────── */
+exports.getBloodDonorsAdmin = async (req, res) => {
+  try {
+    const { page = 1, limit = 20, status } = req.query;
+    const offset = (parseInt(page) - 1) * parseInt(limit);
+    let where = ['1=1'];
+    const params = [];
+    if (status) { where.push("COALESCE(b.status,'approved') = ?"); params.push(status); }
+    const cond = where.join(' AND ');
+    const [rows] = await db.execute(
+      `SELECT b.*, u.name, u.email, u.phone, u.is_verified
+       FROM blood_donors b JOIN users u ON b.user_id=u.id
+       WHERE ${cond}
+       ORDER BY b.created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`,
+      params
+    );
+    const [[{ total }]] = await db.execute(`SELECT COUNT(*) AS total FROM blood_donors b WHERE ${cond}`, params);
+    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+  } catch { err(res, 'Failed', 500); }
+};
 
 /* ── Volunteers extras ────────────────────────────────────── */
 exports.deleteVolunteer = async (req, res) => {
@@ -329,6 +365,34 @@ exports.deleteVolunteer = async (req, res) => {
 exports.verifyVolunteer = async (req, res) => {
   await db.execute('UPDATE users u JOIN volunteers v ON u.id=v.user_id SET u.is_verified=1 WHERE v.id=?', [req.params.id]);
   ok(res, null, 'Verified');
+};
+exports.approveVolunteer = async (req, res) => {
+  const { status } = req.body; // 'approved' or 'rejected'
+  const isActive = status === 'approved' ? 1 : 0;
+  await db.execute('UPDATE volunteers SET is_active=? WHERE id=?', [isActive, req.params.id]);
+  ok(res, null, `Volunteer ${status}`);
+};
+
+/* ── Volunteers admin list with pending support ───────────── */
+exports.getVolunteersAdmin = async (req, res) => {
+  try {
+    const { page = 1, limit = 20, status } = req.query;
+    const offset = (parseInt(page) - 1) * parseInt(limit);
+    let where = ['1=1'];
+    const params = [];
+    if (status === 'pending')  { where.push('v.is_active = 0'); }
+    else if (status === 'active')   { where.push('v.is_active = 1'); }
+    const cond = where.join(' AND ');
+    const [rows] = await db.execute(
+      `SELECT v.*, u.name, u.email, u.phone
+       FROM volunteers v JOIN users u ON v.user_id=u.id
+       WHERE ${cond}
+       ORDER BY v.created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`,
+      params
+    );
+    const [[{ total }]] = await db.execute(`SELECT COUNT(*) AS total FROM volunteers v WHERE ${cond}`, params);
+    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+  } catch { err(res, 'Failed', 500); }
 };
 
 /* ── Jobs extras ──────────────────────────────────────────── */

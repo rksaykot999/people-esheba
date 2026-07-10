@@ -60,9 +60,9 @@ export default function Volunteers() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await api.post('/volunteers', regForm);
-      setMyVol(data.data); closeReg();
-      toast.success(isBn?'স্বেচ্ছাসেবক হিসেবে নিবন্ধিত!':'Registered as volunteer!');
+      await api.post('/volunteers', regForm);
+      toast.success(isBn ? 'আপনার রেজিস্ট্রেশন অনুমোদনের জন্য পাঠানো হয়েছে!' : 'Registration submitted for admin review!');
+      setShowReg(false);
     } catch (err) { toast.error(err.response?.data?.message || 'Failed'); }
   };
 

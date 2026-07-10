@@ -33,15 +33,15 @@ exports.register = async (req, res) => {
     if (existing) return err(res, 'Already registered', 409);
 
     const [r] = await db.execute(
-      `INSERT INTO volunteers (user_id,skills,availability,category,division,district,bio)
-       VALUES (?,?,?,?,?,?,?)`,
-      [req.user.id, skills||null, availability||null, category||'general', division||null, district||null, bio||null]
+      `INSERT INTO volunteers (user_id,skills,availability,category,division,district,bio,is_active)
+       VALUES (?,?,?,?,?,?,?,?)`,
+      [req.user.id, skills||null, availability||null, category||'general', division||null, district||null, bio||null, 0]
     );
     const [[row]] = await db.execute(
       'SELECT v.*, u.name, u.avatar FROM volunteers v JOIN users u ON v.user_id=u.id WHERE v.id=?',
       [r.insertId]
     );
-    ok(res, row, 'Registered as volunteer', 201);
+    ok(res, row, 'Registration submitted for admin review', 201);
   } catch { err(res, 'Failed', 500); }
 };
 

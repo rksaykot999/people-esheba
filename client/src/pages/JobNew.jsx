@@ -28,7 +28,7 @@ export default function JobNew() {
     setLoading(true);
     try {
       const { data } = await api.post('/jobs', form);
-      toast.success(isBn ? 'চাকরি পোস্ট হয়েছে!' : 'Job posted successfully!');
+      toast.success(isBn ? 'আপনার চাকরি পোস্টটি অনুমোদনের জন্য পাঠানো হয়েছে!' : 'Job submitted for admin review!');
       navigate('/jobs');
     } catch (err) { toast.error(err.response?.data?.message || 'Failed'); }
     finally { setLoading(false); }
