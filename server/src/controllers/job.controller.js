@@ -26,8 +26,9 @@ exports.getAll = async (req, res) => {
       `SELECT COUNT(*) AS total FROM jobs j WHERE ${where.join(' AND ')}`, params
     );
     ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
-  } catch {
-    err(res, 'Failed', 500);
+  } catch (error) {
+    console.error('API Error:', error);
+    err(res, error.message || 'Failed', 500);
   }
 };
 
