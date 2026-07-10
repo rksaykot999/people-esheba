@@ -9,7 +9,7 @@ const dbConfig = {
   user:            process.env.DB_USER,
   password:        process.env.DB_PASSWORD,
   waitForConnections: true,
-  connectionLimit:    20,
+  connectionLimit:    2,
   queueLimit:         0,
   enableKeepAlive:    true,
   keepAliveInitialDelay: 0,
