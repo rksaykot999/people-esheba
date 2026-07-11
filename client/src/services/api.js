@@ -1,9 +1,11 @@
 import axios from 'axios';
 
-// যদি অ্যাপটি Vercel লাইভে (Production) থাকে তবে লাইভ ব্যাকএন্ড লিঙ্ক নিবে, 
-// আর লোকালহোস্টে (Development) থাকলে Vite প্রক্সি ব্যবহারের জন্য '/api' নিবে।
+// Vercel Production-এর জন্য লাইভ ব্যাকএন্ড URL
+// Local Development-এর জন্য '/api' (Vite Proxy)
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.PROD 
+    ? import.meta.env.VITE_API_URL 
+    : '/api',
   timeout: 15000,
   headers: { 'Content-Type': 'application/json' },
 });
