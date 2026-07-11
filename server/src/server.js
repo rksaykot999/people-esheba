@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
+const fs = require('fs');
 const routes = require('./routes/index');
 const errorHandler = require('./middleware/errorHandler');
 
@@ -83,13 +84,26 @@ app.use('/api', routes);
 
 // ── Serve Client Static Files & SPA Fallback ──────────────────
 const clientDistPath = path.join(__dirname, '../../client/dist');
-app.use(express.static(clientDistPath));
+const hasClientDist = fs.existsSync(clientDistPath);
+
+if (hasClientDist) {
+  app.use(express.static(clientDistPath));
+}
 
 app.get('*', (req, res, next) => {
   if (req.path.startsWith('/api/') || req.path.startsWith('/uploads/')) {
     return next();
   }
-  res.sendFile(path.join(clientDistPath, 'index.html'));
+  if (hasClientDist) {
+    res.sendFile(path.join(clientDistPath, 'index.html'));
+  } else {
+    res.json({
+      success: true,
+      message: 'People E-Sheba API Server is running 🚀',
+      environment: process.env.NODE_ENV,
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 
 // ── 404 Handler ───────────────────────────────────────────────
