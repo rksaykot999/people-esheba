@@ -62,18 +62,22 @@ export const usePaginated = (url, initialParams = {}) => {
   const [pages,   setPages]   = useState(1);
   const [page,    setPage]    = useState(1);
   const [loading, setLoading] = useState(false);
+  const [error,   setError]   = useState(null);
   const [params,  setParams]  = useState(initialParams);
 
   const load = useCallback(async (p = page, q = params) => {
     try {
-      setLoading(true);
+      setLoading(true); setError(null);
       const res = await api.get(url, { params: { ...q, page: p } });
       const d   = res.data.data;
       setItems(d.rows || d);
       setTotal(d.total  ?? (d.rows?.length ?? 0));
       setPages(d.pages  ?? 1);
       setPage(p);
-    } catch { /* silently handled */ }
+    } catch (e) {
+      console.error(`usePaginated(${url}) failed:`, e);
+      setError(e.response?.data?.message || 'Failed to load');
+    }
     finally  { setLoading(false); }
   }, [url, page, params]);
 
@@ -85,5 +89,5 @@ export const usePaginated = (url, initialParams = {}) => {
     load(1, merged);
   };
 
-  return { items, total, pages, page, loading, load, updateParams };
+  return { items, total, pages, page, loading, error, load, updateParams };
 };

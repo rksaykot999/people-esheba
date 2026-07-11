@@ -2,20 +2,31 @@
 const express  = require('express');
 const router   = express.Router();
 const { protect, adminOnly } = require('../middleware/auth');
+const asyncHandler = require('../utils/asyncHandler');
+
+// Wrap every handler of a controller module in asyncHandler so rejected
+// promises are forwarded to the global error handler instead of turning into
+// unhandled rejections (which leave the request hanging).
+const wrap = (mod) =>
+  Object.fromEntries(
+    Object.entries(mod).map(([key, fn]) =>
+      [key, typeof fn === 'function' ? asyncHandler(fn) : fn]
+    )
+  );
 
 // ── Auth ──────────────────────────────────────────────────────
-const auth = require('../controllers/auth.controller');
+const auth = wrap(require('../controllers/auth.controller'));
 router.post('/auth/register', auth.register);
 router.post('/auth/login',    auth.login);
 router.get( '/auth/me',       protect, auth.getMe);
 
 // ── Site Settings / CMS (public read) ─────────────────────────
-const settings = require('../controllers/settings.controller');
+const settings = wrap(require('../controllers/settings.controller'));
 router.get('/settings', settings.getSettings);
 
 
 // ── Users ─────────────────────────────────────────────────────
-const user = require('../controllers/user.controller');
+const user = wrap(require('../controllers/user.controller'));
 router.get( '/users/profile',              protect, user.getProfile);
 router.put( '/users/profile',              protect, user.updateProfile);
 router.delete('/users/profile',            protect, user.deleteProfile);
@@ -27,7 +38,7 @@ router.get( '/users/bookmarks',            protect, user.getBookmarks);
 router.post('/users/bookmarks',            protect, user.toggleBookmark);
 
 // ── Emergency ─────────────────────────────────────────────────
-const emg = require('../controllers/emergency.controller');
+const emg = wrap(require('../controllers/emergency.controller'));
 router.get( '/sos',          emg.getSOS);
 router.get( '/emergency',    emg.getAll);
 router.get( '/emergency/:id',emg.getOne);
@@ -36,7 +47,7 @@ router.put( '/emergency/:id',protect, emg.update);
 router.delete('/emergency/:id', protect, adminOnly, emg.remove);
 
 // ── Blood Donors ──────────────────────────────────────────────
-const blood = require('../controllers/blood.controller');
+const blood = wrap(require('../controllers/blood.controller'));
 router.get( '/blood-donors',              blood.getAll);
 router.post('/blood-donors',              protect, blood.register);
 router.get( '/blood-donors/me',           protect, blood.getMyDonor);
@@ -44,7 +55,7 @@ router.put( '/blood-donors/availability', protect, blood.toggleAvailability);
 router.put( '/blood-donors/me',           protect, blood.update);
 
 // ── Donations ─────────────────────────────────────────────────
-const don = require('../controllers/donation.controller');
+const don = wrap(require('../controllers/donation.controller'));
 router.get( '/donations',      don.getAll);
 router.get( '/donations/mine', protect, don.getMyDonations);
 router.get( '/donations/:id',  don.getOne);
@@ -52,7 +63,7 @@ router.post('/donations',      protect, require('../middleware/upload').uploadDo
 router.post('/donations/:id/donate', protect, don.donate);
 
 // ── Jobs ──────────────────────────────────────────────────────
-const job = require('../controllers/job.controller');
+const job = wrap(require('../controllers/job.controller'));
 router.get( '/jobs',                      job.getAll);
 router.get( '/jobs/my-applications',      protect, job.getMyApplications);
 router.post('/jobs',                      protect, job.create);
@@ -64,7 +75,7 @@ router.get( '/jobs/:id/applications',    protect, job.getApplications);
 router.put( '/jobs/applications/:appId', protect, job.updateApplication);
 
 // ── Volunteers ────────────────────────────────────────────────
-const vol = require('../controllers/volunteer.controller');
+const vol = wrap(require('../controllers/volunteer.controller'));
 router.get( '/volunteers',    vol.getAll);
 router.post('/volunteers',    protect, vol.register);
 router.get( '/volunteers/me', protect, vol.getMyVolunteer);
@@ -72,7 +83,7 @@ router.put( '/volunteers/me', protect, vol.updateVolunteer);
 router.delete('/volunteers/me', protect, vol.deactivate);
 
 // ── Public Content (Doctors, Pharmacies, Notices, Education, Scholarships) ──
-const cnt = require('../controllers/content.controller');
+const cnt = wrap(require('../controllers/content.controller'));
 router.get('/doctors',      cnt.getDoctors);
 router.get('/doctors/:id',  cnt.getDoctorById);
 router.get('/pharmacies',   cnt.getPharmacies);
@@ -81,12 +92,12 @@ router.get('/education',    cnt.getEducation);
 router.get('/scholarships', cnt.getScholarships);
 
 // ── Directory (Hospitals, Services, Government, Finance) ──
-const dir = require('../controllers/directory.controller');
+const dir = wrap(require('../controllers/directory.controller'));
 router.get('/directory',     dir.getAll);
 router.get('/directory/:id', dir.getOne);
 
 // ── Admin ─────────────────────────────────────────────────────
-const adm = require('../controllers/admin.controller');
+const adm = wrap(require('../controllers/admin.controller'));
 const A   = [protect, adminOnly];
 
 router.get( '/admin/dashboard', ...A, adm.getDashboard);
@@ -139,7 +150,7 @@ router.post(  '/admin/bulk-import',         ...A, adm.bulkImport);
 // Settings (CMS)
 router.put(   '/admin/settings',            ...A, settings.updateSettings);
 // Backup
-const backup = require('../controllers/backup.controller');
+const backup = wrap(require('../controllers/backup.controller'));
 const multer = require('multer');
 const os = require('os');
 const uploadBackup = multer({ dest: os.tmpdir() });

@@ -37,7 +37,9 @@ export default function AdminBlood() {
     try {
       const r = await api.get('/admin/blood-donors?status=pending&limit=1');
       setPendingCount(r.data.data.total || 0);
-    } catch {}
+    } catch (e) {
+      console.error('Failed to fetch pending blood donor count:', e);
+    }
   };
 
   useEffect(() => { fetchDonors(); }, [page, statusFilter]); // eslint-disable-line

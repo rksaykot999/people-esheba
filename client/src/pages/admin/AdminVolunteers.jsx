@@ -36,7 +36,9 @@ export default function AdminVolunteers() {
     try {
       const r = await api.get('/admin/volunteers?status=pending&limit=1');
       setPendingCount(r.data.data.total || 0);
-    } catch {}
+    } catch (e) {
+      console.error('Failed to fetch pending volunteer count:', e);
+    }
   };
 
   useEffect(() => { fetchVolunteers(); }, [page, statusFilter]); // eslint-disable-line
