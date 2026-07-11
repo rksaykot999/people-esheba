@@ -1,10 +1,11 @@
 const db = require('../config/db');
 const { ok, err } = require('../utils/response');
+const { getPagination, runPaginated } = require('../utils/pagination');
 
 exports.getAll = async (req, res) => {
   try {
-    const { blood_group, district, division, available, page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { blood_group, district, division, available } = req.query;
+    const { page, limit } = getPagination(req.query, 20);
     // Only show approved & available donors publicly
     let   where  = ['b.is_available = 1', "COALESCE(b.status,'approved') = 'approved'"];
     const params = [];
@@ -14,19 +15,19 @@ exports.getAll = async (req, res) => {
     if (division)    { where.push('b.division LIKE ?');    params.push(`%${division}%`); }
     if (available === 'false') where[0] = '1=1';
 
-    const [rows] = await db.execute(
+    const cond = where.join(' AND ');
+    const result = await runPaginated(
+      db,
       `SELECT b.*, u.name, u.phone, u.avatar, u.is_verified
        FROM blood_donors b
        JOIN users u ON b.user_id = u.id
-       WHERE ${where.join(' AND ')}
-       ORDER BY b.updated_at DESC
-       LIMIT ${parseInt(limit)} OFFSET ${offset}`,
-      params
+       WHERE ${cond}
+       ORDER BY b.updated_at DESC`,
+      `SELECT COUNT(*) AS total FROM blood_donors b WHERE ${cond}`,
+      params,
+      { page, limit }
     );
-    const [[{ total }]] = await db.execute(
-      `SELECT COUNT(*) AS total FROM blood_donors b WHERE ${where.join(' AND ')}`, params
-    );
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    ok(res, result);
   } catch {
     err(res, 'Failed', 500);
   }

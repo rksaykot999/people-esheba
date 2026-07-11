@@ -1,10 +1,11 @@
 const db = require('../config/db');
 const { ok, err } = require('../utils/response');
+const { getPagination, runPaginated } = require('../utils/pagination');
 
 exports.getAll = async (req, res) => {
   try {
-    const { type, district, division, search, page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { type, district, division, search } = req.query;
+    const { page, limit } = getPagination(req.query, 20);
     let   where  = ['1=1'];
     const params = [];
 
@@ -13,22 +14,20 @@ exports.getAll = async (req, res) => {
     if (division) { where.push('e.division LIKE ?');       params.push(`%${division}%`); }
     if (search)   { where.push('e.name LIKE ?');           params.push(`%${search}%`); }
 
-    const [rows] = await db.execute(
+    const cond = where.join(' AND ');
+    const result = await runPaginated(
+      db,
       `SELECT e.*, u.name AS added_by
        FROM emergency_services e
        LEFT JOIN users u ON e.created_by = u.id
-       WHERE ${where.join(' AND ')}
-       ORDER BY e.is_verified DESC, e.name ASC
-       LIMIT ${parseInt(limit)} OFFSET ${offset}`,
-      params
+       WHERE ${cond}
+       ORDER BY e.is_verified DESC, e.name ASC`,
+      `SELECT COUNT(*) AS total FROM emergency_services e WHERE ${cond}`,
+      params,
+      { page, limit }
     );
 
-    const [[{ total }]] = await db.execute(
-      `SELECT COUNT(*) AS total FROM emergency_services e WHERE ${where.join(' AND ')}`,
-      params
-    );
-
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    ok(res, result);
   } catch (e) {
     err(res, 'Failed to fetch services', 500);
   }

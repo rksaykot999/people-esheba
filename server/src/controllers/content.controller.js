@@ -2,24 +2,28 @@
 // Handles: Doctors, Pharmacies, Notices, Education, Scholarships
 const db = require('../config/db');
 const { ok, err } = require('../utils/response');
+const { getPagination, runPaginated } = require('../utils/pagination');
 
 /* ═══════════════════════ DOCTORS ═══════════════════════════ */
 
 exports.getDoctors = async (req, res) => {
   try {
-    const { search, specialty, district, page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { search, specialty, district } = req.query;
+    const { page, limit } = getPagination(req.query, 20);
     const where = ['is_active = 1'];
     const params = [];
     if (search) { where.push('(name LIKE ? OR specialty LIKE ? OR area LIKE ?)'); params.push(`%${search}%`, `%${search}%`, `%${search}%`); }
     if (specialty) { where.push('specialty = ?'); params.push(specialty); }
     if (district)  { where.push('district = ?');  params.push(district); }
-    const [rows] = await db.execute(
-      `SELECT * FROM doctors WHERE ${where.join(' AND ')} ORDER BY is_verified DESC, rating DESC, created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`,
-      params
+    const cond = where.join(' AND ');
+    const result = await runPaginated(
+      db,
+      `SELECT * FROM doctors WHERE ${cond} ORDER BY is_verified DESC, rating DESC, created_at DESC`,
+      `SELECT COUNT(*) AS total FROM doctors WHERE ${cond}`,
+      params,
+      { page, limit }
     );
-    const [[{ total }]] = await db.execute(`SELECT COUNT(*) AS total FROM doctors WHERE ${where.join(' AND ')}`, params);
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    ok(res, result);
   } catch (e) { console.error(e); err(res, 'Failed', 500); }
 };
 
@@ -33,20 +37,23 @@ exports.getDoctorById = async (req, res) => {
 
 exports.getPharmacies = async (req, res) => {
   try {
-    const { search, district, is_24h, type, page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { search, district, is_24h, type } = req.query;
+    const { page, limit } = getPagination(req.query, 20);
     const where = ['is_active = 1'];
     const params = [];
     if (search)  { where.push('(name LIKE ? OR area LIKE ?)'); params.push(`%${search}%`, `%${search}%`); }
     if (district){ where.push('district = ?'); params.push(district); }
     if (is_24h)  { where.push('is_24h = 1'); }
     if (type)    { where.push('type = ?'); params.push(type); }
-    const [rows] = await db.execute(
-      `SELECT * FROM pharmacies WHERE ${where.join(' AND ')} ORDER BY is_verified DESC, is_24h DESC, created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`,
-      params
+    const cond = where.join(' AND ');
+    const result = await runPaginated(
+      db,
+      `SELECT * FROM pharmacies WHERE ${cond} ORDER BY is_verified DESC, is_24h DESC, created_at DESC`,
+      `SELECT COUNT(*) AS total FROM pharmacies WHERE ${cond}`,
+      params,
+      { page, limit }
     );
-    const [[{ total }]] = await db.execute(`SELECT COUNT(*) AS total FROM pharmacies WHERE ${where.join(' AND ')}`, params);
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    ok(res, result);
   } catch (e) { console.error(e); err(res, 'Failed', 500); }
 };
 
@@ -54,18 +61,21 @@ exports.getPharmacies = async (req, res) => {
 
 exports.getNotices = async (req, res) => {
   try {
-    const { search, category, page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { search, category } = req.query;
+    const { page, limit } = getPagination(req.query, 20);
     const where = ['is_active = 1'];
     const params = [];
     if (search)   { where.push('(title LIKE ? OR source LIKE ?)'); params.push(`%${search}%`, `%${search}%`); }
     if (category) { where.push('category = ?'); params.push(category); }
-    const [rows] = await db.execute(
-      `SELECT * FROM notices WHERE ${where.join(' AND ')} ORDER BY created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`,
-      params
+    const cond = where.join(' AND ');
+    const result = await runPaginated(
+      db,
+      `SELECT * FROM notices WHERE ${cond} ORDER BY created_at DESC`,
+      `SELECT COUNT(*) AS total FROM notices WHERE ${cond}`,
+      params,
+      { page, limit }
     );
-    const [[{ total }]] = await db.execute(`SELECT COUNT(*) AS total FROM notices WHERE ${where.join(' AND ')}`, params);
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    ok(res, result);
   } catch (e) { console.error(e); err(res, 'Failed', 500); }
 };
 
@@ -73,20 +83,23 @@ exports.getNotices = async (req, res) => {
 
 exports.getEducation = async (req, res) => {
   try {
-    const { search, type, subtype, district, page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { search, type, subtype, district } = req.query;
+    const { page, limit } = getPagination(req.query, 20);
     const where = ['is_active = 1'];
     const params = [];
     if (search)   { where.push('(name LIKE ? OR address LIKE ?)'); params.push(`%${search}%`, `%${search}%`); }
     if (type)     { where.push('type = ?');     params.push(type); }
     if (subtype)  { where.push('subtype = ?');  params.push(subtype); }
     if (district) { where.push('district = ?'); params.push(district); }
-    const [rows] = await db.execute(
-      `SELECT * FROM education_institutions WHERE ${where.join(' AND ')} ORDER BY is_verified DESC, created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`,
-      params
+    const cond = where.join(' AND ');
+    const result = await runPaginated(
+      db,
+      `SELECT * FROM education_institutions WHERE ${cond} ORDER BY is_verified DESC, created_at DESC`,
+      `SELECT COUNT(*) AS total FROM education_institutions WHERE ${cond}`,
+      params,
+      { page, limit }
     );
-    const [[{ total }]] = await db.execute(`SELECT COUNT(*) AS total FROM education_institutions WHERE ${where.join(' AND ')}`, params);
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    ok(res, result);
   } catch (e) { console.error(e); err(res, 'Failed', 500); }
 };
 
@@ -94,32 +107,37 @@ exports.getEducation = async (req, res) => {
 
 exports.getScholarships = async (req, res) => {
   try {
-    const { search, category, page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { search, category } = req.query;
+    const { page, limit } = getPagination(req.query, 20);
     const where = ['is_active = 1'];
     const params = [];
     if (search)   { where.push('(title LIKE ? OR provider LIKE ?)'); params.push(`%${search}%`, `%${search}%`); }
     if (category) { where.push('category = ?'); params.push(category); }
-    const [rows] = await db.execute(
-      `SELECT * FROM scholarships WHERE ${where.join(' AND ')} ORDER BY deadline ASC, created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`,
-      params
+    const cond = where.join(' AND ');
+    const result = await runPaginated(
+      db,
+      `SELECT * FROM scholarships WHERE ${cond} ORDER BY deadline ASC, created_at DESC`,
+      `SELECT COUNT(*) AS total FROM scholarships WHERE ${cond}`,
+      params,
+      { page, limit }
     );
-    const [[{ total }]] = await db.execute(`SELECT COUNT(*) AS total FROM scholarships WHERE ${where.join(' AND ')}`, params);
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    ok(res, result);
   } catch (e) { console.error(e); err(res, 'Failed', 500); }
 };
 
 /* ═══════════════════ ADMIN — DOCTORS ═══════════════════════ */
 exports.adminGetDoctors = async (req, res) => {
   try {
-    const { search, specialty, page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { search, specialty } = req.query;
+    const { page, limit } = getPagination(req.query, 20);
     const where = ['1=1']; const params = [];
     if (search)    { where.push('(name LIKE ? OR specialty LIKE ? OR area LIKE ?)'); params.push(`%${search}%`, `%${search}%`, `%${search}%`); }
     if (specialty) { where.push('specialty = ?'); params.push(specialty); }
-    const [rows] = await db.execute(`SELECT * FROM doctors WHERE ${where.join(' AND ')} ORDER BY created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`, params);
-    const [[{ total }]] = await db.execute(`SELECT COUNT(*) AS total FROM doctors WHERE ${where.join(' AND ')}`, params);
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    const cond = where.join(' AND ');
+    const result = await runPaginated(db,
+      `SELECT * FROM doctors WHERE ${cond} ORDER BY created_at DESC`,
+      `SELECT COUNT(*) AS total FROM doctors WHERE ${cond}`, params, { page, limit });
+    ok(res, result);
   } catch { err(res, 'Failed', 500); }
 };
 exports.adminCreateDoctor = async (req, res) => {
@@ -150,13 +168,15 @@ exports.adminDeleteDoctor = async (req, res) => {
 /* ═══════════════════ ADMIN — PHARMACIES ════════════════════ */
 exports.adminGetPharmacies = async (req, res) => {
   try {
-    const { search, page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { search } = req.query;
+    const { page, limit } = getPagination(req.query, 20);
     const where = ['1=1']; const params = [];
     if (search) { where.push('(name LIKE ? OR area LIKE ?)'); params.push(`%${search}%`, `%${search}%`); }
-    const [rows] = await db.execute(`SELECT * FROM pharmacies WHERE ${where.join(' AND ')} ORDER BY created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`, params);
-    const [[{ total }]] = await db.execute(`SELECT COUNT(*) AS total FROM pharmacies WHERE ${where.join(' AND ')}`, params);
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    const cond = where.join(' AND ');
+    const result = await runPaginated(db,
+      `SELECT * FROM pharmacies WHERE ${cond} ORDER BY created_at DESC`,
+      `SELECT COUNT(*) AS total FROM pharmacies WHERE ${cond}`, params, { page, limit });
+    ok(res, result);
   } catch { err(res, 'Failed', 500); }
 };
 exports.adminCreatePharmacy = async (req, res) => {
@@ -185,15 +205,16 @@ exports.adminDeletePharmacy = async (req, res) => {
 /* ════════════════════ ADMIN — NOTICES ══════════════════════ */
 exports.adminGetNotices = async (req, res) => {
   try {
-    const { search, category, page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { search, category } = req.query;
+    const { page, limit } = getPagination(req.query, 20);
     const where = ['1=1']; const params = [];
     if (search)   { where.push('title LIKE ?'); params.push(`%${search}%`); }
     if (category) { where.push('category = ?'); params.push(category); }
-    const [rows] = await db.execute(
-      `SELECT n.*, u.name AS creator_name FROM notices n LEFT JOIN users u ON n.created_by=u.id WHERE ${where.join(' AND ')} ORDER BY n.created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`, params);
-    const [[{ total }]] = await db.execute(`SELECT COUNT(*) AS total FROM notices n WHERE ${where.join(' AND ')}`, params);
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    const cond = where.join(' AND ');
+    const result = await runPaginated(db,
+      `SELECT n.*, u.name AS creator_name FROM notices n LEFT JOIN users u ON n.created_by=u.id WHERE ${cond} ORDER BY n.created_at DESC`,
+      `SELECT COUNT(*) AS total FROM notices n WHERE ${cond}`, params, { page, limit });
+    ok(res, result);
   } catch { err(res, 'Failed', 500); }
 };
 exports.adminCreateNotice = async (req, res) => {
@@ -222,14 +243,16 @@ exports.adminDeleteNotice = async (req, res) => {
 /* ═══════════════════ ADMIN — EDUCATION ═════════════════════ */
 exports.adminGetEducation = async (req, res) => {
   try {
-    const { search, type, page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { search, type } = req.query;
+    const { page, limit } = getPagination(req.query, 20);
     const where = ['1=1']; const params = [];
     if (search) { where.push('name LIKE ?'); params.push(`%${search}%`); }
     if (type)   { where.push('type = ?'); params.push(type); }
-    const [rows] = await db.execute(`SELECT * FROM education_institutions WHERE ${where.join(' AND ')} ORDER BY created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`, params);
-    const [[{ total }]] = await db.execute(`SELECT COUNT(*) AS total FROM education_institutions WHERE ${where.join(' AND ')}`, params);
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    const cond = where.join(' AND ');
+    const result = await runPaginated(db,
+      `SELECT * FROM education_institutions WHERE ${cond} ORDER BY created_at DESC`,
+      `SELECT COUNT(*) AS total FROM education_institutions WHERE ${cond}`, params, { page, limit });
+    ok(res, result);
   } catch { err(res, 'Failed', 500); }
 };
 exports.adminCreateEducation = async (req, res) => {
@@ -258,14 +281,16 @@ exports.adminDeleteEducation = async (req, res) => {
 /* ═══════════════════ ADMIN — SCHOLARSHIPS ══════════════════ */
 exports.adminGetScholarships = async (req, res) => {
   try {
-    const { search, category, page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { search, category } = req.query;
+    const { page, limit } = getPagination(req.query, 20);
     const where = ['1=1']; const params = [];
     if (search)   { where.push('(title LIKE ? OR provider LIKE ?)'); params.push(`%${search}%`, `%${search}%`); }
     if (category) { where.push('category = ?'); params.push(category); }
-    const [rows] = await db.execute(`SELECT * FROM scholarships WHERE ${where.join(' AND ')} ORDER BY created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`, params);
-    const [[{ total }]] = await db.execute(`SELECT COUNT(*) AS total FROM scholarships WHERE ${where.join(' AND ')}`, params);
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    const cond = where.join(' AND ');
+    const result = await runPaginated(db,
+      `SELECT * FROM scholarships WHERE ${cond} ORDER BY created_at DESC`,
+      `SELECT COUNT(*) AS total FROM scholarships WHERE ${cond}`, params, { page, limit });
+    ok(res, result);
   } catch { err(res, 'Failed', 500); }
 };
 exports.adminCreateScholarship = async (req, res) => {

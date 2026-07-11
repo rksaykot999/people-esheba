@@ -1,10 +1,11 @@
 const db = require('../config/db');
 const { ok, err } = require('../utils/response');
+const { getPagination, runPaginated } = require('../utils/pagination');
 
 exports.getAll = async (req, res) => {
   try {
-    const { type, category, district, search, remote, page = 1, limit = 12 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { type, category, district, search, remote } = req.query;
+    const { page, limit } = getPagination(req.query, 12);
     let   where  = ["j.status = 'active'"];
     const params = [];
 
@@ -14,18 +15,18 @@ exports.getAll = async (req, res) => {
     if (remote === 'true') where.push('j.is_remote = 1');
     if (search)   { where.push('(j.title LIKE ? OR j.company LIKE ?)'); params.push(`%${search}%`, `%${search}%`); }
 
-    const [rows] = await db.execute(
+    const cond = where.join(' AND ');
+    const result = await runPaginated(
+      db,
       `SELECT j.*, u.name AS poster_name, u.is_verified AS poster_verified,
        (SELECT COUNT(*) FROM job_applications a WHERE a.job_id=j.id) AS applicants
        FROM jobs j JOIN users u ON j.user_id=u.id
-       WHERE ${where.join(' AND ')} ORDER BY j.created_at DESC
-       LIMIT ${parseInt(limit)} OFFSET ${offset}`,
-      params
+       WHERE ${cond} ORDER BY j.created_at DESC`,
+      `SELECT COUNT(*) AS total FROM jobs j WHERE ${cond}`,
+      params,
+      { page, limit }
     );
-    const [[{ total }]] = await db.execute(
-      `SELECT COUNT(*) AS total FROM jobs j WHERE ${where.join(' AND ')}`, params
-    );
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    ok(res, result);
   } catch (error) {
     console.error('API Error:', error);
     err(res, error.message || 'Failed', 500);
