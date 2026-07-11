@@ -96,20 +96,16 @@ exports.downloadBackup = async (req, res) => {
 
 /* ── GET /admin/backup/status ─────────────────────────────── */
 exports.getBackupStatus = async (req, res) => {
-  try {
-    // Check mysqldump availability
-    const hasMysqldump = await new Promise((resolve) => {
-      exec('mysqldump --version', (error) => resolve(!error));
-    });
+  // Check mysqldump availability
+  const hasMysqldump = await new Promise((resolve) => {
+    exec('mysqldump --version', (error) => resolve(!error));
+  });
 
-    ok(res, {
-      mysqldump_available: hasMysqldump,
-      db_name: process.env.DB_NAME || 'Not configured',
-      server_time: new Date().toISOString(),
-    });
-  } catch {
-    err(res, 'Status check failed', 500);
-  }
+  ok(res, {
+    mysqldump_available: hasMysqldump,
+    db_name: process.env.DB_NAME || 'Not configured',
+    server_time: new Date().toISOString(),
+  });
 };
 
 /* ── POST /admin/backup/restore ─────────────────────────────

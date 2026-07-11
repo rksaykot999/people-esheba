@@ -34,15 +34,20 @@ async function initPool() {
       activePool = pool;
       return pool;
     } catch (err) {
-      console.error('❌ MySQL connection failed:', err.message);
+      console.error('❌ MySQL connection failed:', err.stack || err.message);
+      // Reset so a later request can retry instead of being stuck with a
+      // permanently-rejected cached promise.
+      initPromise = null;
       throw err;
     }
   })();
-  
+
   return initPromise;
 }
 
-// Trigger init immediately on startup
+// Trigger init immediately on startup. We swallow the rejection here only to
+// avoid an unhandled-rejection crash at boot — the error is already logged
+// inside initPool, and any subsequent query will retry and surface the error.
 initPool().catch(() => {});
 
 module.exports = {

@@ -71,7 +71,9 @@ export default function AdminJobs() {
     try {
       const { data } = await api.get('/admin/jobs?status=pending&limit=1');
       setPendingCount(data.data.total || 0);
-    } catch {}
+    } catch (e) {
+      console.error('Failed to fetch pending job count:', e);
+    }
   };
 
   useEffect(() => { fetchJobs(); }, [page, statusFilter]); // eslint-disable-line
