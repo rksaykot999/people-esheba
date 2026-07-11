@@ -1,12 +1,13 @@
+require('dotenv').config();
 const mysql = require('mysql2/promise');
 
 async function run() {
   const c = await mysql.createConnection({
-    host: 'people-e-sheba-people-e-sheba.c.aivencloud.com',
-    port: 18004,
-    user: 'avnadmin',
-    password: 'AVNS_LXmaVTJsLwgbMwJ1gQF',
-    database: 'people_e_sheba',
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT || 18004,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     ssl: { rejectUnauthorized: false }
   });
 
