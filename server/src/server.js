@@ -17,20 +17,21 @@ app.set('trust proxy', 1);
 // ── Security ──────────────────────────────────────────────────
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
+const allowedOrigins = [
+  process.env.FRONTEND_URL || 'https://people-esheba.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:5175',
+  'http://localhost:3000',
+];
+
 app.use(cors({
   origin: (origin, callback) => {
-    const allowed = [
-      process.env.FRONTEND_URL || 'https://people-esheba.vercel.app',
-      'http://localhost:5173',
-      'http://localhost:5174',
-      'http://localhost:5175',
-      'http://localhost:3000',
-    ];
-    if (!origin || allowed.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(null, true); // লোকাল ডেভেলপমেন্ট সহজ করার জন্য আপাতত ট্রু রাখা হলো
+    // Allow requests with no Origin header (curl, mobile apps, same-origin/server-to-server)
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
     }
+    return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],

@@ -116,28 +116,20 @@ exports.getBackupStatus = async (req, res) => {
    Extracts an uploaded zip file directly into the project root
 ────────────────────────────────────────────────────────────── */
 exports.restoreBackup = async (req, res) => {
-  try {
-    if (!req.file) {
-      return err(res, 'No backup file provided', 400);
-    }
-    const zipPath = req.file.path;
-    const projectRoot = path.resolve(__dirname, '../../../');
-    
-    // Extract using tar (available in Windows 10+)
-    const cmd = `tar -xf "${zipPath}" -C "${projectRoot}"`;
-    exec(cmd, (error, stdout, stderr) => {
-      // Remove uploaded file
-      fs.unlink(zipPath, () => {});
-      
-      if (error) {
-        console.error('Extraction error:', error);
-        return err(res, 'Failed to restore backup', 500);
-      }
-      
-      ok(res, { message: 'Backup restored successfully! Server will restart with new files.' });
-    });
-  } catch (e) {
-    console.error('Restore error:', e);
-    err(res, 'Restore failed', 500);
+  // SECURITY: The previous implementation extracted an uploaded archive directly
+  // into the project root with `tar -xf`. That allows an attacker (or a compromised
+  // admin account) to overwrite arbitrary server source files — including .js files
+  // that the Node process executes — resulting in remote code execution, as well as
+  // classic zip-slip path traversal. Automatic restore is therefore disabled.
+  // Restores must be performed manually and out-of-band by an operator who has
+  // verified the archive contents.
+  if (req.file) {
+    fs.unlink(req.file.path, () => {});
   }
+  return err(
+    res,
+    'Automatic backup restore is disabled for security reasons. ' +
+    'Restore backups manually after verifying the archive contents.',
+    501
+  );
 };

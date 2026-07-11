@@ -121,9 +121,28 @@ exports.getApplications = async (req, res) => {
 };
 
 exports.updateApplication = async (req, res) => {
-  const { status } = req.body;
-  await db.execute('UPDATE job_applications SET status=? WHERE id=?', [status, req.params.appId]);
-  ok(res, null, 'Status updated');
+  try {
+    const { status } = req.body;
+    const allowed = ['pending', 'shortlisted', 'rejected', 'hired'];
+    if (!status || !allowed.includes(status)) {
+      return err(res, 'Invalid application status', 400);
+    }
+
+    // Only the job's owner (poster) or an admin may change an application's status.
+    const [[app]] = await db.execute(
+      `SELECT a.id, j.user_id AS job_owner
+       FROM job_applications a JOIN jobs j ON a.job_id = j.id
+       WHERE a.id = ?`,
+      [req.params.appId]
+    );
+    if (!app) return err(res, 'Application not found', 404);
+    if (app.job_owner !== req.user.id && req.user.role !== 'admin') {
+      return err(res, 'Unauthorized', 403);
+    }
+
+    await db.execute('UPDATE job_applications SET status=? WHERE id=?', [status, req.params.appId]);
+    ok(res, null, 'Status updated');
+  } catch { err(res, 'Failed', 500); }
 };
 
 exports.getMyApplications = async (req, res) => {
