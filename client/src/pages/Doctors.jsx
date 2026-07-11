@@ -65,6 +65,13 @@ export default function Doctors() {
 
   useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, specialtyFilter]);
+
   /* Real data — managed from Admin → Doctors */
   const { data, loading } = useApi('/doctors', { params: { specialty: specialtyFilter || undefined, search: search || undefined } });
   const doctors = data?.rows || data || [];
@@ -77,6 +84,9 @@ export default function Doctors() {
     const matchesSpecialty = !specialtyFilter || item.specialty === specialtyFilter;
     return matchesSearch && matchesSpecialty;
   });
+
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const paginated = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const getSpecialtyLabel = (s) => {
     const meta = SPECIALTY_META[s];
@@ -333,7 +343,7 @@ export default function Doctors() {
             gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
             gap: '1.25rem',
           }}>
-            {filtered.map((item, i) => {
+            {paginated.map((item, i) => {
               const meta = SPECIALTY_META[item.specialty] || { color: '#8B5CF6', bg: 'rgba(139,92,246,0.1)', icon: MdHealthAndSafety };
               const Icon = meta.icon;
               return (
@@ -454,6 +464,49 @@ export default function Doctors() {
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-12 pb-4">
+            <button
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold border transition-all cursor-pointer flex items-center gap-1 bg-surface"
+              style={{
+                borderColor: 'var(--border)',
+                color: currentPage === 1 ? 'var(--text-dim)' : 'var(--text)',
+                opacity: currentPage === 1 ? 0.5 : 1,
+              }}
+            >
+              {isBn ? 'পূর্ববর্তী' : 'Previous'}
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`w-9 h-9 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center justify-center`}
+                style={{
+                  background: currentPage === page ? '#3B82F6' : 'var(--surface-2)',
+                  color: currentPage === page ? '#fff' : 'var(--text)',
+                  border: currentPage === page ? '1px solid #3B82F6' : '1px solid var(--border)',
+                }}
+              >
+                {isBn ? page.toLocaleString('bn-BD') : page}
+              </button>
+            ))}
+            <button
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold border transition-all cursor-pointer flex items-center gap-1 bg-surface"
+              style={{
+                borderColor: 'var(--border)',
+                color: currentPage === totalPages ? 'var(--text-dim)' : 'var(--text)',
+                opacity: currentPage === totalPages ? 0.5 : 1,
+              }}
+            >
+              {isBn ? 'পরবর্তী' : 'Next'}
+            </button>
           </div>
         )}
       </div>

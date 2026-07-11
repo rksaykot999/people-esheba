@@ -81,6 +81,17 @@ app.get('/health', (req, res) => {
 // ── API Routes ────────────────────────────────────────────────
 app.use('/api', routes);
 
+// ── Serve Client Static Files & SPA Fallback ──────────────────
+const clientDistPath = path.join(__dirname, '../../client/dist');
+app.use(express.static(clientDistPath));
+
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api/') || req.path.startsWith('/uploads/')) {
+    return next();
+  }
+  res.sendFile(path.join(clientDistPath, 'index.html'));
+});
+
 // ── 404 Handler ───────────────────────────────────────────────
 app.use((req, res) => {
   res.status(404).json({ success: false, message: `Route ${req.method} ${req.path} not found` });

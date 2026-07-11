@@ -40,6 +40,10 @@ import School       from './pages/School';
 import College      from './pages/College';
 import University   from './pages/University';
 import Scholarships from './pages/Scholarships';
+import Contact from './pages/Contact';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+import Help from './pages/Help';
 
 // Admin pages
 import AdminDashboard    from './pages/admin/AdminDashboard';
@@ -63,6 +67,7 @@ import AdminLogs         from './pages/admin/AdminLogs';
 
 // AI Chatbot (floating)
 import AIChatbot from './components/ui/AIChatbot';
+import BackToTop from './components/ui/BackToTop';
 
 /* ── Route guards ──────────────────────────────────────────── */
 const PrivateRoute = ({ children }) => {
@@ -120,6 +125,10 @@ function AppRoutes() {
           <Route path="education/college"     element={<College />} />
           <Route path="education/university"  element={<University />} />
           <Route path="education/scholarships" element={<Scholarships />} />
+          <Route path="contact"        element={<Contact />} />
+          <Route path="privacy"        element={<Privacy />} />
+          <Route path="terms"          element={<Terms />} />
+          <Route path="help"           element={<Help />} />
 
           <Route path="*"              element={<NotFound />} />
         </Route>
@@ -153,6 +162,7 @@ function AppRoutes() {
       </Routes>
 
       <AIChatbot />
+      <BackToTop />
     </>
   );
 }

@@ -32,8 +32,24 @@ export default function Home() {
   const [recentDonations, setRecentDonations] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [cms, setCms] = useState({});
+  const [pulseIndex, setPulseIndex] = useState(0);
 
   const isDark = theme === 'dark';
+
+  const pulses = [
+    { textEn: "Adnan donated A+ Blood in Mirpur, Dhaka", textBn: "আদনান মিরপুর, ঢাকায় এ+ রক্ত দান করেছেন", timeEn: "2m ago", timeBn: "২ মিনিট আগে", icon: "🩸", color: "#EF4444" },
+    { textEn: "Job Application submitted for Remote Developer", textBn: "রিমোট ডেভেলপারের জন্য নতুন চাকরির আবেদন করা হয়েছে", timeEn: "5m ago", timeBn: "৫ মিনিট আগে", icon: "💼", color: "#06B6D4" },
+    { textEn: "Emergency support dispatched from fire service", textBn: "ফায়ার সার্ভিস থেকে জরুরি উদ্ধারকারী দল পাঠানো হয়েছে", timeEn: "12m ago", timeBn: "১২ মিনিট আগে", icon: "🚒", color: "#F97316" },
+    { textEn: "Ayesha requested financial help for education", textBn: "আয়েশা শিক্ষার জন্য সাহায্য চেয়ে পোস্ট করেছেন", timeEn: "25m ago", timeBn: "২৫ মিনিট আগে", icon: "🎓", color: "#EC4899" },
+    { textEn: "Anis registered as a new blood donor", textBn: "আনিস নতুন রক্তদাতা হিসেবে নিবন্ধিত হয়েছেন", timeEn: "40m ago", timeBn: "৪০ মিনিট আগে", icon: "❤️", color: "#10B981" },
+  ];
+
+  useEffect(() => {
+    const pulseInterval = setInterval(() => {
+      setPulseIndex(p => (p + 1) % pulses.length);
+    }, 4000);
+    return () => clearInterval(pulseInterval);
+  }, []);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -340,6 +356,37 @@ export default function Home() {
                       <div className="text-xl md:text-2xl font-black mt-2 md:mt-3">{item.value}</div>
                     </div>
                   ))}
+                </div>
+              </div>
+
+              {/* Live Platform Pulse Feed */}
+              <div className="rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-6 relative overflow-hidden" style={heroPanelStyle}>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-xs md:text-sm font-black uppercase tracking-wider" style={{ color: 'var(--text)' }}>
+                      {isBn ? 'সরাসরি প্ল্যাটফর্ম আপডেট' : 'Live Platform Pulse'}
+                    </span>
+                  </div>
+                  <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                    {isBn ? 'সক্রিয়' : 'Active'}
+                  </span>
+                </div>
+
+                <div className="min-h-[72px] flex items-center gap-4 rounded-2xl p-4 transition-all duration-500" 
+                     style={{ background: 'var(--surface-2)', border: '1px solid var(--border)' }}>
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+                       style={{ background: `${pulses[pulseIndex].color}12`, border: `1px solid ${pulses[pulseIndex].color}24` }}>
+                    {pulses[pulseIndex].icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs md:text-sm font-bold leading-snug" style={{ color: 'var(--text)' }}>
+                      {isBn ? pulses[pulseIndex].textBn : pulses[pulseIndex].textEn}
+                    </div>
+                    <div className="text-[10px] mt-1 font-semibold" style={{ color: 'var(--text-dim)' }}>
+                      {isBn ? pulses[pulseIndex].timeBn : pulses[pulseIndex].timeEn}
+                    </div>
+                  </div>
                 </div>
               </div>
 

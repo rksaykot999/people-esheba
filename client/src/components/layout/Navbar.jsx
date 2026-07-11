@@ -459,6 +459,7 @@ export default function Navbar() {
     },
 
     { icon: <FiBell size={16} />, label: t("nav.notices"), to: "/notices" },
+    { icon: <FiPhone size={16} />, label: t("common.contact"), to: "/contact" },
     ...(!isAuth
       ? [{ icon: <FiUser size={16} />, label: t("nav.login"), to: "/login" }]
       : [
@@ -860,6 +861,48 @@ export default function Navbar() {
                   (cat.isWide ? renderNoticesPanel(cat) : renderDropPanel(cat))}
               </div>
             ))}
+            <Link
+              to="/contact"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+                padding: "8px 10px",
+                borderRadius: 10,
+                textDecoration: "none",
+                cursor: "pointer",
+                background: "transparent",
+                color: location.pathname === "/contact" ? "var(--red)" : "var(--text-muted)",
+                fontSize: "0.75rem",
+                fontWeight: 700,
+                whiteSpace: "nowrap",
+                position: "relative",
+                transition: "color 0.2s",
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = "var(--red)"}
+              onMouseLeave={(e) => {
+                if (location.pathname !== "/contact") {
+                  e.currentTarget.style.color = "var(--text-muted)";
+                }
+              }}
+            >
+              <FiPhone size={12} style={{ opacity: 0.65 }} />
+              {t("common.contact")}
+              {location.pathname === "/contact" && (
+                <span
+                  style={{
+                    position: "absolute",
+                    bottom: -2,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: 4,
+                    height: 4,
+                    borderRadius: "50%",
+                    background: "var(--red)",
+                  }}
+                />
+              )}
+            </Link>
           </div>
 
           {/* Right Side */}

@@ -7,7 +7,7 @@ import BulkImportModal from '../../components/admin/BulkImportModal';
 
 const SPECIALTIES = ['Cardiologist','Pediatrician','Neurologist','Gynecologist','Medicine','Orthopedic','Ophthalmologist','ENT','Dermatologist','Psychiatrist','Dentist','Dermatology','General'];
 const DIVS = ['Dhaka','Chittagong','Rajshahi','Khulna','Barisal','Sylhet','Rangpur','Mymensingh'];
-const BLANK = { name:'', specialty:'Medicine', area:'', district:'', division:'', phone:'', hours:'', rating:'', is_verified:false, is_active:true };
+const BLANK = { name:'', name_bn:'', specialty:'Medicine', specialty_bn:'', area:'', area_bn:'', district:'', division:'', phone:'', hours:'', rating:'', is_verified:false, is_active:true };
 
 export default function AdminDoctors() {
   const { isBn } = useLang();
@@ -155,23 +155,35 @@ export default function AdminDoctors() {
             </div>
             <form onSubmit={handleSave} style={{ display:'flex', flexDirection:'column', gap:'0.9rem' }}>
               <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0.75rem' }}>
-                <div className="form-group" style={{ gridColumn:'1/-1' }}>
-                  <label className="form-label">{isBn ? 'নাম' : 'Full Name'} *</label>
+                <div className="form-group">
+                  <label className="form-label">{isBn ? 'নাম (ইংরেজি)' : 'Full Name (English)'} *</label>
                   <input value={form.name} onChange={e => F('name', e.target.value)} className="form-input" placeholder="Dr. ..." required/>
                 </div>
                 <div className="form-group">
-                  <label className="form-label">{isBn ? 'বিশেষজ্ঞতা' : 'Specialty'} *</label>
+                  <label className="form-label">{isBn ? 'নাম (বাংলা)' : 'Full Name (Bangla)'}</label>
+                  <input value={form.name_bn || ''} onChange={e => F('name_bn', e.target.value)} className="form-input" placeholder="ডা. ..."/>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">{isBn ? 'বিশেষজ্ঞতা (ইংরেজি)' : 'Specialty (English)'} *</label>
                   <select value={form.specialty} onChange={e => F('specialty', e.target.value)} className="form-select" required>
                     {SPECIALTIES.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">{isBn ? 'বিশেষজ্ঞতা (বাংলা)' : 'Specialty (Bangla)'}</label>
+                  <input value={form.specialty_bn || ''} onChange={e => F('specialty_bn', e.target.value)} className="form-input" placeholder="যেমন: হৃদরোগ বিশেষজ্ঞ"/>
                 </div>
                 <div className="form-group">
                   <label className="form-label">{isBn ? 'ফোন' : 'Phone'}</label>
                   <input value={form.phone} onChange={e => F('phone', e.target.value)} className="form-input" placeholder="017XXXXXXXX"/>
                 </div>
                 <div className="form-group">
-                  <label className="form-label">{isBn ? 'এলাকা' : 'Area'}</label>
-                  <input value={form.area} onChange={e => F('area', e.target.value)} className="form-input" placeholder="Mirpur, Dhaka"/>
+                  <label className="form-label">{isBn ? 'এলাকা (ইংরেজি)' : 'Area (English)'}</label>
+                  <input value={form.area} onChange={e => F('area', e.target.value)} className="form-input" placeholder="Mirpur"/>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">{isBn ? 'এলাকা (বাংলা)' : 'Area (Bangla)'}</label>
+                  <input value={form.area_bn || ''} onChange={e => F('area_bn', e.target.value)} className="form-input" placeholder="মিরপুর"/>
                 </div>
                 <div className="form-group">
                   <label className="form-label">{isBn ? 'জেলা' : 'District'}</label>

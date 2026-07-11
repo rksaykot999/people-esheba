@@ -67,6 +67,13 @@ export default function Pharmacy() {
     setSearchParams(newParams);
   };
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, typeFilter]);
+
   /* Real data — managed from Admin → Directory → Pharmacies */
   const { data, loading } = useApi('/pharmacies', { params: { type: typeFilter || undefined, search: search || undefined } });
   const pharmacies = data?.rows || [];
@@ -78,6 +85,9 @@ export default function Pharmacy() {
     const matchesType = !typeFilter || item.type === typeFilter;
     return matchesSearch && matchesType;
   });
+
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const paginated = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   /* Bengali-aware display helpers — fall back to English if no _bn value */
   const dName = (item) => (isBn && item.name_bn) ? item.name_bn : item.name;
@@ -317,7 +327,7 @@ export default function Pharmacy() {
             gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
             gap: '1rem',
           }}>
-            {filtered.map((item, i) => {
+            {paginated.map((item, i) => {
               const meta = TYPE_META[item.type] || TYPE_META['retail'];
               const Icon = meta.icon;
               return (
@@ -436,6 +446,49 @@ export default function Pharmacy() {
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-12 pb-4">
+            <button
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold border transition-all cursor-pointer flex items-center gap-1 bg-surface"
+              style={{
+                borderColor: 'var(--border)',
+                color: currentPage === 1 ? 'var(--text-dim)' : 'var(--text)',
+                opacity: currentPage === 1 ? 0.5 : 1,
+              }}
+            >
+              {isBn ? 'পূর্ববর্তী' : 'Previous'}
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`w-9 h-9 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center justify-center`}
+                style={{
+                  background: currentPage === page ? '#3B82F6' : 'var(--surface-2)',
+                  color: currentPage === page ? '#fff' : 'var(--text)',
+                  border: currentPage === page ? '1px solid #3B82F6' : '1px solid var(--border)',
+                }}
+              >
+                {isBn ? page.toLocaleString('bn-BD') : page}
+              </button>
+            ))}
+            <button
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold border transition-all cursor-pointer flex items-center gap-1 bg-surface"
+              style={{
+                borderColor: 'var(--border)',
+                color: currentPage === totalPages ? 'var(--text-dim)' : 'var(--text)',
+                opacity: currentPage === totalPages ? 0.5 : 1,
+              }}
+            >
+              {isBn ? 'পরবর্তী' : 'Next'}
+            </button>
           </div>
         )}
       </div>

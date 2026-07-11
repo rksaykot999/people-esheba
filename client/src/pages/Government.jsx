@@ -482,11 +482,11 @@ export default function GovernmentPage() {
                     fontWeight:800, color:'var(--text)',
                     marginBottom:'0.6rem', fontSize:'1.1rem', lineHeight:1.35,
                   }}>
-                    {s.name}
+                    {(isBn && s.name_bn) ? s.name_bn : s.name}
                   </h3>
                   
                   <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '1.25rem', flexGrow: 1 }}>
-                    {s.description || 'No description available for this service.'}
+                    {(isBn && s.description_bn) ? s.description_bn : (s.description || 'No description available for this service.')}
                   </p>
 
                   <div style={{ display:'flex', gap:'12px', marginTop: 'auto' }}>

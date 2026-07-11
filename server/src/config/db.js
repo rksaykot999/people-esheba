@@ -1,53 +1,30 @@
 const mysql = require('mysql2/promise');
+
+// Load environment variables if they aren't loaded yet
 require('dotenv').config();
 
-
-const dbConfig = {
-  host:            process.env.DB_HOST,
-  port:            process.env.DB_PORT || 18004,
-  database:        process.env.DB_NAME,
-  user:            process.env.DB_USER,
-  password:        process.env.DB_PASSWORD,
+const poolConfig = {
+  host: process.env.DB_HOST || 'people-e-sheba-people-e-sheba.c.aivencloud.com',
+  port: parseInt(process.env.DB_PORT) || 18004,
+  user: process.env.DB_USER || 'avnadmin',
+  password: process.env.DB_PASSWORD || 'AVNS_LXmaVTJsLwgbMwJ1gQF',
+  database: process.env.DB_NAME || 'people_e_sheba',
+  ssl: { rejectUnauthorized: false },
   waitForConnections: true,
-  connectionLimit:    20,
-  queueLimit:         0,
-  enableKeepAlive:    true,
-  keepAliveInitialDelay: 0,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  connectionLimit: 15,
+  queueLimit: 0,
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 10000
 };
 
-let activePool = null;
-let initPromise = null;
+console.log(`[Database Connection] Host: ${poolConfig.host}, Port: ${poolConfig.port}, Database: ${poolConfig.database}`);
 
-async function initPool() {
-  if (activePool) return activePool;
-  if (initPromise) return initPromise;
-  
-  initPromise = (async () => {
-    try {
-      const pool = mysql.createPool(dbConfig);
-      const conn = await pool.getConnection();
-      console.log(`✅ Connected to LIVE MySQL Database (${dbConfig.host})`);
-      conn.release();
-      activePool = pool;
-      return pool;
-    } catch (err) {
-      console.error('❌ MySQL connection failed:', err.message);
-      throw err;
-    }
-  })();
-  
-  return initPromise;
-}
-
-// Trigger init immediately on startup
-initPool().catch(() => {});
+const pool = mysql.createPool(poolConfig);
 
 module.exports = {
-  query: async (...args) => (await initPool()).query(...args),
-  execute: async (...args) => (await initPool()).execute(...args),
-  getConnection: async () => (await initPool()).getConnection(),
-  end: async () => (await initPool()).end()
+  query: (sql, params) => pool.query(sql, params),
+  execute: (sql, params) => pool.execute(sql, params),
+  getConnection: () => pool.getConnection(),
+  end: () => pool.end(),
+  pool: pool
 };

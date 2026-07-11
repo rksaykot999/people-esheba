@@ -21,8 +21,8 @@ const CATEGORIES = [
 
 const DIVS  = ['Dhaka','Chittagong','Rajshahi','Khulna','Barisal','Sylhet','Rangpur','Mymensingh'];
 const BLANK = (category, subtype) => ({
-  category, subtype, name: '', description: '', area: '', district: '', division: '',
-  address: '', phone: '', website: '', rating: 0, badge_key: '', price_info: '', features: '', is_verified: false,
+  category, subtype, name: '', name_bn: '', description: '', description_bn: '', area: '', area_bn: '', district: '', division: '',
+  address: '', address_bn: '', phone: '', website: '', rating: 0, badge_key: '', price_info: '', features: '', is_verified: false,
 });
 
 export default function AdminDirectory() {
@@ -173,9 +173,13 @@ export default function AdminDirectory() {
             </div>
             <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                <div className="form-group" style={{ gridColumn: '1/-1' }}>
-                  <label className="form-label">Name *</label>
+                <div className="form-group">
+                  <label className="form-label">Name (English) *</label>
                   <input value={form.name} onChange={e => F('name', e.target.value)} className="form-input" required/>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Name (Bangla)</label>
+                  <input value={form.name_bn || ''} onChange={e => F('name_bn', e.target.value)} className="form-input"/>
                 </div>
                 <div className="form-group">
                   <label className="form-label">Category</label>
@@ -209,28 +213,40 @@ export default function AdminDirectory() {
                   <input value={form.district} onChange={e => F('district', e.target.value)} className="form-input"/>
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Area</label>
+                  <label className="form-label">Area (English)</label>
                   <input value={form.area} onChange={e => F('area', e.target.value)} className="form-input"/>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Area (Bangla)</label>
+                  <input value={form.area_bn || ''} onChange={e => F('area_bn', e.target.value)} className="form-input"/>
                 </div>
                 <div className="form-group">
                   <label className="form-label">Rating (0-5)</label>
                   <input type="number" min="0" max="5" step="0.1" value={form.rating} onChange={e => F('rating', e.target.value)} className="form-input"/>
                 </div>
-                <div className="form-group" style={{ gridColumn: '1/-1' }}>
-                  <label className="form-label">Address</label>
-                  <input value={form.address} onChange={e => F('address', e.target.value)} className="form-input"/>
-                </div>
                 <div className="form-group">
                   <label className="form-label">Price info (optional)</label>
                   <input value={form.price_info} onChange={e => F('price_info', e.target.value)} className="form-input" placeholder="e.g. Starts 300 BDT"/>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Address (English)</label>
+                  <input value={form.address} onChange={e => F('address', e.target.value)} className="form-input"/>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Address (Bangla)</label>
+                  <input value={form.address_bn || ''} onChange={e => F('address_bn', e.target.value)} className="form-input"/>
                 </div>
                 <div className="form-group" style={{ gridColumn: '1/-1' }}>
                   <label className="form-label">Features (comma-separated, optional)</label>
                   <input value={form.features} onChange={e => F('features', e.target.value)} className="form-input" placeholder="Verified Pros, 24/7 Support"/>
                 </div>
                 <div className="form-group" style={{ gridColumn: '1/-1' }}>
-                  <label className="form-label">Description</label>
-                  <textarea value={form.description} onChange={e => F('description', e.target.value)} className="form-input" rows={3}/>
+                  <label className="form-label">Description (English)</label>
+                  <textarea value={form.description} onChange={e => F('description', e.target.value)} className="form-input" rows={2}/>
+                </div>
+                <div className="form-group" style={{ gridColumn: '1/-1' }}>
+                  <label className="form-label">Description (Bangla)</label>
+                  <textarea value={form.description_bn || ''} onChange={e => F('description_bn', e.target.value)} className="form-input" rows={2}/>
                 </div>
               </div>
               <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
@@ -247,7 +263,7 @@ export default function AdminDirectory() {
           </div>
         </div>
       )}
-      <BulkImportModal isOpen={showImport} onClose={() => setShowImport(false)} table="directory_listings" onImportSuccess={() => { load(); }} />
+      <BulkImportModal isOpen={showImport} onClose={() => setShowImport(false)} table="directory_listings" defaultValues={{ category: activeCat.key }} onImportSuccess={() => { load(); }} />
     </div>
   );
 }

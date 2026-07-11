@@ -223,7 +223,7 @@ const TEMPLATES = {
   },
 };
 
-export default function BulkImportModal({ isOpen, onClose, table, onImportSuccess }) {
+export default function BulkImportModal({ isOpen, onClose, table, onImportSuccess, defaultValues }) {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showManual, setShowManual] = useState(false);
@@ -241,8 +241,12 @@ export default function BulkImportModal({ isOpen, onClose, table, onImportSucces
         setLoading(false);
         return toast.error('File is empty or invalid format');
       }
+      const processedRows = rows.map(r => ({
+        ...defaultValues,
+        ...r
+      }));
       try {
-        const { data } = await api.post('/admin/bulk-import', { table, rows });
+        const { data } = await api.post('/admin/bulk-import', { table, rows: processedRows });
         toast.success(data.message || 'Import successful');
         if (onImportSuccess) onImportSuccess();
         onClose();
@@ -284,7 +288,13 @@ export default function BulkImportModal({ isOpen, onClose, table, onImportSucces
 
   const downloadTemplate = (format) => {
     if (!tmpl) return;
-    const data = [tmpl.columns.reduce((acc, c) => ({ ...acc, [c]: '' }), {}), ...tmpl.sample];
+    let data = [tmpl.columns.reduce((acc, c) => ({ ...acc, [c]: '' }), {}), ...tmpl.sample];
+    if (defaultValues) {
+      data = data.map((item, idx) => {
+        if (idx === 0) return item;
+        return { ...item, ...defaultValues };
+      });
+    }
     if (format === 'csv') {
       const csv = Papa.unparse(data);
       const blob = new Blob([csv], { type: 'text/csv' });

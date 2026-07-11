@@ -7,7 +7,7 @@ import BulkImportModal from '../../components/admin/BulkImportModal';
 
 const DIVS = ['Dhaka','Chittagong','Rajshahi','Khulna','Barisal','Sylhet','Rangpur','Mymensingh'];
 const PHARMACY_TYPES = ['retail', 'hospital-pharmacy', '24-7'];
-const BLANK = { name:'', area:'', district:'', division:'', phone:'', hours:'', type:'retail', is_24h:false, is_verified:false, is_active:true };
+const BLANK = { name:'', name_bn:'', area:'', area_bn:'', district:'', division:'', phone:'', hours:'', type:'retail', is_24h:false, is_verified:false, is_active:true };
 
 export default function AdminPharmacy() {
   const { isBn } = useLang();
@@ -128,8 +128,10 @@ export default function AdminPharmacy() {
             </div>
             <form onSubmit={handleSave} style={{display:'flex',flexDirection:'column',gap:'0.9rem'}}>
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem'}}>
-                <div className="form-group" style={{gridColumn:'1/-1'}}><label className="form-label">{isBn?'নাম':'Name'} *</label><input value={form.name} onChange={e=>F('name',e.target.value)} className="form-input" placeholder="Pharmacy name" required/></div>
-                <div className="form-group"><label className="form-label">{isBn?'এলাকা':'Area'}</label><input value={form.area} onChange={e=>F('area',e.target.value)} className="form-input" placeholder="Mirpur, Dhaka"/></div>
+                <div className="form-group"><label className="form-label">{isBn?'নাম (ইংরেজি)':'Name (English)'} *</label><input value={form.name} onChange={e=>F('name',e.target.value)} className="form-input" placeholder="Pharmacy name" required/></div>
+                <div className="form-group"><label className="form-label">{isBn?'নাম (বাংলা)':'Name (Bangla)'}</label><input value={form.name_bn || ''} onChange={e=>F('name_bn',e.target.value)} className="form-input" placeholder="ফার্মেসির নাম"/></div>
+                <div className="form-group"><label className="form-label">{isBn?'এলাকা (ইংরেজি)':'Area (English)'}</label><input value={form.area} onChange={e=>F('area',e.target.value)} className="form-input" placeholder="Mirpur"/></div>
+                <div className="form-group"><label className="form-label">{isBn?'এলাকা (বাংলা)':'Area (Bangla)'}</label><input value={form.area_bn || ''} onChange={e=>F('area_bn',e.target.value)} className="form-input" placeholder="মিরপুর"/></div>
                 <div className="form-group"><label className="form-label">{isBn?'ফোন':'Phone'}</label><input value={form.phone} onChange={e=>F('phone',e.target.value)} className="form-input" placeholder="017XXXXXXXX"/></div>
                 <div className="form-group"><label className="form-label">{isBn?'জেলা':'District'}</label><input value={form.district} onChange={e=>F('district',e.target.value)} className="form-input" placeholder="Dhaka"/></div>
                 <div className="form-group"><label className="form-label">{isBn?'বিভাগ':'Division'}</label>

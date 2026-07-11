@@ -28,18 +28,18 @@ const CAT_META = Object.fromEntries(
 );
 
 /* Maps a directory_listings row (category=service) into this page's shape */
-function mapService(row) {
+function mapService(row, isBn) {
   return {
     id: row.id,
     cat: row.subtype,
-    name: row.name,
-    area: row.area || row.district || 'Nationwide',
+    name: (isBn && row.name_bn) ? row.name_bn : row.name,
+    area: (isBn && row.area_bn) ? row.area_bn : (row.area || row.district || 'Nationwide'),
     phone: row.phone,
     rating: Number(row.rating) || 0,
     reviews: null, // real listings don't fabricate review counts
-    badge: row.badge_key || CATS.find(c => c.key === row.subtype)?.label,
-    price: row.price_info || 'Contact for pricing',
-    desc: row.description,
+    badge: (isBn && row.badge_key_bn) ? row.badge_key_bn : (row.badge_key || CATS.find(c => c.key === row.subtype)?.label),
+    price: (isBn && row.price_info_bn) ? row.price_info_bn : (row.price_info || 'Contact for pricing'),
+    desc: (isBn && row.description_bn) ? row.description_bn : row.description,
     features: row.features ? row.features.split(',').map(f => f.trim()) : [],
     is_verified: !!row.is_verified,
   };
@@ -72,7 +72,7 @@ function Counter({ end, suffix = '' }) {
 
 /* ── Main Component ───────────────────────────────────── */
 export default function Services() {
-  const { t } = useLang();
+  const { t, isBn } = useLang();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -88,7 +88,7 @@ export default function Services() {
 
   /* Real data — managed from Admin → Directory → Services */
   const { data, loading } = useApi('/directory', { params: { category: 'service', subtype: activeCat !== 'all' ? activeCat : undefined, search: search || undefined } });
-  const services = (data?.rows || []).map(mapService);
+  const services = (data?.rows || []).map(row => mapService(row, isBn));
 
   const handleCatChange = (key) => {
     const newParams = new URLSearchParams(searchParams);

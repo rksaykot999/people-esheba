@@ -1,0 +1,16 @@
+{
+  "name": "people-e-sheba-root",
+  "version": "1.0.0",
+  "description": "Root package for People E-Sheba in AI Studio",
+  "scripts": {
+    "postinstall": "npm run install:client && npm run install:server",
+    "install:client": "cd client && npm install",
+    "install:server": "cd server && npm install",
+    "build": "npm run build:client",
+    "build:client": "cd client && npm run build",
+    "dev": "npm run build:client && PORT=3000 NODE_ENV=production node server/src/server.js",
+    "start": "PORT=3000 NODE_ENV=production node server/src/server.js"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

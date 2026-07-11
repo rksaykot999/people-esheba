@@ -77,8 +77,8 @@ exports.adminGetAll = async (req, res) => {
 exports.adminCreate = async (req, res) => {
   try {
     const {
-      category, subtype, name, description, area, district, division,
-      address, phone, website, rating, badge_key, price_info, features, is_verified,
+      category, subtype, name, name_bn, description, description_bn, area, area_bn, district, division,
+      address, address_bn, phone, website, rating, badge_key, price_info, features, is_verified,
     } = req.body;
 
     if (!category || !assertCategory(category)) return err(res, 'Valid category is required', 400);
@@ -86,10 +86,10 @@ exports.adminCreate = async (req, res) => {
 
     const [r] = await db.execute(
       `INSERT INTO directory_listings
-       (category, subtype, name, description, area, district, division, address, phone, website, rating, badge_key, price_info, features, is_verified, created_by)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
-      [category, subtype || 'other', name, description || null, area || null, district || null,
-       division || null, address || null, phone || null, website || null, rating || 0,
+       (category, subtype, name, name_bn, description, description_bn, area, area_bn, district, division, address, address_bn, phone, website, rating, badge_key, price_info, features, is_verified, created_by)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+      [category, subtype || 'other', name, name_bn || null, description || null, description_bn || null, area || null, area_bn || null, district || null,
+       division || null, address || null, address_bn || null, phone || null, website || null, rating || 0,
        badge_key || null, price_info || null, features || null, is_verified ? 1 : 0, req.user.id]
     );
     const [[row]] = await db.execute('SELECT * FROM directory_listings WHERE id=?', [r.insertId]);
@@ -102,19 +102,19 @@ exports.adminCreate = async (req, res) => {
 exports.adminUpdate = async (req, res) => {
   try {
     const {
-      category, subtype, name, description, area, district, division,
-      address, phone, website, rating, badge_key, price_info, features, is_verified, is_active,
+      category, subtype, name, name_bn, description, description_bn, area, area_bn, district, division,
+      address, address_bn, phone, website, rating, badge_key, price_info, features, is_verified, is_active,
     } = req.body;
 
     if (category && !assertCategory(category)) return err(res, 'Invalid category', 400);
 
     await db.execute(
       `UPDATE directory_listings SET
-        category=COALESCE(?,category), subtype=?, name=?, description=?, area=?, district=?,
-        division=?, address=?, phone=?, website=?, rating=?, badge_key=?, price_info=?, features=?, is_verified=?, is_active=?
+        category=COALESCE(?,category), subtype=?, name=?, name_bn=?, description=?, description_bn=?, area=?, area_bn=?, district=?,
+        division=?, address=?, address_bn=?, phone=?, website=?, rating=?, badge_key=?, price_info=?, features=?, is_verified=?, is_active=?
        WHERE id=?`,
-      [category || null, subtype || 'other', name, description || null, area || null, district || null,
-       division || null, address || null, phone || null, website || null, rating || 0,
+      [category || null, subtype || 'other', name, name_bn || null, description || null, description_bn || null, area || null, area_bn || null, district || null,
+       division || null, address || null, address_bn || null, phone || null, website || null, rating || 0,
        badge_key || null, price_info || null, features || null, is_verified ? 1 : 0, is_active === undefined ? 1 : (is_active ? 1 : 0),
        req.params.id]
     );

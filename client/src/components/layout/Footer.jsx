@@ -96,12 +96,16 @@ export default function Footer() {
             © {year} People E-Sheba · {isBn ? 'সকল অধিকার সংরক্ষিত' : 'All rights reserved'} · Made with <FiHeart style={{ display: 'inline', color: 'var(--red)' }} /> for Bangladesh
           </p>
           <div style={{ display: 'flex', gap: '1rem' }}>
-            {[isBn ? 'গোপনীয়তা নীতি' : 'Privacy Policy', isBn ? 'শর্তাবলী' : 'Terms', isBn ? 'সাহায্য' : 'Help'].map(l => (
-              <a key={l} href="#" onClick={(e) => e.preventDefault()}
+            {[
+              { label: isBn ? 'গোপনীয়তা নীতি' : 'Privacy Policy', to: '/privacy' },
+              { label: isBn ? 'শর্তাবলী' : 'Terms', to: '/terms' },
+              { label: isBn ? 'সাহায্য' : 'Help', to: '/help' },
+            ].map(l => (
+              <Link key={l.to} to={l.to}
                 style={{ fontSize: '0.8rem', color: 'var(--text-dim)', transition: 'color 0.2s', textDecoration: 'none' }}
                 onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'}
                 onMouseLeave={e => e.currentTarget.style.color = 'var(--text-dim)'}
-              >{l}</a>
+              >{l.label}</Link>
             ))}
           </div>
         </div>
