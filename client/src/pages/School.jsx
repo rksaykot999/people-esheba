@@ -33,6 +33,8 @@ function mapSchool(row, isBn) {
     district: row.district,
     description: (isBn && row.description_bn) ? row.description_bn : row.description,
     badge: TYPE_META[row.subtype]?.label || 'School',
+    phone: row.phone,
+    website: row.website,
     is_verified: !!row.is_verified,
   };
 }
@@ -399,28 +401,37 @@ export default function School() {
                     )}
                   </div>
 
-                  {item.estd ? (
-                    <div style={{
-                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      padding: '10px 14px', borderRadius: 12,
-                      background: `linear-gradient(135deg, ${meta.color}, ${meta.color}cc)`,
-                      color: '#fff', textDecoration: 'none', fontWeight: 700, fontSize: '0.85rem',
-                      boxShadow: `0 4px 14px ${meta.color}30`,
-                    }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                        <FiBook size={14} /> Estd. {item.estd}
-                      </span>
-                      <FiExternalLink size={15} style={{ opacity: 0.7 }} />
-                    </div>
-                  ) : (
-                    <div style={{
-                      padding: '10px 14px', borderRadius: 12,
-                      background: 'var(--surface-3)', color: 'var(--text-dim)',
-                      fontSize: '0.8rem', fontWeight: 600, textAlign: 'center',
-                    }}>
-                      {t("education.no_details") || "Established year unavailable"}
-                    </div>
-                  )}
+                  <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+                    {item.phone && (
+                      <a href={`tel:${item.phone}`} style={{
+                        flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                        padding: '10px', borderRadius: 12, background: 'rgba(16,185,129,0.1)',
+                        color: 'var(--green)', textDecoration: 'none', fontWeight: 700, fontSize: '0.85rem',
+                        transition: 'all 0.2s'
+                      }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(16,185,129,0.2)'} onMouseLeave={e => e.currentTarget.style.background = 'rgba(16,185,129,0.1)'}>
+                        <FiClock size={14} style={{ transform: 'rotate(90deg)' }} /> Call
+                      </a>
+                    )}
+                    {item.website && (
+                      <a href={item.website.startsWith('http') ? item.website : `https://${item.website}`} target="_blank" rel="noreferrer" style={{
+                        flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                        padding: '10px', borderRadius: 12, background: `linear-gradient(135deg, ${meta.color}, ${meta.color}cc)`,
+                        color: '#fff', textDecoration: 'none', fontWeight: 700, fontSize: '0.85rem',
+                        boxShadow: `0 4px 14px ${meta.color}30`, transition: 'all 0.2s'
+                      }}>
+                        <FiExternalLink size={14} /> Website
+                      </a>
+                    )}
+                    {!item.phone && !item.website && (
+                      <div style={{
+                        flex: 1, padding: '10px 14px', borderRadius: 12,
+                        background: 'var(--surface-3)', color: 'var(--text-dim)',
+                        fontSize: '0.8rem', fontWeight: 600, textAlign: 'center',
+                      }}>
+                        {t("education.no_details") || "Contact unavailable"}
+                      </div>
+                    )}
+                  </div>
                 </div>
               );
             })}

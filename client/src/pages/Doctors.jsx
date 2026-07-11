@@ -424,26 +424,33 @@ export default function Doctors() {
                     </span>
                   </div>
 
-                  <button
-                    onClick={() => window.open('#', '_blank')}
-                    style={{
-                      width: '100%',
-                      padding: '10px 14px', borderRadius: 12,
-                      background: `linear-gradient(135deg, ${meta.color}, ${meta.color}cc)`,
-                      color: '#fff', fontWeight: 700, fontSize: '0.85rem',
-                      boxShadow: `0 4px 14px ${meta.color}30`,
-                      transition: 'transform 0.2s',
-                      border: 'none', cursor: 'pointer',
-                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
-                    onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-                  >
-                    <span style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                      <FiExternalLink size={14} /> {t("health.view_profile") || "View Profile"}
-                    </span>
-                    <FiChevronRight size={15} style={{ opacity: 0.7 }} />
-                  </button>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    {item.phone && (
+                      <a href={`tel:${item.phone}`} style={{
+                        flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                        padding: '10px', borderRadius: 12, background: 'rgba(16,185,129,0.1)',
+                        color: 'var(--green)', textDecoration: 'none', fontWeight: 700, fontSize: '0.85rem',
+                        transition: 'all 0.2s'
+                      }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(16,185,129,0.2)'} onMouseLeave={e => e.currentTarget.style.background = 'rgba(16,185,129,0.1)'}>
+                        <FiPhone size={14} /> Call
+                      </a>
+                    )}
+                    <button
+                      onClick={() => window.open('#', '_blank')}
+                      style={{
+                        flex: 1, padding: '10px', borderRadius: 12,
+                        background: `linear-gradient(135deg, ${meta.color}, ${meta.color}cc)`,
+                        color: '#fff', fontWeight: 700, fontSize: '0.85rem',
+                        boxShadow: `0 4px 14px ${meta.color}30`,
+                        transition: 'transform 0.2s', border: 'none', cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
+                      onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                    >
+                      <FiExternalLink size={14} /> Profile
+                    </button>
+                  </div>
                 </div>
               );
             })}

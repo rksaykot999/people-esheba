@@ -418,21 +418,24 @@ export default function Scholarships() {
                     </span>
                   </div>
 
-                  <div style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '10px 14px', borderRadius: 12,
-                    background: `linear-gradient(135deg, ${meta.color}, ${meta.color}cc)`,
-                    color: '#fff', textDecoration: 'none', fontWeight: 700, fontSize: '0.85rem',
-                    boxShadow: `0 4px 14px ${meta.color}30`,
-                    cursor: 'pointer',
-                  }}
-                    onClick={() => {/* Navigate to detail or external link */ }}
+                  <a 
+                    href={item.link ? (item.link.startsWith('http') ? item.link : `https://${item.link}`) : '#'}
+                    target="_blank" 
+                    rel="noreferrer"
+                    style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      padding: '10px 14px', borderRadius: 12,
+                      background: `linear-gradient(135deg, ${meta.color}, ${meta.color}cc)`,
+                      color: '#fff', textDecoration: 'none', fontWeight: 700, fontSize: '0.85rem',
+                      boxShadow: `0 4px 14px ${meta.color}30`,
+                      cursor: 'pointer',
+                    }}
                   >
                     <span style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                       <FiAward size={14} /> {t("education.view_details") || "View Details"}
                     </span>
                     <FiExternalLink size={15} style={{ opacity: 0.7 }} />
-                  </div>
+                  </a>
                 </div>
               );
             })}
