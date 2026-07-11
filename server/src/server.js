@@ -104,8 +104,8 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
 
-// ── Static Uploads (লোকালহোস্টের জন্য ঠিক আছে, Vercel-এ সাময়িক কাজ করবে) ──
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+// ── Static Uploads (Vercel serverless environment এ কাজ করবে না, তাই বন্ধ করা হলো) ──
+// app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // ── Health Check ──────────────────────────────────────────────
 app.get('/health', (req, res) => {

@@ -4,19 +4,24 @@ const fs     = require('fs');
 
 const mkdirp = (dir) => { if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true }); };
 
+// Vercel serverless environment এর জন্য memory storage, অন্যথায় disk storage
+const isVercel = process.env.VERCEL === '1';
+
 const storage = (subDir) =>
-  multer.diskStorage({
-    destination: (req, file, cb) => {
-      const dest = path.join(__dirname, '../../uploads', subDir);
-      mkdirp(dest);
-      cb(null, dest);
-    },
-    filename: (req, file, cb) => {
-      const ext  = path.extname(file.originalname).toLowerCase();
-      const name = `${Date.now()}-${Math.round(Math.random() * 1e6)}${ext}`;
-      cb(null, name);
-    },
-  });
+  isVercel
+    ? multer.memoryStorage() // Vercel এ memory storage ব্যবহার করবে
+    : multer.diskStorage({
+        destination: (req, file, cb) => {
+          const dest = path.join(__dirname, '../../uploads', subDir);
+          mkdirp(dest);
+          cb(null, dest);
+        },
+        filename: (req, file, cb) => {
+          const ext  = path.extname(file.originalname).toLowerCase();
+          const name = `${Date.now()}-${Math.round(Math.random() * 1e6)}${ext}`;
+          cb(null, name);
+        },
+      });
 
 const imageFilter = (req, file, cb) => {
   const allowed = ['.jpg', '.jpeg', '.png', '.webp'];
