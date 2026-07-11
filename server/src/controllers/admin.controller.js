@@ -1,5 +1,6 @@
 const db = require('../config/db');
 const { ok, err } = require('../utils/response');
+const { getPagination, runPaginated } = require('../utils/pagination');
 
 /* ── GET /admin/dashboard ─────────────────────────────────── */
 exports.getDashboard = async (req, res) => {
@@ -54,8 +55,8 @@ exports.getDashboard = async (req, res) => {
 /* ── GET /admin/users ─────────────────────────────────────── */
 exports.getUsers = async (req, res) => {
   try {
-    const { search, role, status, page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { search, role, status } = req.query;
+    const { page, limit } = getPagination(req.query, 20);
     let   where  = ['1=1'];
     const params = [];
 
@@ -64,16 +65,16 @@ exports.getUsers = async (req, res) => {
     if (status === 'active')   where.push('is_active = 1');
     if (status === 'blocked')  where.push('is_active = 0');
 
-    const [rows] = await db.execute(
+    const cond = where.join(' AND ');
+    const result = await runPaginated(
+      db,
       `SELECT id,name,email,phone,role,avatar,division,district,is_active,is_verified,created_at
-       FROM users WHERE ${where.join(' AND ')} ORDER BY created_at DESC
-       LIMIT ${parseInt(limit)} OFFSET ${offset}`,
-      params
+       FROM users WHERE ${cond} ORDER BY created_at DESC`,
+      `SELECT COUNT(*) AS total FROM users WHERE ${cond}`,
+      params,
+      { page, limit }
     );
-    const [[{ total }]] = await db.execute(
-      `SELECT COUNT(*) AS total FROM users WHERE ${where.join(' AND ')}`, params
-    );
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    ok(res, result);
   } catch { err(res, 'Failed', 500); }
 };
 
@@ -104,22 +105,22 @@ exports.deleteUser = async (req, res) => {
 /* ── Donations management ─────────────────────────────────── */
 exports.getDonations = async (req, res) => {
   try {
-    const { status, page = 1, limit = 15 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { status } = req.query;
+    const { page, limit } = getPagination(req.query, 15);
     let   where  = ['1=1'];
     const params = [];
     if (status) { where.push('d.status = ?'); params.push(status); }
-    const [rows] = await db.execute(
+    const cond = where.join(' AND ');
+    const result = await runPaginated(
+      db,
       `SELECT d.*, u.name AS poster_name, u.email AS poster_email
        FROM donations d JOIN users u ON d.user_id=u.id
-       WHERE ${where.join(' AND ')} ORDER BY d.created_at DESC
-       LIMIT ${parseInt(limit)} OFFSET ${offset}`,
-      params
+       WHERE ${cond} ORDER BY d.created_at DESC`,
+      `SELECT COUNT(*) AS total FROM donations d WHERE ${cond}`,
+      params,
+      { page, limit }
     );
-    const [[{ total }]] = await db.execute(
-      `SELECT COUNT(*) AS total FROM donations d WHERE ${where.join(' AND ')}`, params
-    );
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    ok(res, result);
   } catch { err(res, 'Failed', 500); }
 };
 
@@ -138,22 +139,24 @@ exports.deleteDonation = async (req, res) => {
 /* ── Jobs management ──────────────────────────────────────── */
 exports.getAllJobs = async (req, res) => {
   try {
-    const { page = 1, limit = 15, status } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { status } = req.query;
+    const { page, limit } = getPagination(req.query, 15);
     let where = ['1=1'];
     const params = [];
     if (status) { where.push('j.status = ?'); params.push(status); }
     const cond = where.join(' AND ');
-    const [rows] = await db.execute(
+    const result = await runPaginated(
+      db,
       `SELECT j.*, u.name AS poster_name,
        (SELECT COUNT(*) FROM job_applications a WHERE a.job_id=j.id) AS applicants
        FROM jobs j JOIN users u ON j.user_id=u.id
        WHERE ${cond}
-       ORDER BY j.created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`,
-      params
+       ORDER BY j.created_at DESC`,
+      `SELECT COUNT(*) AS total FROM jobs j WHERE ${cond}`,
+      params,
+      { page, limit }
     );
-    const [[{ total }]] = await db.execute(`SELECT COUNT(*) AS total FROM jobs j WHERE ${cond}`, params);
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    ok(res, result);
   } catch { err(res, 'Failed', 500); }
 };
 
@@ -241,30 +244,34 @@ exports.createAnnouncement = async (req, res) => {
 /* ── Blood donors (admin view) ────────────────────────────── */
 exports.getBloodDonors = async (req, res) => {
   try {
-    const { page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
-    const [rows] = await db.execute(
+    const { page, limit } = getPagination(req.query, 20);
+    const result = await runPaginated(
+      db,
       `SELECT b.*, u.name, u.email, u.phone, u.is_verified
        FROM blood_donors b JOIN users u ON b.user_id=u.id
-       ORDER BY b.created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`
+       ORDER BY b.created_at DESC`,
+      'SELECT COUNT(*) AS total FROM blood_donors',
+      [],
+      { page, limit }
     );
-    const [[{ total }]] = await db.execute('SELECT COUNT(*) AS total FROM blood_donors');
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    ok(res, result);
   } catch { err(res, 'Failed', 500); }
 };
 
 /* ── Volunteers (admin view) ──────────────────────────────── */
 exports.getVolunteers = async (req, res) => {
   try {
-    const { page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
-    const [rows] = await db.execute(
+    const { page, limit } = getPagination(req.query, 20);
+    const result = await runPaginated(
+      db,
       `SELECT v.*, u.name, u.email, u.phone
        FROM volunteers v JOIN users u ON v.user_id=u.id
-       ORDER BY v.created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`
+       ORDER BY v.created_at DESC`,
+      'SELECT COUNT(*) AS total FROM volunteers',
+      [],
+      { page, limit }
     );
-    const [[{ total }]] = await db.execute('SELECT COUNT(*) AS total FROM volunteers');
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    ok(res, result);
   } catch { err(res, 'Failed', 500); }
 };
 
@@ -339,21 +346,23 @@ exports.approveBloodDonor = async (req, res) => {
 /* ── Admin blood donors list with status filter ───────────── */
 exports.getBloodDonorsAdmin = async (req, res) => {
   try {
-    const { page = 1, limit = 20, status } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { status } = req.query;
+    const { page, limit } = getPagination(req.query, 20);
     let where = ['1=1'];
     const params = [];
     if (status) { where.push("COALESCE(b.status,'approved') = ?"); params.push(status); }
     const cond = where.join(' AND ');
-    const [rows] = await db.execute(
+    const result = await runPaginated(
+      db,
       `SELECT b.*, u.name, u.email, u.phone, u.is_verified
        FROM blood_donors b JOIN users u ON b.user_id=u.id
        WHERE ${cond}
-       ORDER BY b.created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`,
-      params
+       ORDER BY b.created_at DESC`,
+      `SELECT COUNT(*) AS total FROM blood_donors b WHERE ${cond}`,
+      params,
+      { page, limit }
     );
-    const [[{ total }]] = await db.execute(`SELECT COUNT(*) AS total FROM blood_donors b WHERE ${cond}`, params);
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    ok(res, result);
   } catch { err(res, 'Failed', 500); }
 };
 
@@ -376,22 +385,24 @@ exports.approveVolunteer = async (req, res) => {
 /* ── Volunteers admin list with pending support ───────────── */
 exports.getVolunteersAdmin = async (req, res) => {
   try {
-    const { page = 1, limit = 20, status } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { status } = req.query;
+    const { page, limit } = getPagination(req.query, 20);
     let where = ['1=1'];
     const params = [];
     if (status === 'pending')  { where.push('v.is_active = 0'); }
     else if (status === 'active')   { where.push('v.is_active = 1'); }
     const cond = where.join(' AND ');
-    const [rows] = await db.execute(
+    const result = await runPaginated(
+      db,
       `SELECT v.*, u.name, u.email, u.phone
        FROM volunteers v JOIN users u ON v.user_id=u.id
        WHERE ${cond}
-       ORDER BY v.created_at DESC LIMIT ${parseInt(limit)} OFFSET ${offset}`,
-      params
+       ORDER BY v.created_at DESC`,
+      `SELECT COUNT(*) AS total FROM volunteers v WHERE ${cond}`,
+      params,
+      { page, limit }
     );
-    const [[{ total }]] = await db.execute(`SELECT COUNT(*) AS total FROM volunteers v WHERE ${cond}`, params);
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    ok(res, result);
   } catch { err(res, 'Failed', 500); }
 };
 

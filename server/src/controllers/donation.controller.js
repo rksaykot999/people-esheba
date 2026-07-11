@@ -1,10 +1,11 @@
 const db = require('../config/db');
 const { ok, err } = require('../utils/response');
+const { getPagination, runPaginated } = require('../utils/pagination');
 
 exports.getAll = async (req, res) => {
   try {
-    const { status = 'approved', category, district, urgent, search, page = 1, limit = 12 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { status = 'approved', category, district, urgent, search } = req.query;
+    const { page, limit } = getPagination(req.query, 12);
     let   where  = [];
     const params = [];
 
@@ -15,17 +16,16 @@ exports.getAll = async (req, res) => {
     if (search)   { where.push('d.title LIKE ?');       params.push(`%${search}%`); }
 
     const cond = where.length ? `WHERE ${where.join(' AND ')}` : '';
-    const [rows] = await db.execute(
+    const result = await runPaginated(
+      db,
       `SELECT d.*, u.name AS poster_name, u.avatar AS poster_avatar, u.is_verified AS poster_verified
        FROM donations d JOIN users u ON d.user_id=u.id
-       ${cond} ORDER BY d.is_urgent DESC, d.created_at DESC
-       LIMIT ${parseInt(limit)} OFFSET ${offset}`,
-      params
+       ${cond} ORDER BY d.is_urgent DESC, d.created_at DESC`,
+      `SELECT COUNT(*) AS total FROM donations d ${cond}`,
+      params,
+      { page, limit }
     );
-    const [[{ total }]] = await db.execute(
-      `SELECT COUNT(*) AS total FROM donations d ${cond}`, params
-    );
-    ok(res, { rows, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    ok(res, result);
   } catch (e) {
     err(res, 'Failed', 500);
   }
