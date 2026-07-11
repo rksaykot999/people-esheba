@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { useLang } from '../../context/LanguageContext';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
-import { FiPlus, FiTrash2, FiEdit2, FiX, FiSave, FiPhone, FiAlertTriangle, FiSearch, FiActivity } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit2, FiX, FiSave, FiPhone, FiAlertTriangle, FiSearch, FiActivity, FiUploadCloud } from 'react-icons/fi';
 import { MdOutlineLocalHospital, MdOutlineLocalPolice, MdOutlineFireTruck, MdOutlineMedicalServices } from 'react-icons/md';
+import BulkImportModal from '../../components/admin/BulkImportModal';
 
 const TYPES = ['hospital','police','fire','ambulance','mental','other'];
 const ICONS = { 
@@ -22,6 +23,7 @@ export default function AdminEmergency() {
   const [items, setItems]   = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [showImport, setShowImport] = useState(false);
   const [editing, setEditing]  = useState(null);
   const [form, setForm] = useState(BLANK);
   const [saving, setSaving] = useState(false);
@@ -78,9 +80,14 @@ export default function AdminEmergency() {
           </h1>
           <p style={{ color:'var(--text-muted)', fontSize:'0.88rem' }}>{items.length} {isBn?'জরুরি সেবা নিবন্ধিত আছে':'emergency services registered'}</p>
         </div>
-        <button onClick={openAdd} className="btn btn-primary" style={{ height:42, borderRadius:10 }}>
-          <FiPlus size={16}/> {isBn?'নতুন সেবা যোগ করুন':'Add Service'}
-        </button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={openAdd} className="btn btn-primary" style={{ height:42, borderRadius:10 }}>
+            <FiPlus size={16}/> {isBn?'নতুন সেবা যোগ করুন':'Add Service'}
+          </button>
+          <button onClick={() => setShowImport(true)} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '8px 16px', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.3)', borderRadius: 10, color: 'var(--cyan)', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', height: 42 }}>
+            <FiUploadCloud size={15} /> {isBn ? 'ডেটা আমদানি' : 'Import CSV/Excel'}
+          </button>
+        </div>
       </div>
 
       <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))', gap:'1rem' }}>
@@ -181,6 +188,7 @@ export default function AdminEmergency() {
           </div>
         </div>
       )}
+      <BulkImportModal isOpen={showImport} onClose={() => setShowImport(false)} table="emergency_services" onImportSuccess={() => { fetch(); }} />
     </div>
   );
 }
