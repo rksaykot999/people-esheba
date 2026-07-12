@@ -1,9 +1,3 @@
-// Simple health check without database dependency
-module.exports = (req, res) => {
-  res.json({
-    success: true,
-    message: 'API is running',
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'unknown'
-  });
-};
+// Vercel serverless entry point — আসল Express অ্যাপটি লোড করা হচ্ছে
+// (src/server.js এ পুরো অ্যাপ, routes, database ও auth সব আছে)
+module.exports = require('../src/server.js');
