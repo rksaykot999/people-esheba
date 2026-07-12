@@ -1,0 +1,51 @@
+﻿name,category,skills,availability,division,district,bio,is_verified,is_active
+Md. Rahim Uddin,general,"First Aid, CPR",Weekends,Dhaka,Dhaka,Passionate volunteer committed to community service.,0,1
+Rina Hossain,medical,"Teaching, Tutoring",Evenings,Chittagong,Coxs Bazar,Passionate volunteer committed to community service.,1,1
+Md. Hasan Hossain,education,"Cooking, Distribution",Full-time,Rajshahi,Pabna,Passionate volunteer committed to community service.,1,1
+Ayesha Khan,disaster,IT Support,Flexible,Khulna,Kushtia,Passionate volunteer committed to community service.,0,1
+Md. Kamal Khan,food,Counseling,Weekends,Sylhet,Sylhet Sadar,Passionate volunteer committed to community service.,1,1
+Tania Rahman,environment,"First Aid, CPR",Evenings,Barisal,Barisal,Passionate volunteer committed to community service.,1,1
+Md. Rakib Rahman,tech,"Teaching, Tutoring",Full-time,Rangpur,Dinajpur,Passionate volunteer committed to community service.,0,1
+Mitu Begum,other,"Cooking, Distribution",Flexible,Mymensingh,Netrokona,Passionate volunteer committed to community service.,1,1
+Md. Tanvir Begum,general,IT Support,Weekends,Dhaka,Tangail,Passionate volunteer committed to community service.,1,1
+Sadia Uddin,medical,Counseling,Evenings,Chittagong,Rangamati,Passionate volunteer committed to community service.,0,1
+Md. Arif Uddin,education,"First Aid, CPR",Full-time,Rajshahi,Rajshahi,Passionate volunteer committed to community service.,1,1
+Lamia Hossain,disaster,"Teaching, Tutoring",Flexible,Khulna,Jessore,Passionate volunteer committed to community service.,1,1
+Md. Masud Hossain,food,"Cooking, Distribution",Weekends,Sylhet,Habiganj,Passionate volunteer committed to community service.,0,1
+Sumi Khan,environment,IT Support,Evenings,Barisal,Pirojpur,Passionate volunteer committed to community service.,1,1
+Md. Shakil Khan,tech,Counseling,Full-time,Rangpur,Nilphamari,Passionate volunteer committed to community service.,1,1
+Salma Rahman,other,"First Aid, CPR",Flexible,Mymensingh,Mymensingh,Passionate volunteer committed to community service.,0,1
+Md. Karim Rahman,general,"Teaching, Tutoring",Weekends,Dhaka,Gazipur,Passionate volunteer committed to community service.,1,1
+Fatema Begum,medical,"Cooking, Distribution",Evenings,Chittagong,Comilla,Passionate volunteer committed to community service.,1,1
+Md. Jamal Begum,education,IT Support,Full-time,Rajshahi,Natore,Passionate volunteer committed to community service.,0,1
+Nusrat Uddin,disaster,Counseling,Flexible,Khulna,Bagerhat,Passionate volunteer committed to community service.,1,1
+Md. Sohel Uddin,food,"First Aid, CPR",Weekends,Sylhet,Sylhet,Passionate volunteer committed to community service.,1,1
+Sharmin Hossain,environment,"Teaching, Tutoring",Evenings,Barisal,Bhola,Passionate volunteer committed to community service.,0,1
+Md. Nayeem Hossain,tech,"Cooking, Distribution",Full-time,Rangpur,Kurigram,Passionate volunteer committed to community service.,1,1
+Rima Khan,other,IT Support,Flexible,Mymensingh,Sherpur,Passionate volunteer committed to community service.,1,1
+Md. Sabbir Khan,general,Counseling,Weekends,Dhaka,Manikganj,Passionate volunteer committed to community service.,0,1
+Jannat Rahman,medical,"First Aid, CPR",Evenings,Chittagong,Chittagong,Passionate volunteer committed to community service.,1,1
+Md. Faruk Rahman,education,"Teaching, Tutoring",Full-time,Rajshahi,Bogura,Passionate volunteer committed to community service.,1,1
+Farhana Begum,disaster,"Cooking, Distribution",Flexible,Khulna,Satkhira,Passionate volunteer committed to community service.,0,1
+Md. Rasel Begum,food,IT Support,Weekends,Sylhet,Sunamganj,Passionate volunteer committed to community service.,1,1
+Nadia Uddin,environment,Counseling,Evenings,Barisal,Jhalokati,Passionate volunteer committed to community service.,1,1
+Md. Rahim Uddin,tech,"First Aid, CPR",Full-time,Rangpur,Rangpur,Passionate volunteer committed to community service.,0,1
+Rina Hossain,other,"Teaching, Tutoring",Flexible,Mymensingh,Jamalpur,Passionate volunteer committed to community service.,1,1
+Md. Hasan Hossain,general,"Cooking, Distribution",Weekends,Dhaka,Narayanganj,Passionate volunteer committed to community service.,1,1
+Ayesha Khan,medical,IT Support,Evenings,Chittagong,Feni,Passionate volunteer committed to community service.,0,1
+Md. Kamal Khan,education,Counseling,Full-time,Rajshahi,Naogaon,Passionate volunteer committed to community service.,1,1
+Tania Rahman,disaster,"First Aid, CPR",Flexible,Khulna,Khulna,Passionate volunteer committed to community service.,1,1
+Md. Rakib Rahman,food,"Teaching, Tutoring",Weekends,Sylhet,Moulvibazar,Passionate volunteer committed to community service.,0,1
+Mitu Begum,environment,"Cooking, Distribution",Evenings,Barisal,Patuakhali,Passionate volunteer committed to community service.,1,1
+Md. Tanvir Begum,tech,IT Support,Full-time,Rangpur,Gaibandha,Passionate volunteer committed to community service.,1,1
+Sadia Uddin,other,Counseling,Flexible,Mymensingh,Trishal,Passionate volunteer committed to community service.,0,1
+Md. Arif Uddin,general,"First Aid, CPR",Weekends,Dhaka,Dhaka,Passionate volunteer committed to community service.,1,1
+Lamia Hossain,medical,"Teaching, Tutoring",Evenings,Chittagong,Coxs Bazar,Passionate volunteer committed to community service.,1,1
+Md. Masud Hossain,education,"Cooking, Distribution",Full-time,Rajshahi,Pabna,Passionate volunteer committed to community service.,0,1
+Sumi Khan,disaster,IT Support,Flexible,Khulna,Kushtia,Passionate volunteer committed to community service.,1,1
+Md. Shakil Khan,food,Counseling,Weekends,Sylhet,Sylhet Sadar,Passionate volunteer committed to community service.,1,1
+Salma Rahman,environment,"First Aid, CPR",Evenings,Barisal,Barisal,Passionate volunteer committed to community service.,0,1
+Md. Karim Rahman,tech,"Teaching, Tutoring",Full-time,Rangpur,Dinajpur,Passionate volunteer committed to community service.,1,1
+Fatema Begum,other,"Cooking, Distribution",Flexible,Mymensingh,Netrokona,Passionate volunteer committed to community service.,1,1
+Md. Jamal Begum,general,IT Support,Weekends,Dhaka,Tangail,Passionate volunteer committed to community service.,0,1
+Nusrat Uddin,medical,Counseling,Evenings,Chittagong,Rangamati,Passionate volunteer committed to community service.,1,1

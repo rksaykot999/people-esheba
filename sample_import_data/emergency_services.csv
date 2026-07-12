@@ -1,0 +1,51 @@
+﻿name,type,phone,address,district,division,latitude,longitude,is_24h
+Dhaka Medical College Hospital,hospital,01711000000,"Mirpur, Dhaka",Dhaka,Dhaka,23.0000,90.0000,0
+Coxs Bazar Police Station,police,01711000137,"Uttara, Coxs Bazar",Coxs Bazar,Chittagong,23.0100,90.0100,1
+Pabna Fire Station,fire,01711000274,"Dhanmondi, Pabna",Pabna,Rajshahi,23.0200,90.0200,1
+Kushtia Ambulance Service,ambulance,01711000411,"Gulshan, Kushtia",Kushtia,Khulna,23.0300,90.0300,1
+Sylhet Sadar Mental Health Center,mental,01711000548,"Banani, Sylhet Sadar",Sylhet Sadar,Sylhet,23.0400,90.0400,0
+Barisal Medical College Hospital,other,01711000685,"Mohakhali, Barisal",Barisal,Barisal,23.0500,90.0500,1
+Dinajpur Police Station,hospital,01711000822,"Shahbag, Dinajpur",Dinajpur,Rangpur,23.0600,90.0600,1
+Netrokona Fire Station,police,01711000959,"Agrabad, Netrokona",Netrokona,Mymensingh,23.0700,90.0700,1
+Tangail Ambulance Service,fire,01711001096,"Motijheel, Tangail",Tangail,Dhaka,23.0800,90.0800,0
+Rangamati Mental Health Center,ambulance,01711001233,"Badda, Rangamati",Rangamati,Chittagong,23.0900,90.0900,1
+Rajshahi Medical College Hospital,mental,01711001370,"Mirpur, Rajshahi",Rajshahi,Rajshahi,23.1000,90.1000,1
+Jessore Police Station,other,01711001507,"Uttara, Jessore",Jessore,Khulna,23.1100,90.1100,1
+Habiganj Fire Station,hospital,01711001644,"Dhanmondi, Habiganj",Habiganj,Sylhet,23.1200,90.1200,0
+Pirojpur Ambulance Service,police,01711001781,"Gulshan, Pirojpur",Pirojpur,Barisal,23.1300,90.1300,1
+Nilphamari Mental Health Center,fire,01711001918,"Banani, Nilphamari",Nilphamari,Rangpur,23.1400,90.1400,1
+Mymensingh Medical College Hospital,ambulance,01711002055,"Mohakhali, Mymensingh",Mymensingh,Mymensingh,23.1500,90.1500,1
+Gazipur Police Station,mental,01711002192,"Shahbag, Gazipur",Gazipur,Dhaka,23.1600,90.1600,0
+Comilla Fire Station,other,01711002329,"Agrabad, Comilla",Comilla,Chittagong,23.1700,90.1700,1
+Natore Ambulance Service,hospital,01711002466,"Motijheel, Natore",Natore,Rajshahi,23.1800,90.1800,1
+Bagerhat Mental Health Center,police,01711002603,"Badda, Bagerhat",Bagerhat,Khulna,23.1900,90.1900,1
+Sylhet Medical College Hospital,fire,01711002740,"Mirpur, Sylhet",Sylhet,Sylhet,23.2000,90.2000,0
+Bhola Police Station,ambulance,01711002877,"Uttara, Bhola",Bhola,Barisal,23.2100,90.2100,1
+Kurigram Fire Station,mental,01711003014,"Dhanmondi, Kurigram",Kurigram,Rangpur,23.2200,90.2200,1
+Sherpur Ambulance Service,other,01711003151,"Gulshan, Sherpur",Sherpur,Mymensingh,23.2300,90.2300,1
+Manikganj Mental Health Center,hospital,01711003288,"Banani, Manikganj",Manikganj,Dhaka,23.2400,90.2400,0
+Chittagong Medical College Hospital,police,01711003425,"Mohakhali, Chittagong",Chittagong,Chittagong,23.2500,90.2500,1
+Bogura Police Station,fire,01711003562,"Shahbag, Bogura",Bogura,Rajshahi,23.2600,90.2600,1
+Satkhira Fire Station,ambulance,01711003699,"Agrabad, Satkhira",Satkhira,Khulna,23.2700,90.2700,1
+Sunamganj Ambulance Service,mental,01711003836,"Motijheel, Sunamganj",Sunamganj,Sylhet,23.2800,90.2800,0
+Jhalokati Mental Health Center,other,01711003973,"Badda, Jhalokati",Jhalokati,Barisal,23.2900,90.2900,1
+Rangpur Medical College Hospital,hospital,01711004110,"Mirpur, Rangpur",Rangpur,Rangpur,23.3000,90.3000,1
+Jamalpur Police Station,police,01711004247,"Uttara, Jamalpur",Jamalpur,Mymensingh,23.3100,90.3100,1
+Narayanganj Fire Station,fire,01711004384,"Dhanmondi, Narayanganj",Narayanganj,Dhaka,23.3200,90.3200,0
+Feni Ambulance Service,ambulance,01711004521,"Gulshan, Feni",Feni,Chittagong,23.3300,90.3300,1
+Naogaon Mental Health Center,mental,01711004658,"Banani, Naogaon",Naogaon,Rajshahi,23.3400,90.3400,1
+Khulna Medical College Hospital,other,01711004795,"Mohakhali, Khulna",Khulna,Khulna,23.3500,90.3500,1
+Moulvibazar Police Station,hospital,01711004932,"Shahbag, Moulvibazar",Moulvibazar,Sylhet,23.3600,90.3600,0
+Patuakhali Fire Station,police,01711005069,"Agrabad, Patuakhali",Patuakhali,Barisal,23.3700,90.3700,1
+Gaibandha Ambulance Service,fire,01711005206,"Motijheel, Gaibandha",Gaibandha,Rangpur,23.3800,90.3800,1
+Trishal Mental Health Center,ambulance,01711005343,"Badda, Trishal",Trishal,Mymensingh,23.3900,90.3900,1
+Dhaka Medical College Hospital,mental,01711005480,"Mirpur, Dhaka",Dhaka,Dhaka,23.4000,90.4000,0
+Coxs Bazar Police Station,other,01711005617,"Uttara, Coxs Bazar",Coxs Bazar,Chittagong,23.4100,90.4100,1
+Pabna Fire Station,hospital,01711005754,"Dhanmondi, Pabna",Pabna,Rajshahi,23.4200,90.4200,1
+Kushtia Ambulance Service,police,01711005891,"Gulshan, Kushtia",Kushtia,Khulna,23.4300,90.4300,1
+Sylhet Sadar Mental Health Center,fire,01711006028,"Banani, Sylhet Sadar",Sylhet Sadar,Sylhet,23.4400,90.4400,0
+Barisal Medical College Hospital,ambulance,01711006165,"Mohakhali, Barisal",Barisal,Barisal,23.4500,90.4500,1
+Dinajpur Police Station,mental,01711006302,"Shahbag, Dinajpur",Dinajpur,Rangpur,23.4600,90.4600,1
+Netrokona Fire Station,other,01711006439,"Agrabad, Netrokona",Netrokona,Mymensingh,23.4700,90.4700,1
+Tangail Ambulance Service,hospital,01711006576,"Motijheel, Tangail",Tangail,Dhaka,23.4800,90.4800,0
+Rangamati Mental Health Center,police,01711006713,"Badda, Rangamati",Rangamati,Chittagong,23.4900,90.4900,1

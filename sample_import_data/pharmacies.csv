@@ -1,0 +1,51 @@
+﻿name,name_bn,area,area_bn,district,division,phone,hours,is_24h,is_verified,is_active
+Mirpur Pharmacy,মিরপুর ফার্মেসি,Mirpur,মিরপুর,Dhaka,Dhaka,01711000000,24 hours,1,0,1
+Uttara Medico,উত্তরা ফার্মেসি,Uttara,উত্তরা,Coxs Bazar,Chittagong,01711000137,8am-11pm,0,1,1
+Dhanmondi Medical Store,ধানমন্ডি ফার্মেসি,Dhanmondi,ধানমন্ডি,Pabna,Rajshahi,01711000274,8am-11pm,0,1,1
+Gulshan Drug House,গুলশান ফার্মেসি,Gulshan,গুলশান,Kushtia,Khulna,01711000411,24 hours,1,1,1
+Banani Pharmacy,বনানী ফার্মেসি,Banani,বনানী,Sylhet Sadar,Sylhet,01711000548,8am-11pm,0,1,1
+Mohakhali Medico,মহাখালী ফার্মেসি,Mohakhali,মহাখালী,Barisal,Barisal,01711000685,8am-11pm,0,0,1
+Shahbag Medical Store,শাহবাগ ফার্মেসি,Shahbag,শাহবাগ,Dinajpur,Rangpur,01711000822,24 hours,1,1,1
+Agrabad Drug House,আগ্রাবাদ ফার্মেসি,Agrabad,আগ্রাবাদ,Netrokona,Mymensingh,01711000959,8am-11pm,0,1,1
+Motijheel Pharmacy,মতিঝিল ফার্মেসি,Motijheel,মতিঝিল,Tangail,Dhaka,01711001096,8am-11pm,0,1,1
+Badda Medico,বাড্ডা ফার্মেসি,Badda,বাড্ডা,Rangamati,Chittagong,01711001233,24 hours,1,1,1
+Mirpur Medical Store,মিরপুর ফার্মেসি,Mirpur,মিরপুর,Rajshahi,Rajshahi,01711001370,8am-11pm,0,0,1
+Uttara Drug House,উত্তরা ফার্মেসি,Uttara,উত্তরা,Jessore,Khulna,01711001507,8am-11pm,0,1,1
+Dhanmondi Pharmacy,ধানমন্ডি ফার্মেসি,Dhanmondi,ধানমন্ডি,Habiganj,Sylhet,01711001644,24 hours,1,1,1
+Gulshan Medico,গুলশান ফার্মেসি,Gulshan,গুলশান,Pirojpur,Barisal,01711001781,8am-11pm,0,1,1
+Banani Medical Store,বনানী ফার্মেসি,Banani,বনানী,Nilphamari,Rangpur,01711001918,8am-11pm,0,1,1
+Mohakhali Drug House,মহাখালী ফার্মেসি,Mohakhali,মহাখালী,Mymensingh,Mymensingh,01711002055,24 hours,1,0,1
+Shahbag Pharmacy,শাহবাগ ফার্মেসি,Shahbag,শাহবাগ,Gazipur,Dhaka,01711002192,8am-11pm,0,1,1
+Agrabad Medico,আগ্রাবাদ ফার্মেসি,Agrabad,আগ্রাবাদ,Comilla,Chittagong,01711002329,8am-11pm,0,1,1
+Motijheel Medical Store,মতিঝিল ফার্মেসি,Motijheel,মতিঝিল,Natore,Rajshahi,01711002466,24 hours,1,1,1
+Badda Drug House,বাড্ডা ফার্মেসি,Badda,বাড্ডা,Bagerhat,Khulna,01711002603,8am-11pm,0,1,1
+Mirpur Pharmacy,মিরপুর ফার্মেসি,Mirpur,মিরপুর,Sylhet,Sylhet,01711002740,8am-11pm,0,0,1
+Uttara Medico,উত্তরা ফার্মেসি,Uttara,উত্তরা,Bhola,Barisal,01711002877,24 hours,1,1,1
+Dhanmondi Medical Store,ধানমন্ডি ফার্মেসি,Dhanmondi,ধানমন্ডি,Kurigram,Rangpur,01711003014,8am-11pm,0,1,1
+Gulshan Drug House,গুলশান ফার্মেসি,Gulshan,গুলশান,Sherpur,Mymensingh,01711003151,8am-11pm,0,1,1
+Banani Pharmacy,বনানী ফার্মেসি,Banani,বনানী,Manikganj,Dhaka,01711003288,24 hours,1,1,1
+Mohakhali Medico,মহাখালী ফার্মেসি,Mohakhali,মহাখালী,Chittagong,Chittagong,01711003425,8am-11pm,0,0,1
+Shahbag Medical Store,শাহবাগ ফার্মেসি,Shahbag,শাহবাগ,Bogura,Rajshahi,01711003562,8am-11pm,0,1,1
+Agrabad Drug House,আগ্রাবাদ ফার্মেসি,Agrabad,আগ্রাবাদ,Satkhira,Khulna,01711003699,24 hours,1,1,1
+Motijheel Pharmacy,মতিঝিল ফার্মেসি,Motijheel,মতিঝিল,Sunamganj,Sylhet,01711003836,8am-11pm,0,1,1
+Badda Medico,বাড্ডা ফার্মেসি,Badda,বাড্ডা,Jhalokati,Barisal,01711003973,8am-11pm,0,1,1
+Mirpur Medical Store,মিরপুর ফার্মেসি,Mirpur,মিরপুর,Rangpur,Rangpur,01711004110,24 hours,1,0,1
+Uttara Drug House,উত্তরা ফার্মেসি,Uttara,উত্তরা,Jamalpur,Mymensingh,01711004247,8am-11pm,0,1,1
+Dhanmondi Pharmacy,ধানমন্ডি ফার্মেসি,Dhanmondi,ধানমন্ডি,Narayanganj,Dhaka,01711004384,8am-11pm,0,1,1
+Gulshan Medico,গুলশান ফার্মেসি,Gulshan,গুলশান,Feni,Chittagong,01711004521,24 hours,1,1,1
+Banani Medical Store,বনানী ফার্মেসি,Banani,বনানী,Naogaon,Rajshahi,01711004658,8am-11pm,0,1,1
+Mohakhali Drug House,মহাখালী ফার্মেসি,Mohakhali,মহাখালী,Khulna,Khulna,01711004795,8am-11pm,0,0,1
+Shahbag Pharmacy,শাহবাগ ফার্মেসি,Shahbag,শাহবাগ,Moulvibazar,Sylhet,01711004932,24 hours,1,1,1
+Agrabad Medico,আগ্রাবাদ ফার্মেসি,Agrabad,আগ্রাবাদ,Patuakhali,Barisal,01711005069,8am-11pm,0,1,1
+Motijheel Medical Store,মতিঝিল ফার্মেসি,Motijheel,মতিঝিল,Gaibandha,Rangpur,01711005206,8am-11pm,0,1,1
+Badda Drug House,বাড্ডা ফার্মেসি,Badda,বাড্ডা,Trishal,Mymensingh,01711005343,24 hours,1,1,1
+Mirpur Pharmacy,মিরপুর ফার্মেসি,Mirpur,মিরপুর,Dhaka,Dhaka,01711005480,8am-11pm,0,0,1
+Uttara Medico,উত্তরা ফার্মেসি,Uttara,উত্তরা,Coxs Bazar,Chittagong,01711005617,8am-11pm,0,1,1
+Dhanmondi Medical Store,ধানমন্ডি ফার্মেসি,Dhanmondi,ধানমন্ডি,Pabna,Rajshahi,01711005754,24 hours,1,1,1
+Gulshan Drug House,গুলশান ফার্মেসি,Gulshan,গুলশান,Kushtia,Khulna,01711005891,8am-11pm,0,1,1
+Banani Pharmacy,বনানী ফার্মেসি,Banani,বনানী,Sylhet Sadar,Sylhet,01711006028,8am-11pm,0,1,1
+Mohakhali Medico,মহাখালী ফার্মেসি,Mohakhali,মহাখালী,Barisal,Barisal,01711006165,24 hours,1,0,1
+Shahbag Medical Store,শাহবাগ ফার্মেসি,Shahbag,শাহবাগ,Dinajpur,Rangpur,01711006302,8am-11pm,0,1,1
+Agrabad Drug House,আগ্রাবাদ ফার্মেসি,Agrabad,আগ্রাবাদ,Netrokona,Mymensingh,01711006439,8am-11pm,0,1,1
+Motijheel Pharmacy,মতিঝিল ফার্মেসি,Motijheel,মতিঝিল,Tangail,Dhaka,01711006576,24 hours,1,1,1
+Badda Medico,বাড্ডা ফার্মেসি,Badda,বাড্ডা,Rangamati,Chittagong,01711006713,8am-11pm,0,1,1
