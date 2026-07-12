@@ -404,6 +404,43 @@ exports.updateJobStatus = async (req, res) => {
 };
 
 /* ── Bulk Import ──────────────────────────────────────────── */
+const bcrypt = require('bcryptjs');
+
+// notices.category ENUM মান — template/পুরনো CSV এর সাধারণ মানগুলো schema-র ENUM এ ম্যাপ করা হয়
+const NOTICE_CATEGORY_MAP = {
+  govt: 'government', government: 'government',
+  education: 'academic', academic: 'academic', edu: 'academic',
+  job: 'career', jobs: 'career', career: 'career',
+  scholarship: 'scholarship', donate: 'donate', donation: 'donate',
+  health: 'general', general: 'general',
+};
+
+// একটা টেবিলের আসল column গুলো DB থেকে বের করে আনে (unknown column ফেলে দেওয়ার জন্য)
+async function getTableColumns(table) {
+  const [cols] = await db.query(`SHOW COLUMNS FROM \`${table}\``);
+  return cols.map(c => c.Field);
+}
+
+// blood_donors / volunteers এর জন্য name+phone দিয়ে একটা placeholder user তৈরি করে (বা থাকলে সেটাই reuse করে) user_id ফেরত দেয়
+async function ensurePlaceholderUser(row) {
+  const name = (row.name || row.full_name || 'Imported User').toString().trim();
+  const phone = (row.phone || row.emergency_contact || '').toString().trim();
+  // email তৈরি — phone থাকলে সেটার ভিত্তিতে, নাহলে name ভিত্তিতে (যাতে re-import এ ডুপ্লিকেট user না হয়)
+  const slug = (phone || name.toLowerCase().replace(/[^a-z0-9]/g, '') || 'user')
+    .replace(/[^a-z0-9]/gi, '');
+  const email = `import_${slug}@placeholder.esheba`;
+
+  const [existing] = await db.query('SELECT id FROM users WHERE email=? LIMIT 1', [email]);
+  if (existing.length) return existing[0].id;
+
+  const passwordHash = await bcrypt.hash('Imported@' + Math.random().toString(36).slice(2), 10);
+  const [result] = await db.execute(
+    'INSERT INTO users (name, email, phone, password_hash, role, division, district) VALUES (?,?,?,?,?,?,?)',
+    [name, email, phone || null, passwordHash, 'user', row.division || null, row.district || null]
+  );
+  return result.insertId;
+}
+
 exports.bulkImport = async (req, res) => {
   try {
     const { table, rows } = req.body;
@@ -412,35 +449,57 @@ exports.bulkImport = async (req, res) => {
     const allowedTables = ['doctors', 'pharmacies', 'notices', 'education_institutions', 'scholarships', 'jobs', 'blood_donors', 'volunteers', 'emergency_services', 'directory_listings'];
     if (!allowedTables.includes(table)) return err(res, 'Invalid table', 400);
 
-    // Tables that have a created_by foreign key column
+    // টেবিলের আসল column গুলো DB থেকে নিই — এতে template এর extra/ভুল column আপনা-আপনি বাদ পড়বে
+    const validColumns = await getTableColumns(table);
+
+    // created_by FK আছে এমন টেবিল — admin এর id বসানো হয়
     const tablesWithCreatedBy = ['doctors', 'pharmacies', 'notices', 'education_institutions', 'scholarships', 'jobs', 'directory_listings'];
-    const needsCreatedBy = tablesWithCreatedBy.includes(table);
+    const needsCreatedBy = tablesWithCreatedBy.includes(table) && validColumns.includes('created_by');
 
-    const columns = Object.keys(rows[0]).filter(k => k !== 'id');
-
-    if (needsCreatedBy && !columns.includes('created_by')) {
-      columns.push('created_by');
-      rows.forEach(r => r.created_by = req.user.id);
-    }
-
-    const placeholders = columns.map(() => '?').join(',');
-    const query = `INSERT INTO ${table} (${columns.join(',')}) VALUES (${placeholders})`;
+    // user_id (NOT NULL) দরকার এমন টেবিল
+    const userBackedTables = ['blood_donors', 'volunteers']; // name/phone দিয়ে placeholder user তৈরি হবে
+    const jobLikeTables = ['jobs'];                           // admin নিজেই owner (user_id = admin)
 
     let successCount = 0;
     const errors = [];
-    for (const row of rows) {
-      const values = columns.map(col => {
-        let val = row[col];
-        if (val === undefined || val === '') return null;
-        if (typeof val === 'boolean') return val ? 1 : 0;
-        return val;
-      });
+
+    for (let i = 0; i < rows.length; i++) {
+      const raw = { ...rows[i] };
+      delete raw.id;
+
       try {
+        // ── special handling ──
+        if (needsCreatedBy) raw.created_by = req.user.id;
+
+        if (table === 'notices' && raw.category != null && raw.category !== '') {
+          const mapped = NOTICE_CATEGORY_MAP[String(raw.category).toLowerCase().trim()];
+          raw.category = mapped || 'general';
+        }
+
+        if (userBackedTables.includes(table)) {
+          raw.user_id = await ensurePlaceholderUser(raw);
+        } else if (jobLikeTables.includes(table) && !raw.user_id) {
+          raw.user_id = req.user.id;
+        }
+
+        // ── শুধু আসল column গুলো রেখে বাকি সব বাদ দিই ──
+        const columns = Object.keys(raw).filter(k => validColumns.includes(k));
+        if (columns.length === 0) throw new Error('No matching columns for this table');
+
+        const values = columns.map(col => {
+          let val = raw[col];
+          if (val === undefined || val === '') return null;
+          if (typeof val === 'boolean') return val ? 1 : 0;
+          return val;
+        });
+        const placeholders = columns.map(() => '?').join(',');
+        const query = `INSERT INTO \`${table}\` (${columns.join(',')}) VALUES (${placeholders})`;
+
         await db.execute(query, values);
         successCount++;
       } catch (e) {
-        console.error(`Failed to insert row into ${table}:`, e.message);
-        errors.push(e.message);
+        console.error(`Failed to insert row ${i + 1} into ${table}:`, e.message);
+        errors.push(`Row ${i + 1}: ${e.message}`);
       }
     }
 
