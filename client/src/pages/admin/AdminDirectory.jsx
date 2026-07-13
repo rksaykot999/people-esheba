@@ -25,10 +25,13 @@ const BLANK = (category, subtype) => ({
   address: '', address_bn: '', phone: '', website: '', rating: 0, badge_key: '', price_info: '', features: '', is_verified: false,
 });
 
-export default function AdminDirectory() {
+export default function AdminDirectory({ fixedCategory }) {
   const { isBn } = useLang();
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeCat = CATEGORIES.find(c => c.key === searchParams.get('cat')) || CATEGORIES[0];
+  // When fixedCategory is provided (dedicated page), lock to it and hide the tab switcher.
+  const activeCat = fixedCategory
+    ? (CATEGORIES.find(c => c.key === fixedCategory) || CATEGORIES[0])
+    : (CATEGORIES.find(c => c.key === searchParams.get('cat')) || CATEGORIES[0]);
 
   const [items, setItems]     = useState([]);
   const [loading, setLoading] = useState(true);
@@ -96,10 +99,14 @@ export default function AdminDirectory() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ fontWeight: 800, fontSize: '1.6rem', color: 'var(--text-strong)', marginBottom: 4 }}>
-            {isBn ? 'ডিরেক্টরি ব্যবস্থাপনা' : 'Directory Manager'}
+            {fixedCategory
+              ? `${activeCat.label} ${isBn ? 'ব্যবস্থাপনা' : 'Manager'}`
+              : (isBn ? 'ডিরেক্টরি ব্যবস্থাপনা' : 'Directory Manager')}
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>
-            {isBn ? 'হাসপাতাল, সেবা, সরকারি ও অন্যান্য তালিকা এখান থেকে নিয়ন্ত্রণ করুন' : 'Controls what shows on Health, Services, and Government pages'}
+            {fixedCategory
+              ? (isBn ? `${activeCat.label} পেজে যা দেখানো হবে তা এখান থেকে নিয়ন্ত্রণ করুন` : `Controls what shows on the ${activeCat.label} page`)
+              : (isBn ? 'হাসপাতাল, সেবা, সরকারি ও অন্যান্য তালিকা এখান থেকে নিয়ন্ত্রণ করুন' : 'Controls what shows on Health, Services, and Government pages')}
           </p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
@@ -112,7 +119,8 @@ export default function AdminDirectory() {
         </div>
       </div>
 
-      {/* Category tabs */}
+      {/* Category tabs (hidden on dedicated per-category pages) */}
+      {!fixedCategory && (
       <div style={{ display: 'flex', gap: 8, marginBottom: '1.5rem', flexWrap: 'wrap' }}>
         {CATEGORIES.map(c => (
           <button
@@ -130,6 +138,7 @@ export default function AdminDirectory() {
           </button>
         ))}
       </div>
+      )}
 
       <form onSubmit={submitSearch} style={{ display: 'flex', gap: 8, marginBottom: '1.25rem', maxWidth: 360 }}>
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search name..." className="form-input" style={{ height: 40 }}/>

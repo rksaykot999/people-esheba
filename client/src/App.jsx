@@ -147,6 +147,9 @@ function AppRoutes() {
           <Route path="volunteers"     element={<AdminVolunteers />} />
           <Route path="emergency"      element={<AdminEmergency />} />
           <Route path="directory"      element={<AdminDirectory />} />
+          <Route path="hospitals"      element={<AdminDirectory fixedCategory="hospital" />} />
+          <Route path="services"       element={<AdminDirectory fixedCategory="service" />} />
+          <Route path="government"     element={<AdminDirectory fixedCategory="government" />} />
           <Route path="reports"        element={<AdminReports />} />
           <Route path="analytics"      element={<AdminAnalytics />} />
           <Route path="notifications"  element={<AdminNotifications />} />

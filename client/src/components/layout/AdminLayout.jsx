@@ -9,7 +9,7 @@ import {
   FiLogOut, FiMenu, FiX, FiExternalLink, FiBook, FiFileText, FiAward,
   FiMoon, FiSun, FiSettings, FiPlusCircle, FiPieChart, FiBox,
 } from 'react-icons/fi';
-import { MdOutlineHealthAndSafety, MdOutlineMedicalServices, MdOutlineSchool, MdOutlineAgriculture, MdOutlineLocalPharmacy } from 'react-icons/md';
+import { MdOutlineHealthAndSafety, MdOutlineMedicalServices, MdOutlineSchool, MdOutlineAgriculture, MdOutlineLocalPharmacy, MdOutlineMiscellaneousServices, MdAccountBalance } from 'react-icons/md';
 
 const NAV_ITEMS = (t) => [
   { icon:<FiGrid/>,         label:t('admin.dashboard'),     to:'/admin',              group:'core' },
@@ -21,8 +21,11 @@ const NAV_ITEMS = (t) => [
   { icon:<FiAlertTriangle/>,label:t('admin.emergency'),     to:'/admin/emergency',    group:'core' },
   { icon:<FiBox/>,label:t('admin.directory') || 'Services & Directory', to:'/admin/directory', group:'core' },
   // Content management
+  { icon:<MdOutlineHealthAndSafety/>, label: t('nav.health') || 'Health (Hospitals)', to:'/admin/hospitals',   group:'content' },
   { icon:<MdOutlineMedicalServices/>, label: t('health.doctors') || 'Doctors',       to:'/admin/doctors',      group:'content' },
   { icon:<MdOutlineLocalPharmacy/>,   label: t('health.pharmacy') || 'Pharmacy',                           to:'/admin/pharmacy',     group:'content' },
+  { icon:<MdOutlineMiscellaneousServices/>, label: t('nav.services') || 'Services',   to:'/admin/services',    group:'content' },
+  { icon:<MdAccountBalance/>,          label: t('nav.government') || 'Government',   to:'/admin/government', group:'content' },
   { icon:<FiFileText/>,               label: t('nav.notices') || 'Notices',        to:'/admin/notices',      group:'content' },
   { icon:<MdOutlineSchool/>,          label: t('nav.education') || 'Education',    to:'/admin/education',    group:'content' },
   { icon:<FiAward/>,                  label: t('education.scholarships') || 'Scholarships',                        to:'/admin/scholarships', group:'content' },
