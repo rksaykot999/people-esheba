@@ -1,51 +1,51 @@
 ﻿name,name_bn,specialty,specialty_bn,area,area_bn,district,division,phone,hours,rating,is_verified,is_active
-Dr. Rahim Uddin,ডা. Rahim,Cardiologist,কার্ডিওলজিস্ট,Mirpur,মিরপুর,Dhaka,Dhaka,01711000000,Sat-Thu 9am-2pm,3.5,0,1
-Dr. Karim Ahmed,ডা. Karim,Pediatrician,শিশু বিশেষজ্ঞ,Uttara,উত্তরা,Coxs Bazar,Chittagong,01711000137,Sat-Thu 9am-2pm,3.6,1,1
-Dr. Hasan Hossain,ডা. Hasan,Medicine,মেডিসিন,Dhanmondi,ধানমন্ডি,Pabna,Rajshahi,01711000274,Sat-Thu 9am-2pm,3.7,1,1
-Dr. Jamal Islam,ডা. Jamal,Dentist,ডেন্টিস্ট,Gulshan,গুলশান,Kushtia,Khulna,01711000411,Sat-Thu 9am-2pm,3.8,1,1
-Dr. Kamal Khan,ডা. Kamal,Gynecologist,গাইনী,Banani,বনানী,Sylhet Sadar,Sylhet,01711000548,Sat-Thu 9am-2pm,3.9,0,1
-Dr. Sohel Chowdhury,ডা. Sohel,Orthopedic,অর্থোপেডিক,Mohakhali,মহাখালী,Barisal,Barisal,01711000685,Sat-Thu 9am-2pm,4.0,1,1
-Dr. Rakib Rahman,ডা. Rakib,Neurologist,নিউরোলজিস্ট,Shahbag,শাহবাগ,Dinajpur,Rangpur,01711000822,Sat-Thu 9am-2pm,4.1,1,1
-Dr. Nayeem Akter,ডা. Nayeem,Dermatologist,চর্মরোগ,Agrabad,আগ্রাবাদ,Netrokona,Mymensingh,01711000959,Sat-Thu 9am-2pm,4.2,1,1
-Dr. Tanvir Begum,ডা. Tanvir,ENT,নাক-কান-গলা,Motijheel,মতিঝিল,Tangail,Dhaka,01711001096,Sat-Thu 9am-2pm,4.3,0,1
-Dr. Sabbir Kabir,ডা. Sabbir,Ophthalmologist,চক্ষু,Badda,বাড্ডা,Rangamati,Chittagong,01711001233,Sat-Thu 9am-2pm,4.4,1,1
-Dr. Arif Uddin,ডা. Arif,Cardiologist,কার্ডিওলজিস্ট,Mirpur,মিরপুর,Rajshahi,Rajshahi,01711001370,Sat-Thu 9am-2pm,4.5,1,1
-Dr. Faruk Ahmed,ডা. Faruk,Pediatrician,শিশু বিশেষজ্ঞ,Uttara,উত্তরা,Jessore,Khulna,01711001507,Sat-Thu 9am-2pm,4.6,1,1
-Dr. Masud Hossain,ডা. Masud,Medicine,মেডিসিন,Dhanmondi,ধানমন্ডি,Habiganj,Sylhet,01711001644,Sat-Thu 9am-2pm,4.7,0,1
-Dr. Rasel Islam,ডা. Rasel,Dentist,ডেন্টিস্ট,Gulshan,গুলশান,Pirojpur,Barisal,01711001781,Sat-Thu 9am-2pm,4.8,1,1
-Dr. Shakil Khan,ডা. Shakil,Gynecologist,গাইনী,Banani,বনানী,Nilphamari,Rangpur,01711001918,Sat-Thu 9am-2pm,4.9,1,1
-Dr. Salma Chowdhury,ডা. Salma,Orthopedic,অর্থোপেডিক,Mohakhali,মহাখালী,Mymensingh,Mymensingh,01711002055,Sat-Thu 9am-2pm,3.5,1,1
-Dr. Rina Rahman,ডা. Rina,Neurologist,নিউরোলজিস্ট,Shahbag,শাহবাগ,Gazipur,Dhaka,01711002192,Sat-Thu 9am-2pm,3.6,0,1
-Dr. Fatema Akter,ডা. Fatema,Dermatologist,চর্মরোগ,Agrabad,আগ্রাবাদ,Comilla,Chittagong,01711002329,Sat-Thu 9am-2pm,3.7,1,1
-Dr. Ayesha Begum,ডা. Ayesha,ENT,নাক-কান-গলা,Motijheel,মতিঝিল,Natore,Rajshahi,01711002466,Sat-Thu 9am-2pm,3.8,1,1
-Dr. Nusrat Kabir,ডা. Nusrat,Ophthalmologist,চক্ষু,Badda,বাড্ডা,Bagerhat,Khulna,01711002603,Sat-Thu 9am-2pm,3.9,1,1
-Dr. Tania Uddin,ডা. Tania,Cardiologist,কার্ডিওলজিস্ট,Mirpur,মিরপুর,Sylhet,Sylhet,01711002740,Sat-Thu 9am-2pm,4.0,0,1
-Dr. Sharmin Ahmed,ডা. Sharmin,Pediatrician,শিশু বিশেষজ্ঞ,Uttara,উত্তরা,Bhola,Barisal,01711002877,Sat-Thu 9am-2pm,4.1,1,1
-Dr. Mitu Hossain,ডা. Mitu,Medicine,মেডিসিন,Dhanmondi,ধানমন্ডি,Kurigram,Rangpur,01711003014,Sat-Thu 9am-2pm,4.2,1,1
-Dr. Rima Islam,ডা. Rima,Dentist,ডেন্টিস্ট,Gulshan,গুলশান,Sherpur,Mymensingh,01711003151,Sat-Thu 9am-2pm,4.3,1,1
-Dr. Sadia Khan,ডা. Sadia,Gynecologist,গাইনী,Banani,বনানী,Manikganj,Dhaka,01711003288,Sat-Thu 9am-2pm,4.4,0,1
-Dr. Jannat Chowdhury,ডা. Jannat,Orthopedic,অর্থোপেডিক,Mohakhali,মহাখালী,Chittagong,Chittagong,01711003425,Sat-Thu 9am-2pm,4.5,1,1
-Dr. Lamia Rahman,ডা. Lamia,Neurologist,নিউরোলজিস্ট,Shahbag,শাহবাগ,Bogura,Rajshahi,01711003562,Sat-Thu 9am-2pm,4.6,1,1
-Dr. Farhana Akter,ডা. Farhana,Dermatologist,চর্মরোগ,Agrabad,আগ্রাবাদ,Satkhira,Khulna,01711003699,Sat-Thu 9am-2pm,4.7,1,1
-Dr. Sumi Begum,ডা. Sumi,ENT,নাক-কান-গলা,Motijheel,মতিঝিল,Sunamganj,Sylhet,01711003836,Sat-Thu 9am-2pm,4.8,0,1
-Dr. Nadia Kabir,ডা. Nadia,Ophthalmologist,চক্ষু,Badda,বাড্ডা,Jhalokati,Barisal,01711003973,Sat-Thu 9am-2pm,4.9,1,1
-Dr. Rahim Uddin,ডা. Rahim,Cardiologist,কার্ডিওলজিস্ট,Mirpur,মিরপুর,Rangpur,Rangpur,01711004110,Sat-Thu 9am-2pm,3.5,1,1
-Dr. Karim Ahmed,ডা. Karim,Pediatrician,শিশু বিশেষজ্ঞ,Uttara,উত্তরা,Jamalpur,Mymensingh,01711004247,Sat-Thu 9am-2pm,3.6,1,1
-Dr. Hasan Hossain,ডা. Hasan,Medicine,মেডিসিন,Dhanmondi,ধানমন্ডি,Narayanganj,Dhaka,01711004384,Sat-Thu 9am-2pm,3.7,0,1
-Dr. Jamal Islam,ডা. Jamal,Dentist,ডেন্টিস্ট,Gulshan,গুলশান,Feni,Chittagong,01711004521,Sat-Thu 9am-2pm,3.8,1,1
-Dr. Kamal Khan,ডা. Kamal,Gynecologist,গাইনী,Banani,বনানী,Naogaon,Rajshahi,01711004658,Sat-Thu 9am-2pm,3.9,1,1
-Dr. Sohel Chowdhury,ডা. Sohel,Orthopedic,অর্থোপেডিক,Mohakhali,মহাখালী,Khulna,Khulna,01711004795,Sat-Thu 9am-2pm,4.0,1,1
-Dr. Rakib Rahman,ডা. Rakib,Neurologist,নিউরোলজিস্ট,Shahbag,শাহবাগ,Moulvibazar,Sylhet,01711004932,Sat-Thu 9am-2pm,4.1,0,1
-Dr. Nayeem Akter,ডা. Nayeem,Dermatologist,চর্মরোগ,Agrabad,আগ্রাবাদ,Patuakhali,Barisal,01711005069,Sat-Thu 9am-2pm,4.2,1,1
-Dr. Tanvir Begum,ডা. Tanvir,ENT,নাক-কান-গলা,Motijheel,মতিঝিল,Gaibandha,Rangpur,01711005206,Sat-Thu 9am-2pm,4.3,1,1
-Dr. Sabbir Kabir,ডা. Sabbir,Ophthalmologist,চক্ষু,Badda,বাড্ডা,Trishal,Mymensingh,01711005343,Sat-Thu 9am-2pm,4.4,1,1
-Dr. Arif Uddin,ডা. Arif,Cardiologist,কার্ডিওলজিস্ট,Mirpur,মিরপুর,Dhaka,Dhaka,01711005480,Sat-Thu 9am-2pm,4.5,0,1
-Dr. Faruk Ahmed,ডা. Faruk,Pediatrician,শিশু বিশেষজ্ঞ,Uttara,উত্তরা,Coxs Bazar,Chittagong,01711005617,Sat-Thu 9am-2pm,4.6,1,1
-Dr. Masud Hossain,ডা. Masud,Medicine,মেডিসিন,Dhanmondi,ধানমন্ডি,Pabna,Rajshahi,01711005754,Sat-Thu 9am-2pm,4.7,1,1
-Dr. Rasel Islam,ডা. Rasel,Dentist,ডেন্টিস্ট,Gulshan,গুলশান,Kushtia,Khulna,01711005891,Sat-Thu 9am-2pm,4.8,1,1
-Dr. Shakil Khan,ডা. Shakil,Gynecologist,গাইনী,Banani,বনানী,Sylhet Sadar,Sylhet,01711006028,Sat-Thu 9am-2pm,4.9,0,1
-Dr. Salma Chowdhury,ডা. Salma,Orthopedic,অর্থোপেডিক,Mohakhali,মহাখালী,Barisal,Barisal,01711006165,Sat-Thu 9am-2pm,3.5,1,1
-Dr. Rina Rahman,ডা. Rina,Neurologist,নিউরোলজিস্ট,Shahbag,শাহবাগ,Dinajpur,Rangpur,01711006302,Sat-Thu 9am-2pm,3.6,1,1
-Dr. Fatema Akter,ডা. Fatema,Dermatologist,চর্মরোগ,Agrabad,আগ্রাবাদ,Netrokona,Mymensingh,01711006439,Sat-Thu 9am-2pm,3.7,1,1
-Dr. Ayesha Begum,ডা. Ayesha,ENT,নাক-কান-গলা,Motijheel,মতিঝিল,Tangail,Dhaka,01711006576,Sat-Thu 9am-2pm,3.8,0,1
-Dr. Nusrat Kabir,ডা. Nusrat,Ophthalmologist,চক্ষু,Badda,বাড্ডা,Rangamati,Chittagong,01711006713,Sat-Thu 9am-2pm,3.9,1,1
+Dr. Rahim Uddin 1,ডা. রহিম উদ্দিন 1,Cardiologist,কার্ডিওলজিস্ট,Mirpur,,Dhaka,Dhaka,01711002740,Sat–Thu 9am–2pm,3.8,1,1
+Dr. Salma Begum 2,ডা. সালমা বেগম 2,Pediatrician,পেডিয়াট্রিশিয়ান,Dhanmondi,,Chittagong,Chittagong,01711002877,Sun–Fri 5pm–9pm,3.9,0,1
+Dr. Kamal Hossain 3,ডা. কামাল হোসেন 3,Medicine,মেডিসিন,Uttara,,Rajshahi,Rajshahi,01711003014,Sat–Thu 9am–2pm,4.0,1,1
+Dr. Nasrin Akter 4,ডা. নাসরিন আক্তার 4,Dentist,ডেন্টিস্ট,Gulshan,,Khulna,Khulna,01711003151,Sun–Fri 5pm–9pm,4.1,0,1
+Dr. Jahangir Alam 5,ডা. জাহাঙ্গীর আলম 5,Gynecologist,গাইনোকোলজিস্ট,Mohammadpur,,Sylhet,Sylhet,01711003288,Sat–Thu 9am–2pm,4.2,1,1
+Dr. Ayesha Siddiqua 6,ডা. আয়েশা সিদ্দিকা 6,Orthopedic,অর্থোপেডিক,Banani,,Barisal,Barisal,01711003425,Sun–Fri 5pm–9pm,4.3,0,1
+Dr. Mizanur Rahman 7,ডা. মিজানুর রহমান 7,Neurologist,নিউরোলজিস্ট,Agrabad,,Rangpur,Rangpur,01711003562,Sat–Thu 9am–2pm,4.4,1,1
+Dr. Farhana Yasmin 8,ডা. ফারহানা ইয়াসমিন 8,Dermatologist,চর্মরোগ বিশেষজ্ঞ,Zindabazar,,Mymensingh,Mymensingh,01711003699,Sun–Fri 5pm–9pm,4.5,0,1
+Dr. Rahim Uddin 9,ডা. রহিম উদ্দিন 9,ENT,নাক-কান-গলা বিশেষজ্ঞ,Sadar,,Dhaka,Dhaka,01711003836,Sat–Thu 9am–2pm,4.6,1,1
+Dr. Salma Begum 10,ডা. সালমা বেগম 10,Ophthalmologist,চক্ষু বিশেষজ্ঞ,Kotwali,,Chittagong,Chittagong,01711003973,Sun–Fri 5pm–9pm,4.7,0,1
+Dr. Kamal Hossain 11,ডা. কামাল হোসেন 11,Cardiologist,কার্ডিওলজিস্ট,Mirpur,,Rajshahi,Rajshahi,01711004110,Sat–Thu 9am–2pm,4.8,1,1
+Dr. Nasrin Akter 12,ডা. নাসরিন আক্তার 12,Pediatrician,পেডিয়াট্রিশিয়ান,Dhanmondi,,Khulna,Khulna,01711004247,Sun–Fri 5pm–9pm,4.9,0,1
+Dr. Jahangir Alam 13,ডা. জাহাঙ্গীর আলম 13,Medicine,মেডিসিন,Uttara,,Sylhet,Sylhet,01711004384,Sat–Thu 9am–2pm,3.8,1,1
+Dr. Ayesha Siddiqua 14,ডা. আয়েশা সিদ্দিকা 14,Dentist,ডেন্টিস্ট,Gulshan,,Barisal,Barisal,01711004521,Sun–Fri 5pm–9pm,3.9,0,1
+Dr. Mizanur Rahman 15,ডা. মিজানুর রহমান 15,Gynecologist,গাইনোকোলজিস্ট,Mohammadpur,,Rangpur,Rangpur,01711004658,Sat–Thu 9am–2pm,4.0,1,1
+Dr. Farhana Yasmin 16,ডা. ফারহানা ইয়াসমিন 16,Orthopedic,অর্থোপেডিক,Banani,,Mymensingh,Mymensingh,01711004795,Sun–Fri 5pm–9pm,4.1,0,1
+Dr. Rahim Uddin 17,ডা. রহিম উদ্দিন 17,Neurologist,নিউরোলজিস্ট,Agrabad,,Dhaka,Dhaka,01711004932,Sat–Thu 9am–2pm,4.2,1,1
+Dr. Salma Begum 18,ডা. সালমা বেগম 18,Dermatologist,চর্মরোগ বিশেষজ্ঞ,Zindabazar,,Chittagong,Chittagong,01711005069,Sun–Fri 5pm–9pm,4.3,0,1
+Dr. Kamal Hossain 19,ডা. কামাল হোসেন 19,ENT,নাক-কান-গলা বিশেষজ্ঞ,Sadar,,Rajshahi,Rajshahi,01711005206,Sat–Thu 9am–2pm,4.4,1,1
+Dr. Nasrin Akter 20,ডা. নাসরিন আক্তার 20,Ophthalmologist,চক্ষু বিশেষজ্ঞ,Kotwali,,Khulna,Khulna,01711005343,Sun–Fri 5pm–9pm,4.5,0,1
+Dr. Jahangir Alam 21,ডা. জাহাঙ্গীর আলম 21,Cardiologist,কার্ডিওলজিস্ট,Mirpur,,Sylhet,Sylhet,01711005480,Sat–Thu 9am–2pm,4.6,1,1
+Dr. Ayesha Siddiqua 22,ডা. আয়েশা সিদ্দিকা 22,Pediatrician,পেডিয়াট্রিশিয়ান,Dhanmondi,,Barisal,Barisal,01711005617,Sun–Fri 5pm–9pm,4.7,0,1
+Dr. Mizanur Rahman 23,ডা. মিজানুর রহমান 23,Medicine,মেডিসিন,Uttara,,Rangpur,Rangpur,01711005754,Sat–Thu 9am–2pm,4.8,1,1
+Dr. Farhana Yasmin 24,ডা. ফারহানা ইয়াসমিন 24,Dentist,ডেন্টিস্ট,Gulshan,,Mymensingh,Mymensingh,01711005891,Sun–Fri 5pm–9pm,4.9,0,1
+Dr. Rahim Uddin 25,ডা. রহিম উদ্দিন 25,Gynecologist,গাইনোকোলজিস্ট,Mohammadpur,,Dhaka,Dhaka,01711006028,Sat–Thu 9am–2pm,3.8,1,1
+Dr. Salma Begum 26,ডা. সালমা বেগম 26,Orthopedic,অর্থোপেডিক,Banani,,Chittagong,Chittagong,01711006165,Sun–Fri 5pm–9pm,3.9,0,1
+Dr. Kamal Hossain 27,ডা. কামাল হোসেন 27,Neurologist,নিউরোলজিস্ট,Agrabad,,Rajshahi,Rajshahi,01711006302,Sat–Thu 9am–2pm,4.0,1,1
+Dr. Nasrin Akter 28,ডা. নাসরিন আক্তার 28,Dermatologist,চর্মরোগ বিশেষজ্ঞ,Zindabazar,,Khulna,Khulna,01711006439,Sun–Fri 5pm–9pm,4.1,0,1
+Dr. Jahangir Alam 29,ডা. জাহাঙ্গীর আলম 29,ENT,নাক-কান-গলা বিশেষজ্ঞ,Sadar,,Sylhet,Sylhet,01711006576,Sat–Thu 9am–2pm,4.2,1,1
+Dr. Ayesha Siddiqua 30,ডা. আয়েশা সিদ্দিকা 30,Ophthalmologist,চক্ষু বিশেষজ্ঞ,Kotwali,,Barisal,Barisal,01711006713,Sun–Fri 5pm–9pm,4.3,0,1
+Dr. Mizanur Rahman 31,ডা. মিজানুর রহমান 31,Cardiologist,কার্ডিওলজিস্ট,Mirpur,,Rangpur,Rangpur,01711006850,Sat–Thu 9am–2pm,4.4,1,1
+Dr. Farhana Yasmin 32,ডা. ফারহানা ইয়াসমিন 32,Pediatrician,পেডিয়াট্রিশিয়ান,Dhanmondi,,Mymensingh,Mymensingh,01711006987,Sun–Fri 5pm–9pm,4.5,0,1
+Dr. Rahim Uddin 33,ডা. রহিম উদ্দিন 33,Medicine,মেডিসিন,Uttara,,Dhaka,Dhaka,01711007124,Sat–Thu 9am–2pm,4.6,1,1
+Dr. Salma Begum 34,ডা. সালমা বেগম 34,Dentist,ডেন্টিস্ট,Gulshan,,Chittagong,Chittagong,01711007261,Sun–Fri 5pm–9pm,4.7,0,1
+Dr. Kamal Hossain 35,ডা. কামাল হোসেন 35,Gynecologist,গাইনোকোলজিস্ট,Mohammadpur,,Rajshahi,Rajshahi,01711007398,Sat–Thu 9am–2pm,4.8,1,1
+Dr. Nasrin Akter 36,ডা. নাসরিন আক্তার 36,Orthopedic,অর্থোপেডিক,Banani,,Khulna,Khulna,01711007535,Sun–Fri 5pm–9pm,4.9,0,1
+Dr. Jahangir Alam 37,ডা. জাহাঙ্গীর আলম 37,Neurologist,নিউরোলজিস্ট,Agrabad,,Sylhet,Sylhet,01711007672,Sat–Thu 9am–2pm,3.8,1,1
+Dr. Ayesha Siddiqua 38,ডা. আয়েশা সিদ্দিকা 38,Dermatologist,চর্মরোগ বিশেষজ্ঞ,Zindabazar,,Barisal,Barisal,01711007809,Sun–Fri 5pm–9pm,3.9,0,1
+Dr. Mizanur Rahman 39,ডা. মিজানুর রহমান 39,ENT,নাক-কান-গলা বিশেষজ্ঞ,Sadar,,Rangpur,Rangpur,01711007946,Sat–Thu 9am–2pm,4.0,1,1
+Dr. Farhana Yasmin 40,ডা. ফারহানা ইয়াসমিন 40,Ophthalmologist,চক্ষু বিশেষজ্ঞ,Kotwali,,Mymensingh,Mymensingh,01711008083,Sun–Fri 5pm–9pm,4.1,0,1
+Dr. Rahim Uddin 41,ডা. রহিম উদ্দিন 41,Cardiologist,কার্ডিওলজিস্ট,Mirpur,,Dhaka,Dhaka,01711008220,Sat–Thu 9am–2pm,4.2,1,1
+Dr. Salma Begum 42,ডা. সালমা বেগম 42,Pediatrician,পেডিয়াট্রিশিয়ান,Dhanmondi,,Chittagong,Chittagong,01711008357,Sun–Fri 5pm–9pm,4.3,0,1
+Dr. Kamal Hossain 43,ডা. কামাল হোসেন 43,Medicine,মেডিসিন,Uttara,,Rajshahi,Rajshahi,01711008494,Sat–Thu 9am–2pm,4.4,1,1
+Dr. Nasrin Akter 44,ডা. নাসরিন আক্তার 44,Dentist,ডেন্টিস্ট,Gulshan,,Khulna,Khulna,01711008631,Sun–Fri 5pm–9pm,4.5,0,1
+Dr. Jahangir Alam 45,ডা. জাহাঙ্গীর আলম 45,Gynecologist,গাইনোকোলজিস্ট,Mohammadpur,,Sylhet,Sylhet,01711008768,Sat–Thu 9am–2pm,4.6,1,1
+Dr. Ayesha Siddiqua 46,ডা. আয়েশা সিদ্দিকা 46,Orthopedic,অর্থোপেডিক,Banani,,Barisal,Barisal,01711008905,Sun–Fri 5pm–9pm,4.7,0,1
+Dr. Mizanur Rahman 47,ডা. মিজানুর রহমান 47,Neurologist,নিউরোলজিস্ট,Agrabad,,Rangpur,Rangpur,01711009042,Sat–Thu 9am–2pm,4.8,1,1
+Dr. Farhana Yasmin 48,ডা. ফারহানা ইয়াসমিন 48,Dermatologist,চর্মরোগ বিশেষজ্ঞ,Zindabazar,,Mymensingh,Mymensingh,01711009179,Sun–Fri 5pm–9pm,4.9,0,1
+Dr. Rahim Uddin 49,ডা. রহিম উদ্দিন 49,ENT,নাক-কান-গলা বিশেষজ্ঞ,Sadar,,Dhaka,Dhaka,01711009316,Sat–Thu 9am–2pm,3.8,1,1
+Dr. Salma Begum 50,ডা. সালমা বেগম 50,Ophthalmologist,চক্ষু বিশেষজ্ঞ,Kotwali,,Chittagong,Chittagong,01711009453,Sun–Fri 5pm–9pm,3.9,0,1
