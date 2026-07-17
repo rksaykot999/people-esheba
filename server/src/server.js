@@ -118,8 +118,9 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 // ── Start Server ──────────────────────────────────────────────
-// VERCEL=1 অটোমেটিক Vercel-এ set থাকে, তাই এটা না থাকলেই শুধু listen করবে
-if (!process.env.VERCEL) {
+// ── Start Server ──────────────────────────────────────────────
+// Vercel serverless environment-এ app.listen() কল করা যাবে না
+if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`\n🚀 People E-Sheba API`);
     console.log(`   → http://localhost:${PORT}`);
