@@ -54,6 +54,7 @@ router.post('/donations/:id/donate', protect, don.donate);
 // ── Jobs ──────────────────────────────────────────────────────
 const job = require('../controllers/job.controller');
 router.get( '/jobs',                      job.getAll);
+router.get( '/jobs/mine',                 protect, job.getMyPostedJobs);
 router.get( '/jobs/my-applications',      protect, job.getMyApplications);
 router.post('/jobs',                      protect, job.create);
 router.get( '/jobs/:id',                  job.getOne);

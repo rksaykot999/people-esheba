@@ -54,11 +54,13 @@ exports.create = async (req, res) => {
     if (!title || !description || !amount_needed) return err(res, 'Required fields missing', 400);
     const image = req.file ? `/uploads/donations/${req.file.filename}` : null;
 
+      const urgentVal = (is_urgent === 'true' || is_urgent === true || is_urgent === 1) ? 1 : 0;
+
     const [r] = await db.execute(
       `INSERT INTO donations (user_id,title,description,category,amount_needed,image,division,district,is_urgent,deadline)
        VALUES (?,?,?,?,?,?,?,?,?,?)`,
       [req.user.id, title, description, category||'other', amount_needed, image,
-       division||null, district||null, is_urgent||0, deadline||null]
+       division||null, district||null, urgentVal, deadline||null]
     );
     const [[row]] = await db.execute('SELECT * FROM donations WHERE id=?', [r.insertId]);
     ok(res, row, 'Request submitted for review', 201);

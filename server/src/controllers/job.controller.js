@@ -134,3 +134,14 @@ exports.getMyApplications = async (req, res) => {
   );
   ok(res, rows);
 };
+
+exports.getMyPostedJobs = async (req, res) => {
+  const [rows] = await db.execute(
+    `SELECT j.*, 
+     (SELECT COUNT(*) FROM job_applications a WHERE a.job_id=j.id) AS applicants
+     FROM jobs j WHERE j.user_id=? ORDER BY j.created_at DESC`,
+    [req.user.id]
+  );
+  ok(res, rows);
+};
+

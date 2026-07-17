@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useLang } from '../context/LanguageContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
-import { FiUser, FiEdit2, FiLock, FiBriefcase, FiHeart, FiBookmark, FiBell, FiCheck, FiSave, FiMapPin } from 'react-icons/fi';
+import { FiUser, FiEdit2, FiLock, FiBriefcase, FiHeart, FiBookmark, FiBell, FiCheck, FiSave, FiMapPin, FiUsers, FiX } from 'react-icons/fi';
 
 export default function Profile() {
   const { user, updateUser } = useAuth();
@@ -19,14 +19,35 @@ export default function Profile() {
   const [bookmarks, setBookmarks] = useState([]);
   const [appliedJobs, setAppliedJobs] = useState([]);
   const [myDonations, setMyDonations] = useState([]);
+  const [myJobs, setMyJobs] = useState([]);
+  const [showApplicants, setShowApplicants] = useState(false);
+  const [activeJobTitle, setActiveJobTitle] = useState('');
+  const [applicants, setApplicants] = useState([]);
+  const [loadingApplicants, setLoadingApplicants] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (tab === 'notifications') api.get('/users/notifications').then(r=>setNotifs(r.data.data)).catch(()=>{});
     if (tab === 'bookmarks')     api.get('/users/bookmarks').then(r=>setBookmarks(r.data.data)).catch(()=>{});
     if (tab === 'jobs')          api.get('/jobs/my-applications').then(r=>setAppliedJobs(r.data.data)).catch(()=>{});
+    if (tab === 'my-jobs')       api.get('/jobs/mine').then(r=>setMyJobs(r.data.data)).catch(()=>{});
     if (tab === 'donations')     api.get('/donations/mine').then(r=>setMyDonations(r.data.data)).catch(()=>{});
   }, [tab]);
+
+  const openApplicants = async (jobId, title) => {
+    setActiveJobTitle(title);
+    setShowApplicants(true);
+    setLoadingApplicants(true);
+    try {
+      const { data } = await api.get(`/jobs/${jobId}/applications`);
+      setApplicants(data.data || []);
+    } catch {
+      setApplicants([]);
+      toast.error('Failed to load applicants');
+    } finally {
+      setLoadingApplicants(false);
+    }
+  };
 
   const switchTab = (t) => { setTab(t); setSearchParams({ tab:t }); };
 
@@ -74,7 +95,8 @@ export default function Profile() {
 
   const TABS = [
     { key:'profile',       icon:<FiUser size={14}/>,      label: isBn?'প্রোফাইল':'Profile' },
-    { key:'jobs',          icon:<FiBriefcase size={14}/>,  label: isBn?'চাকরি আবেদন':'Applications' },
+    { key:'jobs',          icon:<FiBriefcase size={14}/>,  label: isBn?'আবেদন করা চাকরি':'Applications' },
+    { key:'my-jobs',       icon:<FiBriefcase size={14}/>,  label: isBn?'আমার চাকরির পোস্ট':'My Job Posts' },
     { key:'donations',     icon:<FiHeart size={14}/>,      label: isBn?'আমার অনুরোধ':'My Requests' },
     { key:'bookmarks',     icon:<FiBookmark size={14}/>,   label: isBn?'সেভ করা':'Saved' },
     { key:'notifications', icon:<FiBell size={14}/>,       label: isBn?'বিজ্ঞপ্তি':'Notifications' },
@@ -172,6 +194,31 @@ export default function Profile() {
                         <div style={{ fontSize:'0.78rem', color:'var(--text-muted)', marginTop:2 }}>{a.company} · {new Date(a.created_at).toLocaleDateString()}</div>
                       </div>
                       <span className={`badge ${STATUS_BADGE[a.status]||'badge-gray'}`}>{a.status}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* My Job Posts */}
+          {tab === 'my-jobs' && (
+            <div>
+              <h2 style={{ fontWeight:700, color:'#fff', fontSize:'1.05rem', marginBottom:'1.25rem' }}>{isBn?'আমার চাকরির পোস্ট':'My Job Posts'} ({myJobs.length})</h2>
+              {myJobs.length === 0 ? (
+                <div className="empty"><div className="empty-icon"><FiBriefcase size={40} style={{ opacity: 0.4 }} /></div><div>{isBn?'কোনো চাকরি পোস্ট করা হয়নি':'No jobs posted yet'}</div></div>
+              ) : (
+                <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+                  {myJobs.map(j => (
+                    <div key={j.id} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'12px 16px', background:'var(--surface-2)', borderRadius:12, border:'1px solid var(--border)' }}>
+                      <div>
+                        <div style={{ fontWeight:700, color:'#fff', fontSize:'0.92rem' }}>{j.title}</div>
+                        <div style={{ fontSize:'0.78rem', color:'var(--text-muted)', marginTop:2 }}>{j.type} · {new Date(j.created_at).toLocaleDateString()}</div>
+                        <button onClick={() => openApplicants(j.id, j.title)} style={{ marginTop: 8, background: 'rgba(6,182,212,0.1)', color: 'var(--cyan)', border: 'none', padding: '4px 10px', borderRadius: 6, fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+                          <FiUsers size={12}/> {j.applicants || 0} {isBn ? 'আবেদনকারী' : 'Applicants'}
+                        </button>
+                      </div>
+                      <span className={`badge ${STATUS_BADGE[j.status]||'badge-gray'}`}>{j.status}</span>
                     </div>
                   ))}
                 </div>
@@ -285,6 +332,52 @@ export default function Profile() {
           )}
         </div>
       </div>
+
+      {/* Applicants Modal */}
+      {showApplicants && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+          <div onClick={() => setShowApplicants(false)} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(8px)' }} />
+          <div style={{ position: 'relative', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 24, width: '100%', maxWidth: 700, padding: '2.5rem', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h2 style={{ fontWeight: 800, fontSize: '1.25rem', color: '#fff' }}>
+                {isBn ? 'আবেদনকারী:' : 'Applicants for:'} <span style={{ color: 'var(--cyan)' }}>{activeJobTitle}</span>
+              </h2>
+              <button onClick={() => setShowApplicants(false)} style={{ width: 32, height: 32, borderRadius: 10, border: '1px solid var(--border)', background: 'transparent', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><FiX size={16} /></button>
+            </div>
+            {loadingApplicants ? (
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}><div className="spinner" /></div>
+            ) : applicants.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>{isBn ? 'এই চাকরির জন্য এখনও কোনো আবেদনকারী নেই।' : 'No applicants yet for this job.'}</div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {applicants.map(app => (
+                  <div key={app.id} style={{ background: 'var(--surface-2)', padding: '1.25rem', borderRadius: 16, border: '1px solid var(--border)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                      <div style={{ fontWeight: 700, color: '#fff' }}>{app.name}</div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>{new Date(app.created_at).toLocaleDateString()}</div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '1rem', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+                      <span>✉️ {app.email}</span>
+                      {app.phone && <span>📞 {app.phone}</span>}
+                    </div>
+                    <div style={{ background: 'var(--surface)', padding: '1rem', borderRadius: 10, fontSize: '0.85rem', color: 'var(--text-muted)', whiteSpace: 'pre-wrap', border: '1px solid var(--border)' }}>
+                      <strong style={{ color: 'var(--text)', display: 'block', marginBottom: 4 }}>{isBn ? 'কভার লেটার:' : 'Cover Letter:'}</strong>
+                      {app.cover_letter || (isBn ? 'কোনো কভার লেটার দেওয়া হয়নি।' : 'No cover letter provided.')}
+                    </div>
+                    {app.resume && (
+                      <div style={{ marginTop: '1rem' }}>
+                        <a href={`${import.meta.env.VITE_API_URL || ''}${app.resume}`} target="_blank" rel="noreferrer" className="btn btn-primary btn-sm">
+                          {isBn ? 'রেজুমে দেখুন' : 'View Resume'}
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       <style>{`
         @media (max-width: 768px) {
