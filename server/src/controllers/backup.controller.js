@@ -1,6 +1,5 @@
 const path = require('path');
 const fs = require('fs');
-const archiver = require('archiver');
 const { exec } = require('child_process');
 const { ok, err } = require('../utils/response');
 
@@ -10,82 +9,12 @@ const { ok, err } = require('../utils/response');
 ────────────────────────────────────────────────────────────── */
 exports.downloadBackup = async (req, res) => {
   try {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-    const filename  = `people-esheba-backup-${timestamp}.zip`;
+    // VERCEL FIX: Archiver and file system backups are not supported in a Vercel Serverless environment.
+    // The filesystem is read-only and source files are not available.
+    return err(res, 'File backup is not supported in Vercel Serverless environment. Please use Database backups directly from your database provider.', 403);
 
-    // Set streaming headers
-    res.setHeader('Content-Type', 'application/zip');
-    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
 
-    const archive = archiver('zip', { zlib: { level: 6 } });
-    archive.on('error', (e) => { console.error('Archiver error:', e); });
-    archive.pipe(res);
-
-    // ── 1. Add the server source files (not node_modules / .git)
-    const serverRoot = path.join(__dirname, '../../');
-    const projectRoot = path.resolve(serverRoot, '../');
-
-    archive.glob('**/*', {
-      cwd: serverRoot,
-      ignore: [
-        'node_modules/**',
-        '.git/**',
-        'uploads/**',      // can be large
-        '*.log',
-        '.env',            // security
-      ],
-      prefix: 'server',
-    });
-
-    // ── 2. Add the client source files
-    const clientRoot = path.resolve(projectRoot, 'client');
-    if (fs.existsSync(clientRoot)) {
-      archive.glob('**/*', {
-        cwd: clientRoot,
-        ignore: ['node_modules/**', '.git/**', 'dist/**', '*.log'],
-        prefix: 'client',
-      });
-    }
-
-    // ── 3. Add README.md
-    const readmePath = path.join(projectRoot, 'README.md');
-    if (fs.existsSync(readmePath)) {
-      archive.file(readmePath, { name: 'README.md' });
-    }
-
-    // ── 3. Try to add a DB dump (mysqldump)
-    //  Requires mysqldump to be available in PATH. If not, we skip gracefully.
-    const dbDumpPromise = new Promise((resolve) => {
-      const {
-        DB_HOST = 'localhost',
-        DB_PORT = '3306',
-        DB_USER = 'root',
-        DB_PASSWORD = '',
-        DB_NAME,
-      } = process.env;
-
-      if (!DB_NAME) return resolve(null);
-
-      const cmd = `mysqldump -h ${DB_HOST} -P ${DB_PORT} -u ${DB_USER} ${DB_PASSWORD ? `-p${DB_PASSWORD}` : ''} ${DB_NAME} 2>NUL`;
-
-      const child = exec(cmd, { maxBuffer: 500 * 1024 * 1024 }, (error, stdout) => {
-        if (error || !stdout) return resolve(null);
-        resolve(stdout);
-      });
-    });
-
-    const sqlDump = await dbDumpPromise;
-    if (sqlDump) {
-      archive.append(sqlDump, { name: `database_${timestamp}.sql` });
-    } else {
-      // Add a readme explaining that mysqldump wasn't available
-      archive.append(
-        'mysqldump was not available on this server. Please backup the database manually.\n',
-        { name: 'DATABASE_BACKUP_README.txt' }
-      );
-    }
-
-    await archive.finalize();
+    // The remaining implementation has been removed as it requires file system access which Vercel Serverless Functions do not provide.
   } catch (e) {
     console.error('Backup failed:', e);
     if (!res.headersSent) {
