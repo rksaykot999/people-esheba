@@ -1,47 +1,6 @@
 require('dotenv').config();
 
-// Workaround for Vercel/NFT: Force bundling of semver files used by jsonwebtoken
-global.__vercelNftWorkaround = [
-  require('semver/classes/comparator'),
-  require('semver/classes/range'),
-  require('semver/classes/semver'),
-  require('semver/functions/clean'),
-  require('semver/functions/cmp'),
-  require('semver/functions/coerce'),
-  require('semver/functions/compare'),
-  require('semver/functions/compare-build'),
-  require('semver/functions/compare-loose'),
-  require('semver/functions/diff'),
-  require('semver/functions/eq'),
-  require('semver/functions/gt'),
-  require('semver/functions/gte'),
-  require('semver/functions/inc'),
-  require('semver/functions/lt'),
-  require('semver/functions/lte'),
-  require('semver/functions/major'),
-  require('semver/functions/minor'),
-  require('semver/functions/neq'),
-  require('semver/functions/parse'),
-  require('semver/functions/patch'),
-  require('semver/functions/prerelease'),
-  require('semver/functions/rcompare'),
-  require('semver/functions/rsort'),
-  require('semver/functions/satisfies'),
-  require('semver/functions/sort'),
-  require('semver/functions/truncate'),
-  require('semver/functions/valid'),
-  require('semver/ranges/gtr'),
-  require('semver/ranges/intersects'),
-  require('semver/ranges/ltr'),
-  require('semver/ranges/max-satisfying'),
-  require('semver/ranges/min-satisfying'),
-  require('semver/ranges/min-version'),
-  require('semver/ranges/outside'),
-  require('semver/ranges/simplify'),
-  require('semver/ranges/subset'),
-  require('semver/ranges/to-comparators'),
-  require('semver/ranges/valid')
-];
+// Vercel semver bundling is now handled by includeFiles in vercel.json
 
 
 const express = require('express');
